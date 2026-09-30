@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trend Analyzer</title>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+:root{--bg:#0f1115;--card:#181b22;--card2:#11141a;--line:#2a2f3a;--text:#e8e8e8;--muted:#9aa0aa;--gold:#e6b422;--up:#26a69a;--down:#ef5350;--warn:#f5a623;--blue:#42a5f5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Sarabun",sans-serif;font-size:15px}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:0 0 4px;color:var(--gold)}
+h2{font-size:15px;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+select,input,button,textarea{background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit}
+button{background:var(--gold);color:#111;border:none;font-weight:600;cursor:pointer}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1}
+.tabs button:not(.on){background:transparent;color:var(--muted);border:1px solid var(--line)}
+#chart{height:420px;width:100%}
+.big{font-size:28px;font-weight:700;line-height:1.2}
+.up{color:var(--up)}.down{color:var(--down)}.neutral{color:var(--warn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat{background:var(--card2);border-radius:8px;padding:10px}
+.stat .k{color:var(--muted);font-size:12px}
+.stat .v{font-size:17px;font-weight:600;margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:6px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+.bar{height:8px;background:var(--card2);border-radius:4px;overflow:hidden;margin-top:6px}
+.bar>div{height:100%;transition:width .4s}
+.warnbox{border-left:3px solid var(--warn);padding:8px 12px;color:var(--muted);font-size:13px;background:#1d1a12;border-radius:6px}
+textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-size:12px}
+.hidden{display:none}
+.muted{color:var(--muted);font-size:13px}
+.live{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:12px;padding:3px 8px;border-radius:999px;background:var(--card2);border:1px solid var(--line)}
+.dot{width:8px;height:8px;border-radius:50%;background:#666}
+.live.on .dot{background:#22c55e;animation:pulse 1.4s infinite}
+.live.on{color:#22c55e}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}70%{box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.flash{animation:flash .6s}
+@keyframes flash{from{background:#2a3242}to{background:var(--card2)}}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.plan .stat .v{font-size:16px}
+.reasons{margin:0;padding-left:0;list-style:none}
+.reasons li{padding:7px 0 7px 26px;border-bottom:1px solid var(--line);position:relative;font-size:14px;line-height:1.5}
+.reasons li:last-child{border-bottom:none}
+.reasons li::before{content:attr(data-i);position:absolute;left:0;top:7px;width:18px;height:18px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center;background:var(--card2);color:var(--muted)}
+.reasons li.p::before{content:"+";background:rgba(38,166,154,.18);color:var(--up)}
+.reasons li.n::before{content:"−";background:rgba(239,83,80,.18);color:var(--down)}
+.reasons li.w::before{content:"!";background:rgba(245,166,35,.18);color:var(--warn)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:12px;color:var(--muted)}
+.legend span b{display:inline-block;width:14px;height:0;border-top:2px solid;vertical-align:middle;margin-right:4px}
+.log{max-height:220px;overflow:auto;font-size:13px}
+.log div{padding:5px 0;border-bottom:1px solid var(--line)}
+.bubble{background:var(--card2);border-radius:10px;padding:12px 14px;line-height:1.6;font-size:14px}
+.ntabs{display:flex;gap:6px;margin:10px 0}
+.ntabs button{flex:1;padding:6px 8px;font-size:13px}
+.ntabs button:not(.on){background:transparent;color:var(--muted);border:1px solid var(--line)}
+.news{max-height:420px;overflow:auto}
+.nitem{padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}
+.nitem:last-child{border-bottom:none}
+.nitem a{color:var(--text);text-decoration:none}
+.nitem a:hover{text-decoration:underline}
+.nmeta{color:var(--muted);font-size:12px;margin-top:3px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.nmeta a{color:var(--blue);font-size:12px}
+.chip{font-size:11px;padding:1px 7px;border-radius:999px;background:var(--card2);border:1px solid var(--line);white-space:nowrap}
+.chip.up{background:rgba(38,166,154,.15);border-color:transparent}
+.chip.down{background:rgba(239,83,80,.15);border-color:transparent}
+.chip.hi{background:rgba(239,83,80,.2);color:var(--down);border-color:transparent}
+.chip.md{background:rgba(245,166,35,.18);color:var(--warn);border-color:transparent}
+.ev{display:grid;grid-template-columns:92px 1fr auto;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:center}
+.ev.past{opacity:.5}
+.ev.soon{background:rgba(239,83,80,.08);border-radius:6px;padding:8px 6px}
+.ev .t{color:var(--muted);font-size:12px}
+.ev .fc{color:var(--muted);font-size:12px;text-align:right;white-space:nowrap}
+.tone{display:flex;gap:10px;align-items:center;font-size:13px;margin-top:4px}
+.tone .bar{flex:1;margin:0;display:flex}
+.alert{border-left:3px solid var(--down);background:rgba(239,83,80,.08);padding:8px 12px;border-radius:6px;font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="row" style="justify-content:space-between">
+    <h1 id="h1">Gold Trend Analyzer</h1>
+    <span class="live" id="liveBadge"><span class="dot"></span><span id="liveText">OFFLINE</span></span>
+  </div>
+  <div class="sub">วิเคราะห์ทิศทางระยะสั้นแบบเรียลไทม์ (ทองคำ / คริปโต) ด้วย EMA · RSI · MACD · แนวรับแนวต้าน พร้อมวัดความแม่นยำจริงด้วยการทดสอบย้อนหลัง</div>
+
+  <div class="tabs">
+    <button id="tabLive" class="on">เรียลไทม์</button>
+    <button id="tabPaste">วางข้อมูลจาก InterGold</button>
+  </div>
+
+  <div class="card" id="panelLive">
+    <div class="row">
+      <label>สินทรัพย์
+        <select id="asset">
+          <option value="GOLD" selected>ทองคำ (XAU/USD)</option>
+          <option value="BTCUSDT">Bitcoin (BTC)</option>
+          <option value="ETHUSDT">Ethereum (ETH)</option>
+          <option value="SOLUSDT">Solana (SOL)</option>
+          <option value="BNBUSDT">BNB</option>
+          <option value="XRPUSDT">XRP</option>
+          <option value="DOGEUSDT">Dogecoin (DOGE)</option>
+        </select>
+      </label>
+      <label id="srcWrap">แหล่งข้อมูล
+        <select id="src">
+          <option value="binance" selected>Binance PAXG (อัปเดตทุกวินาที)</option>
+          <option value="xaus">XAUS XAU/USD (อัปเดตทุก 30 วิ)</option>
+        </select>
+      </label>
+      <label>ไทม์เฟรม
+        <select id="tf">
+          <option value="1m">1 นาที</option>
+          <option value="5m">5 นาที</option>
+          <option value="15m" selected>15 นาที</option>
+          <option value="1h">1 ชั่วโมง</option>
+          <option value="4h">4 ชั่วโมง</option>
+          <option value="1d">รายวัน</option>
+        </select>
+      </label>
+      <label>ทายล่วงหน้า
+        <select id="horizon">
+          <option value="1">1 แท่ง</option>
+          <option value="3" selected>3 แท่ง</option>
+          <option value="6">6 แท่ง</option>
+          <option value="12">12 แท่ง</option>
+        </select>
+      </label>
+      <button id="btnLoad">โหลดใหม่</button>
+    </div>
+    <div class="muted" style="margin-top:8px" id="srcNote">ทองคำ: Binance PAXG ผูกกับทอง 1 ออนซ์ ราคาใกล้ XAU/USD และส่งราคาสดทุกวินาที · XAUS เป็น XAU/USD ตรง แต่ใช้ได้เฉพาะ 1/5/15 นาทีและรายวัน</div>
+  </div>
+
+  <div class="card hidden" id="panelPaste">
+    <div class="muted" style="margin-bottom:8px">เปิดหน้าราคาทองย้อนหลังของ InterGold → ลากคลุมตารางทั้งหมด → ก๊อปมาวางตรงนี้ (หรือวางราคาทีละบรรทัดก็ได้)</div>
+    <textarea id="pasteBox" placeholder="29/09/2569 19:00  68,226  68,291  65,837  65,907  65,800  66,000  4,153  32.45&#10;29/09/2569 18:00  ..."></textarea>
+    <div class="row" style="margin-top:8px">
+      <label>ใช้คอลัมน์ตัวเลขที่
+        <select id="col">
+          <option value="1">1 LBMA รับซื้อ</option>
+          <option value="2">2 LBMA ขายออก</option>
+          <option value="3">3 InterGold รับซื้อ</option>
+          <option value="4">4 InterGold ขายออก</option>
+          <option value="5">5 สมาคมฯ รับซื้อ</option>
+          <option value="6">6 สมาคมฯ ขายออก</option>
+          <option value="7" selected>7 Gold Spot (USD)</option>
+        </select>
+      </label>
+      <label class="muted"><input type="checkbox" id="newestFirst" checked> ข้อมูลเรียงใหม่→เก่า</label>
+      <button id="btnPaste">วิเคราะห์</button>
+    </div>
+  </div>
+
+  <div class="card" id="thaiCard">
+    <div class="row" style="justify-content:space-between">
+      <div style="font-weight:600">ราคาทองไทย (สมาคมค้าทองคำ)</div>
+      <div class="muted" id="thaiTime">กำลังโหลด...</div>
+    </div>
+    <div class="grid" style="margin-top:8px">
+      <div class="stat"><div class="k">ทองแท่ง รับซื้อ</div><div class="v" id="tBarBuy">—</div></div>
+      <div class="stat"><div class="k">ทองแท่ง ขายออก</div><div class="v" id="tBarSell">—</div></div>
+      <div class="stat"><div class="k">ทองรูปพรรณ รับซื้อ</div><div class="v" id="tOrnBuy">—</div></div>
+      <div class="stat"><div class="k">ทองรูปพรรณ ขายออก</div><div class="v" id="tOrnSell">—</div></div>
+    </div>
+  </div>
+
+  <div class="card" id="newsCard">
+    <div class="row" style="justify-content:space-between">
+      <div style="font-weight:600">ข่าวต่างประเทศ</div>
+      <div class="row" style="gap:6px"><span class="muted" id="newsTime">กำลังโหลด...</span><button id="btnNews" style="padding:4px 10px;font-size:12px">รีเฟรช</button></div>
+    </div>
+    <div id="newsAlert"></div>
+    <div class="ntabs">
+      <button id="ntCal" class="on">ปฏิทินข่าวเศรษฐกิจ</button>
+      <button id="ntHead">หัวข่าวล่าสุด</button>
+    </div>
+    <div id="calPane">
+      <div class="row" style="margin-bottom:6px">
+        <label class="muted"><input type="checkbox" id="calUsdOnly" checked> เฉพาะ USD</label>
+        <label class="muted"><input type="checkbox" id="calHighOnly"> เฉพาะผลกระทบสูง</label>
+        <label class="muted"><input type="checkbox" id="calHidePast" checked> ซ่อนที่ผ่านไปแล้ว</label>
+      </div>
+      <div class="news" id="calList"><div class="muted">กำลังโหลด...</div></div>
+      <div class="muted" style="margin-top:6px">เวลาเป็นเวลาไทย · ข้อมูลจาก ForexFactory · ข่าวสีแดงมักทำให้ทองและคริปโตกระชากแรงทั้งสองทาง</div>
+    </div>
+    <div id="headPane" class="hidden">
+      <div class="tone" id="toneRow"></div>
+      <div class="news" id="headList"><div class="muted">กำลังโหลด...</div></div>
+      <div class="muted" style="margin-top:6px">โทนข่าวประเมินจากคำในหัวข่าวแบบคร่าวๆ ไม่ได้อ่านเนื้อหา ใช้ดูภาพรวมเท่านั้น · กด "แปลไทย" เพื่อเปิด Google Translate</div>
+    </div>
+  </div>
+
+  <div id="status" class="muted" style="margin-bottom:10px"></div>
+
+  <div id="result" class="hidden">
+    <!-- Signal + trade plan -->
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div class="muted">บอทวิเคราะห์ตอนนี้</div>
+        <div class="muted" id="priceNow">—</div>
+      </div>
+      <div class="big" id="dir">—</div>
+      <div id="probText" class="muted"></div>
+      <div class="bar"><div id="probBar"></div></div>
+      <div class="plan" id="plan"></div>
+    </div>
+
+    <!-- Chart -->
+    <div class="card">
+      <div id="chart"></div>
+      <div class="legend">
+        <span><b style="border-color:#42a5f5"></b>EMA9</span>
+        <span><b style="border-color:#ab47bc"></b>EMA21</span>
+        <span><b style="border-color:#ffa726"></b>EMA50 (เทรนด์ใหญ่)</span>
+        <span><b style="border-color:#e0e0e0;border-top-style:dashed"></b>โซนเข้า</span>
+        <span><b style="border-color:#ef5350"></b>Stop Loss</span>
+        <span><b style="border-color:#26a69a"></b>Take Profit</span>
+        <span><b style="border-color:#8a8f99;border-top-style:dotted"></b>แนวรับ/แนวต้าน</span>
+        <span>▲▼ จุดที่ EMA9 ตัด EMA21</span>
+      </div>
+    </div>
+
+    <!-- Bot commentary -->
+    <div class="card">
+      <h2>ความเห็นของบอท: ทำไมถึงแนะนำแบบนี้</h2>
+      <div class="bubble" id="summary"></div>
+      <ul class="reasons" id="reasons" style="margin-top:10px"></ul>
+      <div class="bubble" id="invalid" style="margin-top:10px"></div>
+    </div>
+
+    <!-- Signal log -->
+    <div class="card">
+      <h2>บันทึกการเปลี่ยนสัญญาณ (ระหว่างเปิดหน้านี้)</h2>
+      <div class="log" id="log"><div class="muted">ยังไม่มีการเปลี่ยนสัญญาณ</div></div>
+    </div>
+
+    <div class="card">
+      <h2>คะแนนจากตัวชี้วัด</h2>
+      <div class="grid" style="margin-bottom:10px">
+        <div class="stat"><div class="k">คะแนนรวม (-5 ถึง +5)</div><div class="v" id="sScore">—</div></div>
+        <div class="stat"><div class="k">RSI(14)</div><div class="v" id="sRsi">—</div></div>
+        <div class="stat"><div class="k">ATR(14) ความผันผวน</div><div class="v" id="sAtr">—</div></div>
+      </div>
+      <table id="votes"></table>
+    </div>
+
+    <div class="card">
+      <h2>ทดสอบย้อนหลัง (ความแม่นยำจริงบนกราฟนี้)</h2>
+      <div class="grid" style="margin-bottom:10px">
+        <div class="stat"><div class="k">ทายถูกรวม (เมื่อมีสัญญาณ)</div><div class="v" id="bAcc">—</div></div>
+        <div class="stat"><div class="k">จำนวนครั้งที่ทดสอบ</div><div class="v" id="bN">—</div></div>
+        <div class="stat"><div class="k">ขึ้นเองตามธรรมชาติ</div><div class="v" id="bBase">—</div></div>
+      </div>
+      <table id="bucketTable"></table>
+      <div class="muted" style="margin-top:8px">ความน่าจะเป็นที่บอทใช้มาจากตารางนี้ คือ "เวลาที่คะแนนเท่านี้ในอดีต ราคาขึ้นจริงกี่ %" ไม่ใช่ตัวเลขที่ตั้งขึ้นเอง</div>
+    </div>
+  </div>
+
+  <div class="warnbox">บอทนี้เป็นระบบกฎตายตัว (rule-based) ไม่ใช่คำแนะนำการลงทุน ความแม่นยำระยะสั้นโดยทั่วไปอยู่ราว 50–60% และเปลี่ยนไปตามสภาวะตลาด ควรทดลองกับบัญชี Demo ก่อนใช้เงินจริง ระวังช่วงข่าวเศรษฐกิจสหรัฐ และคริปโตผันผวนแรงกว่าทองหลายเท่า ควรลดขนาดไม้ลง</div>
+</div>
+
+<script>
+// =============== Indicators ===============
+function ema(arr,p){const k=2/(p+1);const out=new Array(arr.length).fill(null);let prev=null;
+  for(let i=0;i<arr.length;i++){if(i<p-1)continue;
+    if(prev===null){let s=0;for(let j=i-p+1;j<=i;j++)s+=arr[j];prev=s/p;}else prev=arr[i]*k+prev*(1-k);
+    out[i]=prev;}return out;}
+function rsi(c,p=14){const out=new Array(c.length).fill(null);let g=0,l=0;
+  for(let i=1;i<c.length;i++){const d=c[i]-c[i-1];const up=Math.max(d,0),dn=Math.max(-d,0);
+    if(i<=p){g+=up;l+=dn;if(i===p){g/=p;l/=p;out[i]=l===0?100:100-100/(1+g/l);}}
+    else{g=(g*(p-1)+up)/p;l=(l*(p-1)+dn)/p;out[i]=l===0?100:100-100/(1+g/l);}}
+  return out;}
+function macd(c){const e12=ema(c,12),e26=ema(c,26);const line=c.map((_,i)=>e12[i]!=null&&e26[i]!=null?e12[i]-e26[i]:null);
+  const start=line.findIndex(v=>v!=null);const sig=new Array(c.length).fill(null);
+  if(start>=0){const s=ema(line.slice(start),9);s.forEach((v,i)=>sig[start+i]=v);}
+  return line.map((v,i)=>v!=null&&sig[i]!=null?v-sig[i]:null);}
+function atr(h,l,c,p=14){const tr=c.map((_,i)=>i===0?h[0]-l[0]:Math.max(h[i]-l[i],Math.abs(h[i]-c[i-1]),Math.abs(l[i]-c[i-1])));
+  const out=new Array(c.length).fill(null);let a=null;
+  for(let i=0;i<c.length;i++){if(i<p-1)continue;if(a===null){let s=0;for(let j=i-p+1;j<=i;j++)s+=tr[j];a=s/p;}else a=(a*(p-1)+tr[i])/p;out[i]=a;}
+  return out;}
+function levels(h,l,c,lookback=150,w=3){const n=c.length,start=Math.max(w,n-lookback),price=c[n-1];let sup=null,res=null;
+  for(let i=start;i<n-w;i++){let isH=true,isL=true;
+    for(let j=i-w;j<=i+w;j++){if(h[j]>h[i])isH=false;if(l[j]<l[i])isL=false;}
+    if(isH&&h[i]>price&&(res===null||h[i]<res))res=h[i];
+    if(isL&&l[i]<price&&(sup===null||l[i]>sup))sup=l[i];}
+  return {sup,res};}
+
+// =============== Scoring & backtest ===============
+function scoreAt(i,I){const {c,e9,e21,e50,r,mh}=I;
+  if(i<3||[e9[i],e21[i],e50[i],r[i],mh[i],e21[i-3]].some(v=>v==null))return null;
+  const v=[];
+  v.push(['EMA9 เทียบ EMA21',e9[i]>e21[i]?1:-1,e9[i]>e21[i]?'EMA9 อยู่เหนือ (โมเมนตัมขึ้น)':'EMA9 อยู่ใต้ (โมเมนตัมลง)']);
+  v.push(['ราคาเทียบ EMA50',c[i]>e50[i]?1:-1,c[i]>e50[i]?'ราคาเหนือเส้นเทรนด์':'ราคาใต้เส้นเทรนด์']);
+  v.push(['MACD Histogram',mh[i]>0?1:-1,mh[i]>0?'เป็นบวก':'เป็นลบ']);
+  const rv=r[i];let rs=0,rt='กลางๆ';
+  if(rv>=70){rs=0;rt='ซื้อมากเกิน ระวังย่อ';}else if(rv>55){rs=1;rt='ฝั่งซื้อได้เปรียบ';}
+  else if(rv<=30){rs=0;rt='ขายมากเกิน ระวังเด้ง';}else if(rv<45){rs=-1;rt='ฝั่งขายได้เปรียบ';}
+  v.push(['RSI(14) = '+rv.toFixed(1),rs,rt]);
+  const sl=e21[i]-e21[i-3];
+  v.push(['ความชัน EMA21',sl>0?1:-1,sl>0?'ชันขึ้น':'ชันลง']);
+  return {score:v.reduce((a,x)=>a+x[1],0),votes:v};}
+
+function analyze(bars,horizon){
+  const c=bars.map(b=>b.close),h=bars.map(b=>b.high),l=bars.map(b=>b.low);
+  const I={c,e9:ema(c,9),e21:ema(c,21),e50:ema(c,50),r:rsi(c),mh:macd(c)};
+  const a=atr(h,l,c);const n=c.length;
+  const buckets={};let ups=0,tot=0,hit=0,sig=0;
+  for(let i=55;i<n-horizon;i++){const s=scoreAt(i,I);if(!s)continue;
+    const up=c[i+horizon]>c[i];tot++;if(up)ups++;
+    const b=buckets[s.score]||(buckets[s.score]={n:0,up:0});b.n++;if(up)b.up++;
+    if(s.score!==0){sig++;if((s.score>0)===up)hit++;}}
+  const cur=scoreAt(n-1,I);
+  let pUp=null,basis='',bn=0;
+  if(cur){const b=buckets[cur.score];
+    if(b&&b.n>=15){pUp=b.up/b.n;bn=b.n;basis=`จากอดีต ${b.n} ครั้งที่คะแนน = ${sgn(cur.score)}`;}
+    else{let nn=0,uu=0;for(const k in buckets){if(Math.sign(+k)===Math.sign(cur.score)){nn+=buckets[k].n;uu+=buckets[k].up;}}
+      if(nn>0){pUp=uu/nn;bn=nn;basis=`จากอดีต ${nn} ครั้งที่คะแนนไปทางเดียวกัน`;}}}
+  return {I,a,cur,pUp,bn,basis,buckets,tot,ups,hit,sig,lv:levels(h,l,c),n,bars};}
+
+// =============== Trade plan ===============
+function makePlan(res){const {I,a,cur,pUp,lv,n}=res;const P=I.c[n-1],A=a[n-1]||P*0.002;
+  if(!cur||pUp==null)return {side:'NONE',P,A};
+  const conf=Math.max(pUp,1-pUp);
+  // ต้องให้ทั้งตัวชี้วัด (คะแนน) และสถิติย้อนหลัง (pUp) ชี้ทางเดียวกันถึงจะออกสัญญาณ
+  let side='WAIT',conflict=false;
+  if(cur.score>0&&pUp>=0.52)side='LONG';else if(cur.score<0&&pUp<=0.48)side='SHORT';
+  else if(cur.score!==0&&conf>=0.52)conflict=true;
+  const plan={side,conflict,P,A,sup:lv.sup,res:lv.res,conf,pUp,warn:[]};
+  if(conflict)plan.warn.push(`ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตของคะแนนนี้กลับ${pUp>=0.5?'ขึ้น':'ลง'}มากกว่า (${(pUp*100).toFixed(0)}% ขึ้น) แปลว่าตลาดช่วงนี้มักกลับตัวหลังสัญญาณแบบนี้ สองอย่างขัดกัน บอทจึงไม่ออกสัญญาณ`);
+  const S=lv.sup,R=lv.res;
+  if(plan.side==='LONG'){
+    let sl=(S!=null&&P-S<2*A)?S-0.3*A:P-1.5*A;if(P-sl<0.6*A)sl=P-0.8*A;const risk=P-sl;
+    const tp1=(R!=null&&R-P>=risk)?R:P+1.5*risk;let tp2=P+2.5*risk;if(tp2<=tp1+0.3*risk)tp2=tp1+risk;
+    Object.assign(plan,{entryLow:Math.max(S!=null?S:-Infinity,P-0.5*A),entryHigh:P,sl,tp1,tp2,risk,rr:(tp1-P)/risk});
+    if(R!=null&&R-P<0.8*risk){plan.warn.push(`แนวต้าน ${fmt(R)} อยู่ใกล้เกินไป (ห่างแค่ ${((R-P)/A).toFixed(1)} ATR) กำไรไม่คุ้มความเสี่ยง จึงให้รอราคาเบรกขึ้นก่อน`);plan.side='WAIT';plan.lean='LONG';}
+    if(I.r[n-1]>=70){plan.warn.push(`RSI ${I.r[n-1].toFixed(0)} สูงเกิน 70 ไล่ซื้อตอนนี้เสี่ยงโดนย่อ ควรรอราคาย่อลงมาในโซนเข้า`);}
+  }else if(plan.side==='SHORT'){
+    let sl=(R!=null&&R-P<2*A)?R+0.3*A:P+1.5*A;if(sl-P<0.6*A)sl=P+0.8*A;const risk=sl-P;
+    const tp1=(S!=null&&P-S>=risk)?S:P-1.5*risk;let tp2=P-2.5*risk;if(tp2>=tp1-0.3*risk)tp2=tp1-risk;
+    Object.assign(plan,{entryLow:P,entryHigh:Math.min(R!=null?R:Infinity,P+0.5*A),sl,tp1,tp2,risk,rr:(P-tp1)/risk});
+    if(S!=null&&P-S<0.8*risk){plan.warn.push(`แนวรับ ${fmt(S)} อยู่ใกล้เกินไป (ห่างแค่ ${((P-S)/A).toFixed(1)} ATR) กำไรไม่คุ้มความเสี่ยง จึงให้รอราคาหลุดลงก่อน`);plan.side='WAIT';plan.lean='SHORT';}
+    if(I.r[n-1]<=30){plan.warn.push(`RSI ${I.r[n-1].toFixed(0)} ต่ำกว่า 30 ไล่ขายตอนนี้เสี่ยงโดนเด้ง ควรรอราคาเด้งขึ้นมาในโซนเข้า`);}
+  }
+  plan.buyTrig=R!=null?R:P+A;plan.sellTrig=S!=null?S:P-A;
+  return plan;}
+
+// =============== Bot commentary ===============
+function barsSinceCross(I,n){const d=i=>Math.sign(I.e9[i]-I.e21[i]);const s=d(n-1);let k=0;
+  for(let i=n-1;i>0&&I.e9[i-1]!=null&&I.e21[i-1]!=null;i--){if(d(i-1)!==s)return k+1;k++;}return null;}
+function buildComment(res,plan,horizon){
+  const {I,n,cur,a,hit,sig,bn}=res;const P=plan.P,A=plan.A,items=[];
+  if(!cur)return {summary:'ข้อมูลยังไม่พอให้วิเคราะห์',items:[],invalid:''};
+  const up9=I.e9[n-1]>I.e21[n-1],bc=barsSinceCross(I,n);
+  items.push([up9?'p':'n',`EMA9 (ฟ้า) ${up9?'อยู่เหนือ':'อยู่ใต้'} EMA21 (ม่วง)${bc?` ตัด${up9?'ขึ้น':'ลง'}มาแล้ว ${bc} แท่ง (ดูลูกศร ${up9?'▲':'▼'} ล่าสุดบนกราฟ)`:''} แปลว่าโมเมนตัมระยะสั้น${up9?'เป็นฝั่งซื้อ':'เป็นฝั่งขาย'}${bc&&bc<=3?' และเพิ่งเกิดใหม่ๆ':''}`]);
+  const d50=(P-I.e50[n-1])/I.e50[n-1]*100;
+  items.push([d50>0?'p':'n',`ราคาอยู่${d50>0?'เหนือ':'ใต้'} EMA50 (ส้ม) ${Math.abs(d50).toFixed(2)}% เทรนด์ใหญ่ของไทม์เฟรมนี้ยังเป็น${d50>0?'ขาขึ้น':'ขาลง'}`]);
+  const m0=I.mh[n-1],m1=I.mh[n-2];const grow=Math.abs(m0)>Math.abs(m1);
+  items.push([m0>0?'p':'n',`MACD Histogram ${m0>0?'เป็นบวก':'เป็นลบ'}และ${grow?'กำลังแรงขึ้น':'เริ่มอ่อนแรงลง'}${!grow?' (แรงส่งเริ่มหมด ระวังกลับตัว)':''}`]);
+  const rv=I.r[n-1];
+  items.push([rv>=70||rv<=30?'w':rv>55?'p':rv<45?'n':'',`RSI ${rv.toFixed(1)} ${rv>=70?'สูงเกิน 70 ซื้อมากเกินไป มักย่อตัวก่อนไปต่อ':rv<=30?'ต่ำกว่า 30 ขายมากเกินไป มักเด้งก่อนลงต่อ':rv>55?'ฝั่งซื้อได้เปรียบ และยังมีที่ว่างให้วิ่งก่อนถึง 70':rv<45?'ฝั่งขายได้เปรียบ และยังมีที่ว่างก่อนถึง 30':'อยู่โซนกลาง ยังไม่มีฝั่งไหนคุมตลาด'}`]);
+  if(plan.res!=null)items.push(['',`แนวต้านใกล้สุด ${fmt(plan.res)} (ห่าง ${((plan.res-P)/A).toFixed(1)} ATR) คือยอดสูงที่ราคาเคยถูกขายกลับลงมา`]);
+  if(plan.sup!=null)items.push(['',`แนวรับใกล้สุด ${fmt(plan.sup)} (ห่าง ${((P-plan.sup)/A).toFixed(1)} ATR) คือจุดต่ำที่ราคาเคยมีแรงซื้อกลับขึ้นไป`]);
+  const atrPct=A/P*100;
+  items.push([atrPct>1.5?'w':'',`ความผันผวน (ATR) ${fmt(A)} หรือ ${atrPct.toFixed(2)}% ต่อแท่ง${atrPct>1.5?' ถือว่าแรง ควรลดขนาดไม้':''} ใช้คำนวณระยะ Stop Loss ไม่ให้แคบจนโดนสะบัดออก`]);
+  items.push([plan.pUp>=0.55?'p':plan.pUp<=0.45?'n':'',`สถิติบนกราฟนี้: ${res.basis} ราคาขึ้นใน ${horizon} แท่งถัดไป ${(plan.pUp*100).toFixed(1)}%`]);
+  const acc=sig?hit/sig:0;
+  if(sig&&acc<0.52)items.push(['w',`ภาพรวมระบบนี้บนกราฟนี้ทายถูกแค่ ${(acc*100).toFixed(1)}% ใกล้เคียงการโยนเหรียญ ควรใช้เป็นข้อมูลประกอบ ไม่ใช่ตัวตัดสินใจหลัก`]);
+  if(bn<40)items.push(['w',`ข้อมูลสถิติของสถานการณ์นี้มีแค่ ${bn} ครั้ง ตัวเลขความน่าจะเป็นยังไม่นิ่ง`]);
+  plan.warn.forEach(w=>items.push(['w',w]));
+  const nw=newsContext();
+  nw.items.forEach(x=>items.push(x));
+
+  let summary,invalid;const pct=x=>(x*100).toFixed(0)+'%';
+  if(plan.side==='LONG'){
+    summary=`<b class="up">บอทมองฝั่งซื้อ (LONG)</b> ตัวชี้วัดส่วนใหญ่ชี้ขึ้น (คะแนน ${sgn(cur.score)}) และสถิติในอดีตให้โอกาสขึ้น ${pct(plan.pUp)} แผนคือรอซื้อในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (ใต้แนวรับเล็กน้อย กันโดนสะบัด) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดต่ำกว่า ${fmt(plan.sl)} หรือ EMA9 ตัดลงใต้ EMA21 บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
+  }else if(plan.side==='SHORT'){
+    summary=`<b class="down">บอทมองฝั่งขาย (SHORT)</b> ตัวชี้วัดส่วนใหญ่ชี้ลง (คะแนน ${sgn(cur.score)}) และสถิติในอดีตให้โอกาสลง ${pct(1-plan.pUp)} แผนคือรอขายในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (เหนือแนวต้านเล็กน้อย) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดสูงกว่า ${fmt(plan.sl)} หรือ EMA9 ตัดขึ้นเหนือ EMA21 บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
+  }else{
+    summary=plan.conflict
+      ?`<b class="neutral">บอทแนะนำให้รอก่อน</b> ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตบอกว่าหลังสัญญาณแบบนี้ราคามัก${plan.pUp>=0.5?'ขึ้น':'ลง'} (โอกาสขึ้น ${pct(plan.pUp)}) สองอย่างขัดกัน เข้าตอนนี้เสี่ยงโดนหลอก`
+      :plan.lean
+      ?`<b class="neutral">บอทแนะนำให้รอก่อน</b> สัญญาณเอียงไปทาง${plan.lean==='LONG'?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}, โอกาสขึ้น ${pct(plan.pUp)}) แต่${plan.lean==='LONG'?'แนวต้านอยู่ใกล้':'แนวรับอยู่ใกล้'}เกินไป กำไรที่ได้ไม่คุ้มความเสี่ยง รอให้ราคา${plan.lean==='LONG'?'เบรกขึ้นเหนือ '+fmt(plan.buyTrig):'หลุดลงต่ำกว่า '+fmt(plan.sellTrig)} ก่อน`
+      :`<b class="neutral">บอทแนะนำให้รอก่อน</b> ยังไม่มีความได้เปรียบชัดพอ (คะแนน ${sgn(cur.score)}, โอกาสขึ้น ${pct(plan.pUp)}) การเข้าตอนนี้เหมือนโยนเหรียญ`;
+    invalid=`<b>เงื่อนไขที่รอ:</b> ถ้าราคา<span class="up">ปิดเหนือ ${fmt(plan.buyTrig)}</span> จะเริ่มมีสัญญาณซื้อ ถ้า<span class="down">ปิดต่ำกว่า ${fmt(plan.sellTrig)}</span> จะเริ่มมีสัญญาณขาย (เส้นประสีเทาบนกราฟ)`;
+  }
+  if(nw.alert)summary=`<div class="alert" style="margin:0 0 8px">${nw.alert}</div>`+summary;
+  return {summary,items,invalid};}
+
+// =============== Formatting ===============
+let DEC=2;
+function sgn(x){return (x>0?'+':'')+x;}
+function fmt(x,d=DEC){return x==null||!isFinite(x)?'—':x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
+const $=id=>document.getElementById(id);
+
+// =============== Chart ===============
+let chart,candle,l9,l21,l50,priceLines=[],drawnLen=0,drawnLast=0;
+function ensureChart(){if(chart)return;const el=$('chart');
+  chart=LightweightCharts.createChart(el,{layout:{background:{color:'transparent'},textColor:'#9aa0aa'},
+    grid:{vertLines:{color:'#1d2129'},horzLines:{color:'#1d2129'}},localization:{locale:'th-TH'},
+    rightPriceScale:{borderColor:'#2a2f3a'},timeScale:{borderColor:'#2a2f3a',timeVisible:true,secondsVisible:false,rightOffset:8},
+    crosshair:{mode:0},height:420});
+  candle=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+  const opt=c=>({color:c,lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+  l9=chart.addLineSeries(opt('#42a5f5'));l21=chart.addLineSeries(opt('#ab47bc'));l50=chart.addLineSeries({...opt('#ffa726'),lineWidth:2});
+  new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth})).observe(el);}
+function drawChart(res,plan,full,hasTime){ensureChart();const {bars,I,n}=res;
+  const pf={type:'price',precision:DEC,minMove:Math.pow(10,-DEC)};
+  const line=arr=>bars.map((b,i)=>arr[i]!=null?{time:b.time,value:arr[i]}:null).filter(Boolean);
+  const last=bars[n-1];
+  if(full||n!==drawnLen||last.time!==drawnLast){
+    [candle,l9,l21,l50].forEach(x=>x.applyOptions({priceFormat:pf}));
+    candle.setData(bars.map(b=>({time:b.time,open:b.open,high:b.high,low:b.low,close:b.close})));
+    l9.setData(line(I.e9));l21.setData(line(I.e21));l50.setData(line(I.e50));
+    if(full){chart.applyOptions({timeScale:{timeVisible:hasTime}});chart.timeScale().setVisibleLogicalRange({from:Math.max(0,n-150),to:n+8});}
+  }else{
+    candle.update({time:last.time,open:last.open,high:last.high,low:last.low,close:last.close});
+    [[l9,I.e9],[l21,I.e21],[l50,I.e50]].forEach(([s,a])=>{if(a[n-1]!=null)s.update({time:last.time,value:a[n-1]});});
+  }
+  drawnLen=n;drawnLast=last.time;
+  // markers: EMA crosses + current signal
+  const mk=[];
+  for(let i=Math.max(1,n-300);i<n;i++){const a0=I.e9[i-1],b0=I.e21[i-1],a1=I.e9[i],b1=I.e21[i];
+    if([a0,b0,a1,b1].some(v=>v==null))continue;
+    if(a0<=b0&&a1>b1)mk.push({time:bars[i].time,position:'belowBar',color:'#26a69a',shape:'arrowUp',text:'ตัดขึ้น'});
+    if(a0>=b0&&a1<b1)mk.push({time:bars[i].time,position:'aboveBar',color:'#ef5350',shape:'arrowDown',text:'ตัดลง'});}
+  const recent=mk.slice(-10);
+  const sm={LONG:{position:'belowBar',color:'#26a69a',shape:'circle',text:'BUY'},SHORT:{position:'aboveBar',color:'#ef5350',shape:'circle',text:'SELL'},WAIT:{position:'aboveBar',color:'#f5a623',shape:'circle',text:'WAIT'}}[plan.side];
+  if(sm){const ex=recent.findIndex(m=>m.time===last.time);if(ex>=0)recent.splice(ex,1);recent.push({time:last.time,...sm});}
+  candle.setMarkers(recent);
+  // price lines
+  priceLines.forEach(p=>candle.removePriceLine(p));priceLines=[];
+  const add=(price,color,title,style=0,w=1)=>{if(price==null||!isFinite(price))return;priceLines.push(candle.createPriceLine({price,color,lineWidth:w,lineStyle:style,axisLabelVisible:true,title}));};
+  if(plan.side==='LONG'||plan.side==='SHORT'){
+    add(plan.entryLow,'#e0e0e0','เข้า',2);if(Math.abs(plan.entryHigh-plan.entryLow)>plan.A*0.05)add(plan.entryHigh,'#e0e0e0','เข้า',2);
+    add(plan.sl,'#ef5350','SL',0,2);add(plan.tp1,'#26a69a','TP1',0,2);add(plan.tp2,'#26a69a','TP2',2,1);
+    if(plan.side==='LONG'&&plan.sup!=null&&Math.abs(plan.sup-plan.entryLow)>plan.A*0.05)add(plan.sup,'#8a8f99','แนวรับ',1);
+    if(plan.side==='SHORT'&&plan.res!=null&&Math.abs(plan.res-plan.entryHigh)>plan.A*0.05)add(plan.res,'#8a8f99','แนวต้าน',1);
+    if(plan.side==='LONG'&&plan.res!=null&&Math.abs(plan.res-plan.tp1)>plan.A*0.05)add(plan.res,'#8a8f99','แนวต้าน',1);
+    if(plan.side==='SHORT'&&plan.sup!=null&&Math.abs(plan.sup-plan.tp1)>plan.A*0.05)add(plan.sup,'#8a8f99','แนวรับ',1);
+  }else if(plan.side==='WAIT'){
+    add(plan.buyTrig,'#8a8f99','ซื้อถ้าเบรก',2);add(plan.sellTrig,'#8a8f99','ขายถ้าหลุด',2);
+  }}
+
+// =============== Panels ===============
+let lastSide=null;
+function renderAll(res,full,hasTime){
+  $('result').classList.remove('hidden');
+  const {I,a,cur,pUp,buckets,tot,ups,hit,sig,n}=res;const price=I.c[n-1];
+  DEC=price>=100?2:price>=1?4:6;
+  const plan=makePlan(res);const h=S.horizon;
+  // headline
+  const dirEl=$('dir'),bar=$('probBar');
+  const lab={LONG:['▲ ซื้อ (LONG)','up'],SHORT:['▼ ขาย (SHORT)','down'],WAIT:['รอก่อน / ยังไม่ชัด','neutral'],NONE:['ข้อมูลไม่พอ','neutral']}[plan.side];
+  dirEl.textContent=lab[0];dirEl.className='big '+lab[1];
+  if(pUp!=null){$('probText').textContent=`โอกาสขึ้นใน ${h} แท่งข้างหน้า ≈ ${(pUp*100).toFixed(1)}% · ${res.basis}`;
+    bar.style.width=(pUp*100)+'%';bar.style.background=pUp>=0.5?'var(--up)':'var(--down)';}
+  const pn=$('priceNow');pn.textContent='ราคา '+fmt(price);
+  // plan tiles
+  const tile=(k,v,c='')=>`<div class="stat"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`;
+  $('plan').innerHTML=(plan.side==='LONG'||plan.side==='SHORT')?
+    tile('โซนเข้า',`${fmt(plan.entryLow)}<br>– ${fmt(plan.entryHigh)}`)+tile('Stop Loss',fmt(plan.sl),'down')+
+    tile('TP1 (ปิดครึ่ง)',fmt(plan.tp1),'up')+tile('TP2',fmt(plan.tp2),'up')+tile('Risk : Reward',`1 : ${plan.rr.toFixed(2)}`)
+    :plan.side==='WAIT'?tile('ซื้อเมื่อปิดเหนือ',fmt(plan.buyTrig),'up')+tile('ขายเมื่อปิดต่ำกว่า',fmt(plan.sellTrig),'down')+tile('แนวรับ',fmt(plan.sup))+tile('แนวต้าน',fmt(plan.res)):'';
+  // commentary
+  const cm=buildComment(res,plan,h);
+  $('summary').innerHTML=cm.summary;
+  $('reasons').innerHTML=cm.items.map(([c,t],i)=>`<li class="${c}" data-i="${i+1}">${t}</li>`).join('');
+  $('invalid').innerHTML=cm.invalid;
+  // signal log
+  if(lastSide!==null&&plan.side!==lastSide){const t=new Date().toLocaleTimeString('th-TH');
+    const lg=$('log');if(lg.querySelector('.muted'))lg.innerHTML='';
+    const cls={LONG:'up',SHORT:'down'}[plan.side]||'neutral';
+    lg.insertAdjacentHTML('afterbegin',`<div><span class="muted">${t}</span> · ${lastSide} → <b class="${cls}">${plan.side}</b> ที่ราคา ${fmt(price)}</div>`);}
+  lastSide=plan.side;
+  // votes / stats
+  $('sScore').textContent=cur?sgn(cur.score):'—';$('sRsi').textContent=fmt(I.r[n-1],1);$('sAtr').textContent=fmt(a[n-1]);
+  $('votes').innerHTML='<tr><th>ตัวชี้วัด</th><th>สถานะ</th><th>คะแนน</th></tr>'+(cur?cur.votes.map(v=>`<tr><td>${v[0]}</td><td>${v[2]}</td><td class="${v[1]>0?'up':v[1]<0?'down':'neutral'}">${v[1]>0?'+1':v[1]<0?'-1':'0'}</td></tr>`).join(''):'');
+  $('bAcc').textContent=sig?(hit/sig*100).toFixed(1)+'%':'—';$('bN').textContent=sig;$('bBase').textContent=tot?(ups/tot*100).toFixed(1)+'%':'—';
+  const keys=Object.keys(buckets).map(Number).sort((x,y)=>y-x);
+  $('bucketTable').innerHTML='<tr><th>คะแนน</th><th>จำนวนครั้ง</th><th>ขึ้นจริง</th></tr>'+keys.map(k=>{const b=buckets[k];const p=b.up/b.n*100;
+    return `<tr${cur&&k===cur.score?' style="background:#222734"':''}><td>${sgn(k)}</td><td>${b.n}</td><td class="${p>=55?'up':p<=45?'down':''}">${p.toFixed(1)}%</td></tr>`}).join('');
+  drawChart(res,plan,full,hasTime);}
+
+// =============== Data sources ===============
+const TZ=7*3600;
+const TF_SEC={'1m':60,'5m':300,'15m':900,'1h':3600,'4h':14400,'1d':86400};
+async function getJSON(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
+function toCandles(pts,sec){const out=[];let cur=null;
+  for(const x of pts){const b=Math.floor(x.t/sec)*sec;
+    if(!cur||cur.b!==b){if(cur)out.push(cur);cur={b,open:cur?cur.close:x.p,high:x.p,low:x.p,close:x.p};cur.high=Math.max(cur.high,cur.open);cur.low=Math.min(cur.low,cur.open);}
+    else{cur.high=Math.max(cur.high,x.p);cur.low=Math.min(cur.low,x.p);cur.close=x.p;}}
+  if(cur)out.push(cur);
+  return out.map(c=>({time:c.b+TZ,open:c.open,high:c.high,low:c.low,close:c.close}));}
+async function fetchXaus(tf){
+  if(tf==='1d'){const d=await getJSON('https://xaus.com/api/v1/history');
+    const pts=(d.points||[]).filter(p=>p&&p.c!=null).sort((a,b)=>a.d<b.d?-1:1);
+    if(pts.length<70)throw new Error('ข้อมูลรายวันน้อยเกินไป');
+    return pts.map((p,i)=>{const c=+p.c,o=i?+pts[i-1].c:c;
+      return {time:Math.floor(Date.parse(p.d+'T00:00:00Z')/1000),open:o,high:Math.max(+(p.h??c),o,c),low:Math.min(+(p.l??c),o,c),close:c};});}
+  const d=await getJSON('https://xaus.com/api/v1/intraday?symbol=xau&hours=48');
+  const pts=(d.points||[]).map(x=>({t:Math.floor(Date.parse(x.t)/1000),p:+x.p})).filter(x=>x.t&&x.p>0).sort((a,b)=>a.t-b.t);
+  const bars=toCandles(pts,TF_SEC[tf]);
+  if(bars.length<70)throw new Error('ได้แค่ '+bars.length+' แท่ง');
+  return bars;}
+async function fetchKlines(tf,sym){
+  const urls=[`https://data-api.binance.vision/api/v3/klines?symbol=${sym}&interval=${tf}&limit=1000`,
+              `https://api.binance.com/api/v3/klines?symbol=${sym}&interval=${tf}&limit=1000`];
+  let lastErr;
+  for(const u of urls){try{const d=await getJSON(u);
+      return d.map(k=>({time:Math.floor(k[0]/1000)+TZ,open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));}
+    catch(e){lastErr=e;}}
+  throw lastErr;}
+
+// =============== Live engine ===============
+const S={bars:[],horizon:3,tf:'15m',feed:null,sym:null,used:'',gen:0,ws:null,poll:null,lastTick:0,dirty:false,hasTime:true};
+function setLive(on,text){$('liveBadge').classList.toggle('on',!!on);$('liveText').textContent=text||(on?'LIVE':'OFFLINE');}
+function stopFeed(){S.gen++;if(S.ws){try{S.ws.close()}catch(e){}S.ws=null;}clearInterval(S.poll);S.poll=null;setLive(false);}
+function onTick(bar){const B=S.bars,last=B[B.length-1];
+  if(last&&bar.time===last.time)B[B.length-1]=bar;
+  else if(!last||bar.time>last.time){B.push(bar);if(B.length>1000)B.shift();}
+  else return;
+  S.lastTick=Date.now();S.dirty=true;}
+setInterval(()=>{ // throttled re-analysis ≈ 1/sec
+  if(S.dirty&&S.bars.length>=70){S.dirty=false;renderAll(analyze(S.bars,S.horizon),false,S.hasTime);
+    const pn=$('priceNow');pn.classList.remove('flash');void pn.offsetWidth;pn.classList.add('flash');}
+  if(S.feed){const age=S.lastTick?Math.round((Date.now()-S.lastTick)/1000):null;
+    $('status').textContent=`${S.used} · ${S.bars.length} แท่ง · ราคาล่าสุดเมื่อ ${age==null?'—':age+' วิที่แล้ว'} · บอทวิเคราะห์ใหม่ทุกครั้งที่ราคาขยับ`;}
+},1000);
+function openWS(sym,tf){const g=S.gen,s=sym.toLowerCase();
+  const urls=[`wss://stream.binance.com:9443/ws/${s}@kline_${tf}`,`wss://data-stream.binance.vision/ws/${s}@kline_${tf}`];let idx=0;
+  const connect=()=>{if(g!==S.gen)return;let opened=false;const ws=new WebSocket(urls[idx%urls.length]);S.ws=ws;
+    ws.onopen=()=>{opened=true;setLive(true);};
+    ws.onmessage=e=>{if(g!==S.gen)return;const k=JSON.parse(e.data).k;if(!k)return;
+      onTick({time:Math.floor(k.t/1000)+TZ,open:+k.o,high:+k.h,low:+k.l,close:+k.c});};
+    ws.onclose=()=>{if(g!==S.gen)return;setLive(false,'กำลังต่อใหม่...');if(!opened)idx++;setTimeout(connect,3000);};
+    ws.onerror=()=>{try{ws.close()}catch(e){}};};
+  connect();}
+function startXausPoll(tf){const g=S.gen,sec=TF_SEC[tf],off=tf==='1d'?0:TZ;
+  const tick=async()=>{if(g!==S.gen)return;
+    try{const d=await getJSON('https://xaus.com/api/v1/spot?compact=1&fresh='+Math.floor(Date.now()/30000));
+      const p=+(d.spot_usd_oz??(d.xau&&d.xau.price));if(!(p>0))return;
+      const t=Math.floor(Date.now()/1000/sec)*sec+off,last=S.bars[S.bars.length-1];
+      if(last&&last.time===t)onTick({...last,high:Math.max(last.high,p),low:Math.min(last.low,p),close:p});
+      else if(last&&t>last.time)onTick({time:t,open:last.close,high:Math.max(p,last.close),low:Math.min(p,last.close),close:p});
+      setLive(true);}catch(e){setLive(false,'XAUS ไม่ตอบ');}};
+  tick();S.poll=setInterval(tick,30000);}
+
+async function loadAll(){
+  stopFeed();const asset=$('asset').value,tf=$('tf').value,src=$('src').value;
+  S.tf=tf;S.horizon=+$('horizon').value;S.hasTime=tf!=='1d';lastSide=null;
+  $('log').innerHTML='<div class="muted">ยังไม่มีการเปลี่ยนสัญญาณ</div>';
+  $('status').textContent='กำลังโหลดข้อมูลย้อนหลัง...';
+  try{let bars,note='';
+    if(asset==='GOLD'&&src==='xaus'){
+      if(['1m','5m','15m','1d'].includes(tf)){try{bars=await fetchXaus(tf);S.feed='xaus';S.used='XAUS XAU/USD (อัปเดตทุก 30 วิ)';}
+        catch(e){note=` · XAUS ใช้ไม่ได้ (${e.message}) สลับไป Binance`;}}
+      else note=' · XAUS มีข้อมูลไม่พอสำหรับไทม์เฟรมนี้ ใช้ Binance แทน';}
+    if(!bars){const sym=asset==='GOLD'?'PAXGUSDT':asset;bars=await fetchKlines(tf,sym);S.feed='binance';S.sym=sym;
+      S.used=`Binance ${sym.replace('USDT','/USDT')} (สดทุกวินาที)${note}`;}
+    S.bars=bars;S.dirty=false;S.lastTick=Date.now();
+    renderAll(analyze(S.bars,S.horizon),true,S.hasTime);
+    if(S.feed==='binance')openWS(S.sym,tf);else startXausPoll(tf);}
+  catch(e){S.feed=null;$('status').textContent='ดึงข้อมูลไม่สำเร็จ ('+e.message+') ลองกด "โหลดใหม่" หรือใช้แท็บวางข้อมูลแทน';}}
+
+// =============== Thai gold ===============
+async function loadThai(){if($('asset').value!=='GOLD')return;const el=$('thaiTime');
+  try{const d=await getJSON('https://api.chnwt.dev/thai-gold-api/latest');const r=d.response||{},p=r.price||{};
+    const g=p.gold||{},b=p.gold_bar||{};
+    $('tBarBuy').textContent=b.buy||'—';$('tBarSell').textContent=b.sell||'—';$('tOrnBuy').textContent=g.buy||'—';$('tOrnSell').textContent=g.sell||'—';
+    el.textContent=[r.update_date,r.update_time].filter(Boolean).join(' ');}
+  catch(e){el.textContent='ดึงราคาทองไทยไม่ได้ ('+e.message+')';}}
+setInterval(loadThai,60000);
+
+// =============== Foreign news ===============
+const NEWS={events:[],heads:[],headAsset:null,calErr:'',headErr:''};
+const PROXIES=[u=>u,u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),u=>'https://corsproxy.io/?url='+encodeURIComponent(u),u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u)];
+async function fetchText(url){let last;
+  for(const p of PROXIES){try{const r=await fetch(p(url),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();if(t&&t.length>20)return t;throw new Error('ว่างเปล่า');}catch(e){last=e;}}
+  throw last||new Error('โหลดไม่ได้');}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function ago(ms){const m=Math.round((Date.now()-ms)/60000);if(m<1)return 'เมื่อสักครู่';if(m<60)return m+' นาทีที่แล้ว';const h=Math.floor(m/60);if(h<24)return h+' ชม.ที่แล้ว';return Math.floor(h/24)+' วันที่แล้ว';}
+function countdown(ms){const m=Math.round((ms-Date.now())/60000);if(m<=0)return m>-1?'ตอนนี้':'ผ่านมา '+(-m<60?-m+' นาที':Math.floor(-m/60)+' ชม.');
+  if(m<60)return 'อีก '+m+' นาที';const h=Math.floor(m/60);if(h<24)return 'อีก '+h+' ชม. '+(m%60)+' นาที';return 'อีก '+Math.floor(h/24)+' วัน';}
+const thTime=ms=>new Date(ms).toLocaleString('th-TH',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'});
+
+// --- Economic calendar (ForexFactory weekly JSON) ---
+const EV_TH=[[/non-farm/i,'การจ้างงานนอกภาคเกษตร (NFP)'],[/core pce|pce price/i,'ดัชนี PCE (เงินเฟ้อที่ Fed ใช้)'],[/core cpi|^cpi/i,'ดัชนีราคาผู้บริโภค CPI (เงินเฟ้อ)'],
+  [/ppi/i,'ดัชนีราคาผู้ผลิต PPI'],[/unemployment claims/i,'ผู้ขอรับสวัสดิการว่างงานรายสัปดาห์'],[/unemployment rate/i,'อัตราว่างงาน'],
+  [/federal funds rate/i,'ประกาศอัตราดอกเบี้ย Fed'],[/fomc.*(minutes)/i,'รายงานการประชุม Fed'],[/fomc|fed chair|powell/i,'ถ้อยแถลง/ประชุม Fed'],
+  [/speaks/i,'สุนทรพจน์เจ้าหน้าที่ธนาคารกลาง'],[/gdp/i,'GDP (การเติบโตเศรษฐกิจ)'],[/retail sales/i,'ยอดค้าปลีก'],[/ism manufacturing/i,'ดัชนีภาคการผลิต ISM'],
+  [/ism services/i,'ดัชนีภาคบริการ ISM'],[/jolts/i,'ตำแหน่งงานว่าง JOLTS'],[/adp/i,'การจ้างงานภาคเอกชน ADP'],[/consumer (confidence|sentiment)/i,'ความเชื่อมั่นผู้บริโภค'],
+  [/average hourly/i,'ค่าจ้างเฉลี่ยรายชั่วโมง'],[/durable goods/i,'คำสั่งซื้อสินค้าคงทน'],[/pmi/i,'ดัชนี PMI'],[/crude oil inventories/i,'สต็อกน้ำมันดิบ'],[/bank holiday/i,'วันหยุดธนาคาร']];
+const evTh=t=>{for(const [r,s] of EV_TH)if(r.test(t))return s;return '';};
+async function loadCalendar(){
+  const base='https://nfs.faireconomy.media/ff_calendar_';const all=[];let ok=false,err='';
+  for(const wk of ['thisweek','nextweek']){try{const d=JSON.parse(await fetchText(base+wk+'.json'));
+      if(Array.isArray(d)){ok=true;d.forEach(e=>{const t=Date.parse(e.date);if(t)all.push({t,title:e.title,cur:e.country,imp:e.impact,fc:e.forecast,prev:e.previous,act:e.actual});});}}
+    catch(e){if(wk==='thisweek')err=e.message;}}
+  if(ok){const seen=new Set();NEWS.events=all.filter(e=>{const k=e.t+e.title+e.cur;if(seen.has(k))return false;seen.add(k);return true;}).sort((a,b)=>a.t-b.t);NEWS.calErr='';}
+  else NEWS.calErr=err||'โหลดไม่ได้';
+  renderCalendar();}
+function renderCalendar(){const el=$('calList');
+  if(NEWS.calErr&&!NEWS.events.length){el.innerHTML=`<div class="muted">ดึงปฏิทินข่าวไม่ได้ (${esc(NEWS.calErr)}) ลองกดรีเฟรช</div>`;renderAlert();return;}
+  const usd=$('calUsdOnly').checked,hi=$('calHighOnly').checked,hide=$('calHidePast').checked,now=Date.now();
+  const list=NEWS.events.filter(e=>(!usd||e.cur==='USD')&&(hi?e.imp==='High':(e.imp==='High'||e.imp==='Medium'||e.imp==='Holiday'))&&(!hide||e.t>now-30*60000));
+  if(!list.length){el.innerHTML='<div class="muted">ไม่มีข่าวตามเงื่อนไขที่เลือกในช่วงนี้</div>';renderAlert();return;}
+  el.innerHTML=list.slice(0,60).map(e=>{const past=e.t<now-5*60000,soon=!past&&e.imp==='High'&&e.t-now<60*60000;
+    const chip=e.imp==='High'?'<span class="chip hi">สูง</span>':e.imp==='Medium'?'<span class="chip md">กลาง</span>':'<span class="chip">หยุด</span>';
+    const th=evTh(e.title);const nums=[e.act?`จริง <b>${esc(e.act)}</b>`:'',e.fc?`คาด ${esc(e.fc)}`:'',e.prev?`ก่อน ${esc(e.prev)}`:''].filter(Boolean).join(' · ');
+    return `<div class="ev${past?' past':''}${soon?' soon':''}"><div><div>${thTime(e.t)}</div><div class="t">${countdown(e.t)}</div></div>
+      <div>${chip} <b>${esc(e.cur)}</b> ${esc(e.title)}${th?`<div class="t">${th}</div>`:''}</div><div class="fc">${nums}</div></div>`;}).join('');
+  renderAlert();}
+function highUsdWindow(){const now=Date.now();
+  const hot=NEWS.events.filter(e=>e.cur==='USD'&&e.imp==='High'&&e.t>now-15*60000&&e.t<now+60*60000);
+  const next=NEWS.events.find(e=>e.cur==='USD'&&e.imp==='High'&&e.t>now);return {hot,next};}
+function renderAlert(){const {hot}=highUsdWindow();
+  $('newsAlert').innerHTML=hot.length?`<div class="alert">⚠ ข่าวแรง USD ช่วงนี้: ${hot.map(e=>`<b>${esc(e.title)}</b> (${thTime(e.t)}, ${countdown(e.t)})`).join(', ')} ราคามักกระชากทั้งสองทาง Stop Loss อาจโดนง่าย</div>`:'';}
+
+// --- Headlines ---
+const TONE={
+  gold:{up:[/rate cuts?\b|cuts? rates?|dovish|easing/i,/(dollar|greenback|usd)\s+(falls?|slips?|drops?|weakens?|slides?|retreats?|eases?)|weak(er)? dollar/i,/yields?\s+(fall|drop|slip|ease|decline)/i,/safe[- ]haven|geopolitic|tension|conflict|\bwar\b|missile|attack|shutdown|uncertaint|recession|turmoil/i,/record|all-time high|rall(y|ies)|surg|soar|jump|climb|\brise|rises|rising|gain|higher|boost|inflow|central banks? buy/i],
+        dn:[/rate hikes?|hikes? rates?|hawkish|tighten/i,/(dollar|greenback|usd)\s+(rises?|gains?|jumps?|climbs?|strengthens?|firms?|rall(y|ies))|strong(er)? dollar/i,/yields?\s+(rise|climb|jump|surge)/i,/ceasefire|truce|peace (deal|talks)|eases? tensions?/i,/\bfall|falls|drop|slide|slump|tumbl|plung|sell-?off|lower|declin|retreat|\bloss|profit[- ]taking|outflow/i]},
+  crypto:{up:[/rate cuts?\b|dovish/i,/etf (inflow|approv)|approv|adopt|reserve|bullish|breakout/i,/record|all-time high|rall(y|ies)|surg|soar|jump|climb|\brise|rises|rising|gain|higher|rebound|inflow/i],
+        dn:[/rate hikes?|hawkish/i,/hack|exploit|ban\b|bans|lawsuit|\bsues?\b|fraud|crackdown|bearish|liquidat|outflow/i,/\bfall|falls|drop|slide|slump|tumbl|plung|crash|sell-?off|lower|declin|retreat|\bloss/i]}};
+function toneOf(title,kind){let s=title,sc=0;const T=TONE[kind];
+  // จับวลีเฉพาะก่อน (เช่น "dollar falls") แล้วลบออก กันไปนับคำว่า falls ซ้ำเป็นข่าวลบของทอง
+  const groups=[...T.up.slice(0,-1).map(r=>[r,1]),...T.dn.slice(0,-1).map(r=>[r,-1]),[T.up[T.up.length-1],1],[T.dn[T.dn.length-1],-1]];
+  for(const [r,v] of groups){const g=new RegExp(r.source,'gi');if(g.test(s)){sc+=v;s=s.replace(g,' ');}}
+  return Math.sign(sc);}
+const gnews=q=>`https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`;
+async function fetchRss(url){
+  try{const d=await getJSON('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(url));
+    if(d.status==='ok'&&d.items&&d.items.length)return d.items.map(x=>({title:x.title,link:x.link,t:Date.parse(x.pubDate.replace(' ','T')+'Z'),src:x.author||''}));}catch(e){}
+  const xml=new DOMParser().parseFromString(await fetchText(url),'text/xml');
+  return [...xml.querySelectorAll('item')].map(it=>({title:it.querySelector('title')?.textContent||'',link:it.querySelector('link')?.textContent||'',
+    t:Date.parse(it.querySelector('pubDate')?.textContent||''),src:it.querySelector('source')?.textContent||''}));}
+function cleanGoogle(x){const i=x.title.lastIndexOf(' - ');if(i>20){if(!x.src)x.src=x.title.slice(i+3);x.title=x.title.slice(0,i);}return x;}
+const COIN={BTCUSDT:['BTC','Bitcoin'],ETHUSDT:['ETH','Ethereum'],SOLUSDT:['SOL','Solana'],BNBUSDT:['BNB','BNB crypto'],XRPUSDT:['XRP','XRP Ripple'],DOGEUSDT:['DOGE','Dogecoin']};
+async function loadHeadlines(){const asset=$('asset').value;$('headList').innerHTML='<div class="muted">กำลังโหลด...</div>';let items=[],err='';
+  try{if(asset==='GOLD'){
+      const res=await Promise.allSettled([fetchRss(gnews('gold price OR "gold prices" OR XAUUSD when:2d')),fetchRss(gnews('Federal Reserve OR "US dollar" OR Treasury yields when:1d'))]);
+      res.forEach(r=>{if(r.status==='fulfilled')items.push(...r.value.map(cleanGoogle));else err=r.reason?.message||'';});
+    }else{const [cat,name]=COIN[asset];
+      try{const d=await getJSON(`https://min-api.cryptocompare.com/data/v2/news/?lang=EN&categories=${cat}`);
+        if(Array.isArray(d.Data)&&d.Data.length)items=d.Data.map(x=>({title:x.title,link:x.url,t:x.published_on*1000,src:x.source_info?.name||x.source||''}));}catch(e){err=e.message;}
+      if(!items.length)items=(await fetchRss(gnews(`${name} price when:2d`))).map(cleanGoogle);}
+  }catch(e){err=e.message;}
+  if(asset!==$('asset').value)return; // ผู้ใช้เปลี่ยนสินทรัพย์ระหว่างโหลด
+  const seen=new Set();items=items.filter(x=>x.title&&x.t&&!seen.has(x.title.toLowerCase())&&seen.add(x.title.toLowerCase())).sort((a,b)=>b.t-a.t).slice(0,30);
+  const kind=asset==='GOLD'?'gold':'crypto';items.forEach(x=>x.tone=toneOf(x.title,kind));
+  NEWS.heads=items;NEWS.headAsset=asset;NEWS.headErr=items.length?'':(err||'ไม่พบข่าว');
+  renderHeadlines();}
+function renderHeadlines(){const el=$('headList'),items=NEWS.heads;
+  if(!items.length){el.innerHTML=`<div class="muted">ดึงหัวข่าวไม่ได้ (${esc(NEWS.headErr)}) ลองกดรีเฟรช</div>`;$('toneRow').innerHTML='';return;}
+  const tgt=NEWS.headAsset==='GOLD'?'ทอง':NAMES[NEWS.headAsset];
+  const up=items.filter(x=>x.tone>0).length,dn=items.filter(x=>x.tone<0).length,nt=items.length-up-dn;
+  $('toneRow').innerHTML=`<span class="up">บวกต่อ${tgt} ${up}</span><div class="bar"><div style="width:${up/items.length*100}%;background:var(--up)"></div><div style="width:${nt/items.length*100}%;background:#444"></div><div style="width:${dn/items.length*100}%;background:var(--down)"></div></div><span class="down">ลบ ${dn}</span>`;
+  el.innerHTML=items.map(x=>{const chip=x.tone>0?`<span class="chip up">บวกต่อ${tgt}</span>`:x.tone<0?`<span class="chip down">ลบต่อ${tgt}</span>`:'<span class="chip">กลาง</span>';
+    return `<div class="nitem"><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.title)}</a>
+      <div class="nmeta">${chip}<span>${esc(x.src)}</span><span>${ago(x.t)}</span><a href="https://translate.google.com/?sl=en&tl=th&op=translate&text=${encodeURIComponent(x.title)}" target="_blank" rel="noopener">แปลไทย</a></div></div>`;}).join('');}
+
+// --- What the bot says about news ---
+function newsContext(){const items=[];let alert='';const {hot,next}=highUsdWindow();
+  if(hot.length){alert=`⚠ มีข่าวแรง USD (${hot.map(e=>esc(e.title)).join(', ')}) ภายใน 1 ชั่วโมง ตัวชี้วัดทางเทคนิคมักใช้ไม่ได้ช่วงข่าวออก ควรรอให้ข่าวออกและราคานิ่งก่อน 15–30 นาที หรือลดขนาดไม้`;
+    items.push(['w',`ข่าวผลกระทบสูง: ${hot.map(e=>`${esc(e.title)} ${thTime(e.t)} (${countdown(e.t)})`).join(', ')} ช่วงนี้ราคาอาจสวิงหลาย ATR ภายในไม่กี่นาที`]);}
+  else if(next&&next.t-Date.now()<24*3600000)items.push(['',`ข่าวแรง USD ตัวถัดไป: ${esc(next.title)}${evTh(next.title)?' ('+evTh(next.title)+')':''} ${thTime(next.t)} (${countdown(next.t)}) ถ้าถือออเดอร์ข้ามช่วงนั้นควรขยับ Stop Loss หรือปิดบางส่วนก่อน`]);
+  if(NEWS.heads.length&&NEWS.headAsset===$('asset').value){const h=NEWS.heads,up=h.filter(x=>x.tone>0).length,dn=h.filter(x=>x.tone<0).length;
+    const lean=up>=dn*1.5&&up-dn>=3?'p':dn>=up*1.5&&dn-up>=3?'n':'';
+    items.push([lean,`โทนหัวข่าวต่างประเทศ ${h.length} ชิ้นล่าสุด: บวก ${up} / ลบ ${dn}${lean==='p'?' ข่าวเอียงบวก':lean==='n'?' ข่าวเอียงลบ':' ไม่เอียงชัด'} (ใช้ประกอบ ไม่ได้นำไปคิดคะแนน)`]);}
+  return {items,alert};}
+
+async function loadNews(){$('newsTime').textContent='กำลังโหลด...';
+  await Promise.allSettled([loadCalendar(),loadHeadlines()]);
+  $('newsTime').textContent='อัปเดต '+new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+  if(S.bars.length>=70)S.dirty=true;}
+setInterval(()=>{if(NEWS.events.length)renderCalendar();if(S.bars.length>=70)S.dirty=true;},30000); // นับถอยหลัง + ให้บอทเช็กข่าวใหม่
+setInterval(loadHeadlines,5*60000);setInterval(loadCalendar,30*60000);
+const nc=$('ntCal'),nh=$('ntHead');
+nc.onclick=()=>{nc.classList.add('on');nh.classList.remove('on');$('calPane').classList.remove('hidden');$('headPane').classList.add('hidden');};
+nh.onclick=()=>{nh.classList.add('on');nc.classList.remove('on');$('headPane').classList.remove('hidden');$('calPane').classList.add('hidden');};
+['calUsdOnly','calHighOnly','calHidePast'].forEach(id=>$(id).onchange=renderCalendar);
+$('btnNews').onclick=loadNews;
+
+// =============== Paste mode ===============
+$('btnPaste').onclick=()=>{
+  const col=+$('col').value;const lines=$('pasteBox').value.split(/\n/);let vals=[];
+  for(const ln of lines){const toks=ln.trim().split(/[\s\t]+/).filter(t=>t&&!/[\/:]/.test(t));
+    const nums=toks.filter(t=>!/^[+-]/.test(t)).map(t=>t.replace(/,/g,'')).filter(t=>/^\d+(\.\d+)?$/.test(t)).map(Number);
+    if(!nums.length)continue;const v=nums.length===1?nums[0]:nums[col-1];if(v!=null&&v>0)vals.push(v);}
+  if($('newestFirst').checked)vals.reverse();
+  if(vals.length<70){$('status').textContent=`อ่านได้ ${vals.length} แถว ต้องการอย่างน้อย 70 แถว (แนะนำ 200+ แถว)`;return;}
+  stopFeed();S.feed=null;S.horizon=+$('horizon').value;S.hasTime=false;lastSide=null;
+  const base=Math.floor(Date.now()/1000)-vals.length*3600;
+  S.bars=vals.map((v,i)=>{const p=i?vals[i-1]:v;return {time:base+i*3600,open:p,close:v,high:Math.max(p,v),low:Math.min(p,v)};});
+  renderAll(analyze(S.bars,S.horizon),true,false);
+  $('status').textContent=`วิเคราะห์จากข้อมูลที่วาง ${vals.length} แถว (ไม่ใช่เรียลไทม์ ใช้ราคาปิดอย่างเดียว ATR จึงเป็นค่าประมาณ)`;};
+
+// =============== UI wiring ===============
+const NAMES={GOLD:'Gold',BTCUSDT:'Bitcoin',ETHUSDT:'Ethereum',SOLUSDT:'Solana',BNBUSDT:'BNB',XRPUSDT:'XRP',DOGEUSDT:'Dogecoin'};
+function syncAssetUI(){const a=$('asset').value,g=a==='GOLD';
+  $('srcWrap').style.display=g?'':'none';$('srcNote').style.display=g?'':'none';$('thaiCard').style.display=g?'':'none';
+  $('h1').textContent=NAMES[a]+' Trend Analyzer';}
+$('asset').onchange=()=>{syncAssetUI();loadAll();loadThai();loadHeadlines();};
+$('src').onchange=loadAll;$('tf').onchange=loadAll;$('btnLoad').onclick=loadAll;
+$('horizon').onchange=()=>{S.horizon=+$('horizon').value;if(S.bars.length>=70)renderAll(analyze(S.bars,S.horizon),false,S.hasTime);};
+const tl=$('tabLive'),tp=$('tabPaste');
+tl.onclick=()=>{tl.classList.add('on');tp.classList.remove('on');$('panelLive').classList.remove('hidden');$('panelPaste').classList.add('hidden');loadAll();};
+tp.onclick=()=>{tp.classList.add('on');tl.classList.remove('on');$('panelPaste').classList.remove('hidden');$('panelLive').classList.add('hidden');};
+
+syncAssetUI();loadAll();loadThai();loadNews();
+</script>
+</body>
+</html>
