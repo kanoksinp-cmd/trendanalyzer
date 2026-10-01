@@ -116,10 +116,39 @@ details[open].card>summary::after{content:"▴"}
 .toast.big{border-width:1px 1px 1px 6px;background:#222733}.toast.big b.tt{font-size:17px}
 .toast.out{opacity:0;transform:translateX(30px);transition:.3s}
 @keyframes tin{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.tbtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tbtns button{flex:1;min-width:140px;padding:11px;font-size:15px;border-radius:10px}
+.bBuy{background:var(--up)!important;color:#fff!important}.bSell{background:var(--down)!important;color:#fff!important}
+.bGhost{background:transparent!important;color:var(--muted)!important;border:1px solid var(--line)!important}
+#tradeModal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9500;display:none;align-items:center;justify-content:center;padding:16px}
+#tradeModal.on{display:flex}
+#tradeModal .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;width:min(460px,100%);max-height:90vh;overflow:auto}
+#tradeModal .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+#tradeModal label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+#tradeModal input,#tradeModal select{width:100%}
+.seg{display:flex;gap:6px}.seg button{flex:1;padding:9px}
+.seg button.off{background:transparent!important;color:var(--muted)!important;border:1px solid var(--line)!important}
+.pnl-up{color:var(--up);font-weight:600}.pnl-dn{color:var(--down);font-weight:600}
+.pbtn{padding:4px 8px;font-size:12px;margin:1px}
+#posTable td,#histTable td{vertical-align:middle}
 </style>
 </head>
 <body>
 <div id="toasts"></div>
+<div id="tradeModal"><div class="box">
+  <div class="row" style="justify-content:space-between"><b id="tmTitle" style="font-size:17px">เปิดออเดอร์</b><span class="muted" id="tmAsset"></span></div>
+  <div class="seg" style="margin-top:12px"><button id="tmLong" class="bBuy">▲ ซื้อ (LONG)</button><button id="tmShort" class="bSell off">▼ ขาย (SHORT)</button></div>
+  <div class="g2">
+    <label>ราคาเข้า<input id="tmEntry" type="number" step="0.01"></label>
+    <label><span id="tmQtyLab">จำนวน (lot)</span><input id="tmQty" type="number" step="0.01" min="0"></label>
+    <label>Stop Loss<input id="tmSL" type="number" step="0.01"></label>
+    <label>TP1 (ปิดครึ่ง)<input id="tmTP1" type="number" step="0.01"></label>
+    <label>TP2<input id="tmTP2" type="number" step="0.01"></label>
+    <label>บัญชี<select id="tmMode"><option value="paper" selected>จำลอง (Paper)</option><option value="real">เงินจริง (ส่งที่โบรกเกอร์แล้ว)</option></select></label>
+  </div>
+  <div class="bubble" id="tmCalc" style="margin-top:12px;font-size:13px"></div>
+  <div class="row" style="margin-top:12px;gap:8px"><button id="tmOk" style="flex:1;padding:11px">ยืนยันเปิดออเดอร์</button><button id="tmCancel" class="bGhost" style="flex:1;padding:11px">ยกเลิก</button></div>
+</div></div>
 <div class="wrap">
   <div class="row" style="justify-content:space-between">
     <h1 id="h1">Gold Trend Analyzer</h1>
@@ -347,6 +376,11 @@ details[open].card>summary::after{content:"▴"}
       <div id="proStrip" class="muted" style="margin-top:4px"></div>
       <div class="bar"><div id="probBar"></div></div>
       <div class="plan" id="plan"></div>
+      <div class="tbtns">
+        <button class="bBuy" id="btnBuy">▲ เปิดออเดอร์ซื้อ</button>
+        <button class="bSell" id="btnSell">▼ เปิดออเดอร์ขาย</button>
+      </div>
+      <div class="muted" id="tradeHint" style="margin-top:6px;font-size:12px"></div>
     </div>
 
     <!-- Chart -->
@@ -403,6 +437,21 @@ details[open].card>summary::after{content:"▴"}
       <div id="eqChart" style="height:180px;margin-top:12px"></div>
       <div class="muted" style="margin-top:6px">กราฟเงินทุนสะสม (หน่วย R = ความเสี่ยงต่อ 1 ไม้) · จำลอง: เข้าที่ราคาปิดแท่งที่มีสัญญาณ, ปิดครึ่งที่ TP1 แล้วเลื่อน SL มาทุน, ที่เหลือถือไป TP2, ถ้าแท่งเดียวโดนทั้ง SL และ TP ถือว่าโดน SL ก่อน (มองแง่ร้าย), ถือไม่เกิน 50 แท่ง, หักต้นทุนสเปรด/ค่าคอมทุกไม้ · สถิติความน่าจะเป็นสร้างจากข้อมูลก่อนหน้าจุดเข้าเท่านั้น (ไม่แอบดูอนาคต) · ข่าวทดสอบย้อนหลังไม่ได้</div>
       <details style="margin-top:8px"><summary class="muted" style="cursor:pointer">ดู 20 เทรดล่าสุดในการทดสอบ</summary><table id="simTrades" style="margin-top:6px"></table></details>
+    </div>
+
+    <div class="card" id="portCard">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">พอร์ตเทรดของฉัน</h2>
+        <div class="row" style="gap:6px">
+          <label class="muted" style="font-size:12px"><input type="checkbox" id="autoManage" checked> ปิดอัตโนมัติเมื่อชน SL/TP</label>
+          <button id="histCsv" type="button" class="pbtn bGhost">CSV</button>
+          <button id="histClear" type="button" class="pbtn bGhost">ล้างประวัติ</button>
+        </div></div>
+      <div class="grid" id="portStats" style="margin:10px 0"></div>
+      <h2 style="font-size:14px;margin-top:6px">ออเดอร์ที่เปิดอยู่</h2>
+      <div style="overflow:auto"><table id="posTable"></table></div>
+      <h2 style="font-size:14px;margin-top:14px">ผลแต่ละไม้ (ปิดแล้ว)</h2>
+      <div style="max-height:360px;overflow:auto"><table id="histTable"></table></div>
+      <div class="muted" style="margin-top:8px">กำไร/ขาดทุนคิดจากราคาบนกราฟ (รวมการปรับราคาโบรกเกอร์) หักต้นทุน/รอบตามที่ตั้งไว้ · โหมด <b>จำลอง</b> = เทรดด้วยเงินสมมติจากยอด "เงินทุนในพอร์ต" · โหมด <b>เงินจริง</b> = คุณส่งคำสั่งที่โบรกเกอร์เองแล้วกดบันทึกที่นี่ให้บอทติดตามผลให้ (หน้าเว็บนี้ไม่ได้ส่งคำสั่งไปโบรกเกอร์) · ปิดอัตโนมัติทำงานเฉพาะตอนเปิดหน้าเว็บ</div>
     </div>
 
     <div class="card" id="jrCard">
@@ -760,7 +809,11 @@ function drawChart(res,plan,full,hasTime){ensureChart();const {bars,I,n}=res;
     if(plan.side==='SHORT'&&plan.sup!=null&&Math.abs(plan.sup-plan.tp1)>plan.A*0.05)add(plan.sup,'#8a8f99','แนวรับ',1);
   }else if(plan.side==='WAIT'){
     add(plan.buyTrig,'#8a8f99','ซื้อถ้าเบรก',2);add(plan.sellTrig,'#8a8f99','ขายถ้าหลุด',2);
-  }}
+  }
+  // ออเดอร์ที่เปิดอยู่ของสินทรัพย์นี้
+  (typeof POS!=='undefined'?POS:[]).filter(p=>p.asset===$('asset').value).forEach((p,k)=>{const L=p.side==='LONG';
+    add(p.entry,'#e6b422',`#${p.no} ${L?'BUY':'SELL'} ${p.qtyLeft}`,0,2);add(p.sl,'#ff7043',`#${p.no} SL`,1,1);
+    if(!p.half&&p.tp1)add(p.tp1,'#66bb6a',`#${p.no} TP1`,1,1);if(p.tp2)add(p.tp2,'#66bb6a',`#${p.no} TP2`,1,1);});}
 
 // =============== Panels ===============
 let lastSide=null;
@@ -874,7 +927,7 @@ function refresh(full){if(S.bars.length<71)return;
   renderAll(resC,full,S.hasTime,resL);
   const sk=cfgKey()+'|'+closed.length+'|'+lt.time;
   if(CACHE.simKey!==sk){CACHE.simKey=sk;try{CACHE.sim=simulate(closed,S.horizon);renderSim(CACHE.sim);}catch(e){console.error(e);}}
-  jrUpdate();}
+  jrUpdate();posTick();}
 setInterval(()=>{ // throttled re-analysis ≈ 1/sec
   if(S.dirty&&S.bars.length>=70){S.dirty=false;refresh(false);
     const pn=$('priceNow');pn.classList.remove('flash');void pn.offsetWidth;pn.classList.add('flash');}
@@ -1244,7 +1297,7 @@ function cfgLoad(){try{const o=JSON.parse(localStorage.getItem('ta_cfg')||'{}');
 function applyLock(){const on=$('lockCfg').checked;STRAT.forEach(k=>$(k).disabled=on);$('btnPreset').disabled=on;}
 let stratChanges=0;
 document.addEventListener('change',e=>{const id=e.target.id;if(PERSIST.includes(id))cfgSave();
-  if(['accBal','accCur','fx','riskPct','contract'].includes(id)){riskBadge();jrSig='';refresh(false);if(CACHE.sim)renderSim(CACHE.sim);}
+  if(['accBal','accCur','fx','riskPct','contract'].includes(id)){posSig='';posRender();riskBadge();jrSig='';refresh(false);if(CACHE.sim)renderSim(CACHE.sim);}
   if(STRAT.includes(id)){stratChanges++;if(stratChanges===6||stratChanges%10===0)toast('⚠ ระวังการปรับค่าจนเข้ากับอดีต',`คุณเปลี่ยนค่ากลยุทธ์ไปแล้ว ${stratChanges} ครั้ง การเลือกค่าที่ผลทดสอบสวยที่สุดมักใช้กับอนาคตไม่ได้ (overfitting) แนะนำให้เลือกชุดเดียว แล้ว "ล็อกการตั้งค่า" และดูผล Forward Test เป็นหลัก`,'warn',{key:'overfit',imp:true,ms:20000});}});
 $('lockCfg').addEventListener('change',applyLock);
 $('htfMode').addEventListener('change',()=>{loadHTF().then(()=>refresh(false));});
@@ -1262,6 +1315,117 @@ $('btnAutoOff').onclick=async()=>{if(!S.offOn){toast('ใช้ได้เฉ�
     const raw=S.bars[S.bars.length-1].close-S.offset;setOffset(spot-raw);
     toast('ปรับราคาให้ตรง XAU/USD แล้ว',`XAU/USD ${fmt(spot)} · PAXG ${fmt(raw)} → ปรับ ${S.offset>0?'+':''}${S.offset}<br><span class="muted">ถ้าโบรกเกอร์ของคุณต่างจากนี้ แก้ตัวเลขเองได้</span>`,'info',{key:'off',imp:true});}
   catch(e){toast('ดึงราคา XAU/USD ไม่ได้',esc(e.message)+' · ใส่ส่วนต่างเองได้ (ราคาโบรกเกอร์ − ราคาบนกราฟ)','down',{key:'off',imp:true});}};
+
+// =============== Trading: open orders & per-trade P&L ===============
+let POS=[],HIST=[],TNO=0;
+try{POS=JSON.parse(localStorage.getItem('ta_pos')||'[]');HIST=JSON.parse(localStorage.getItem('ta_hist')||'[]');TNO=+(localStorage.getItem('ta_tno')||0);}catch(e){}
+const trSave=()=>{try{localStorage.setItem('ta_pos',JSON.stringify(POS));localStorage.setItem('ta_hist',JSON.stringify(HIST.slice(-1000)));localStorage.setItem('ta_tno',TNO);}catch(e){}};
+const isGoldA=a=>a==='GOLD';
+const perUnit=p=>isGoldA(p.asset)?(p.oz||100):1;              // มูลค่า USD ต่อราคาขยับ 1 หน่วย ต่อ 1 lot/เหรียญ
+const accTHB=()=>$('accCur').value==='THB',FX=()=>numIn('fx')||1;
+const toAcc=usd=>accTHB()?usd*FX():usd;
+const m$=(usd,sign=true)=>{const v=toAcc(usd);return (sign&&v>0?'+':v<0?'−':'')+(accTHB()?'฿':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:accTHB()?0:2});};
+const qtyTxt=p=>isGoldA(p.asset)?`${(+p.qtyLeft).toFixed(2)} lot`:`${+(+p.qtyLeft).toPrecision(4)} ${p.asset.replace('USDT','')}`;
+const curPrice=()=>S.bars.length?S.bars[S.bars.length-1].close:null;
+function floatUSD(p,px){return (p.side==='LONG'?px-p.entry:p.entry-px)*p.qtyLeft*perUnit(p);}
+// ---- modal ----
+let TM={side:'LONG'};
+function openModal(side){if(!S.feed||!LAST){toast('ยังเปิดออเดอร์ไม่ได้','ต้องอยู่ในโหมดเรียลไทม์และโหลดราคาเสร็จก่อน','warn',{key:'tr'});return;}
+  TM={side};$('tradeModal').classList.add('on');$('tmAsset').textContent=`${NAMES[$('asset').value]} · TF ${S.tf}`;
+  $('tmQtyLab').textContent=isGold()?'จำนวน (lot)':`จำนวน (${$('asset').value.replace('USDT','')})`;$('tmQty').step=isGold()?'0.01':'any';
+  fillModal(true);}
+function fillModal(reset){const side=TM.side,L=side==='LONG';$('tmLong').classList.toggle('off',!L);$('tmShort').classList.toggle('off',L);
+  $('tmTitle').textContent=L?'เปิดออเดอร์ซื้อ':'เปิดออเดอร์ขาย';$('tmOk').className=L?'bBuy':'bSell';
+  if(reset){const P=curPrice(),plan=LAST.plan,A=plan.A||P*0.002;let lv;
+    if(plan.side===side&&plan.sl){lv={sl:plan.sl,tp1:plan.tp1,tp2:plan.tp2,risk:Math.abs(P-plan.sl),size:plan.size};TM.follow=true;}
+    else{const t=tradeLevels(side,P,A,plan.sup,plan.res);lv={sl:t.sl,tp1:t.tp1,tp2:t.tp2,risk:t.risk,size:1};TM.follow=false;}
+    const d=DEC;$('tmEntry').value=P.toFixed(d);$('tmSL').value=lv.sl.toFixed(d);$('tmTP1').value=lv.tp1.toFixed(d);$('tmTP2').value=lv.tp2.toFixed(d);
+    const z=calcSize({risk:lv.risk,size:lv.size,P});$('tmQty').value=z?(isGold()?Math.max(0.01,Math.floor(z.lots*100)/100).toFixed(2):+z.units.toPrecision(4)):(isGold()?'0.01':'0.001');}
+  calcModal();}
+function readModal(){const g=id=>parseFloat($(id).value);return {side:TM.side,entry:g('tmEntry'),qty:g('tmQty'),sl:g('tmSL'),tp1:g('tmTP1'),tp2:g('tmTP2'),mode:$('tmMode').value};}
+function calcModal(){const o=readModal(),L=o.side==='LONG',pu=isGold()?(numIn('contract')||100):1,plan=LAST.plan;const msgs=[];let ok=true;
+  if(!(o.qty>0)){msgs.push('<span class="down">ใส่จำนวนให้มากกว่า 0</span>');ok=false;}
+  if(!(L?o.sl<o.entry:o.sl>o.entry)){msgs.push(`<span class="down">Stop Loss ต้องอยู่${L?'ต่ำกว่า':'สูงกว่า'}ราคาเข้า</span>`);ok=false;}
+  if(o.tp1&&!(L?o.tp1>o.entry:o.tp1<o.entry)){msgs.push(`<span class="down">TP1 ต้องอยู่${L?'สูงกว่า':'ต่ำกว่า'}ราคาเข้า</span>`);ok=false;}
+  if(ok){const risk=Math.abs(o.entry-o.sl)*o.qty*pu,cost=o.entry*costPct()/100*o.qty*pu,r1=o.tp1?Math.abs(o.tp1-o.entry)*o.qty*pu:0,r2=o.tp2?Math.abs(o.tp2-o.entry)*o.qty*pu:0;
+    const bal=numIn('accBal'),pct=bal?toAcc(risk)/bal*100:0;
+    msgs.push(`ถ้าโดน SL: <b class="down">${m$(-risk-cost)}</b>${bal?` (${pct.toFixed(2)}% ของพอร์ต)`:''}`);
+    if(o.tp1)msgs.push(`ถ้าถึง TP1 ทั้งไม้: <b class="up">${m$(r1-cost)}</b> · R:R 1 : ${(r1/risk).toFixed(2)}`);
+    if(o.tp1&&o.tp2)msgs.push(`ตามแผน (ปิดครึ่ง TP1 + ครึ่ง TP2): <b class="up">${m$(r1/2+r2/2-cost)}</b>`);
+    msgs.push(`<span class="muted">ต้นทุน ${m$(-cost)} · มูลค่าสัญญา $${Math.round(o.entry*o.qty*pu).toLocaleString()}</span>`);
+    if(pct>2)msgs.push('<span class="neutral">⚠ เสี่ยงเกิน 2% ต่อไม้ มืออาชีพมักไม่เกิน 1%</span>');
+    if(plan.side!==o.side)msgs.push(`<span class="neutral">⚠ บอทตอนนี้${plan.side==='WAIT'?'ให้รอ':'ชี้'+(plan.side==='LONG'?'ซื้อ':'ขาย')} ออเดอร์นี้ไม่ได้ตามสัญญาณบอท</span>`);
+    else msgs.push('<span class="up">✓ ตรงกับสัญญาณบอท ใช้แผน SL/TP ของบอท</span>');}
+  $('tmCalc').innerHTML=msgs.join('<br>');$('tmOk').disabled=!ok;return ok;}
+['tmEntry','tmQty','tmSL','tmTP1','tmTP2','tmMode'].forEach(id=>$(id).addEventListener('input',calcModal));
+$('tmLong').onclick=()=>{TM.side='LONG';fillModal(true);};$('tmShort').onclick=()=>{TM.side='SHORT';fillModal(true);};
+$('tmCancel').onclick=()=>$('tradeModal').classList.remove('on');
+$('tradeModal').addEventListener('click',e=>{if(e.target.id==='tradeModal')$('tradeModal').classList.remove('on');});
+$('btnBuy').onclick=()=>openModal('LONG');$('btnSell').onclick=()=>openModal('SHORT');
+$('tmOk').onclick=()=>{if(!calcModal())return;const o=readModal(),asset=$('asset').value,oz=isGold()?(numIn('contract')||100):1;
+  const p={id:Date.now()+'',no:++TNO,asset,tf:S.tf,side:o.side,mode:o.mode,entry:o.entry,qty:o.qty,qtyLeft:o.qty,sl:o.sl,sl0:o.sl,tp1:o.tp1||null,tp2:o.tp2||null,
+    oz,risk:Math.abs(o.entry-o.sl),openTs:Date.now(),costUSD:o.entry*costPct()/100*o.qty*oz,realized:0,half:false,follow:!!TM.follow,last:o.entry,mfe:0,mae:0};
+  POS.push(p);trSave();$('tradeModal').classList.remove('on');posRender();S.dirty=true;
+  const t=`${o.side==='LONG'?'🟢 เปิดซื้อ':'🔴 เปิดขาย'} #${p.no} ${NAMES[asset]} ${qtyTxt(p)} ที่ ${fmt(o.entry)}`;
+  toast(t.replace(/^\S+ /,''),`SL ${fmt(p.sl)} · TP1 ${fmt(p.tp1)} · TP2 ${fmt(p.tp2)} · ${p.mode==='paper'?'จำลอง':'เงินจริง'}`,o.side==='LONG'?'up':'down',{key:'tr'+p.id,imp:true});
+  if($('msgOn').checked)trySend(`${t}\nSL ${fmt(p.sl)} · TP1 ${fmt(p.tp1)} · TP2 ${fmt(p.tp2)}\n(${p.mode==='paper'?'บัญชีจำลอง':'บัญชีจริง'})`,'เปิดออเดอร์ #'+p.no);};
+// ---- close / manage ----
+function closePart(p,px,frac,why){const q=frac>=1?p.qtyLeft:(isGoldA(p.asset)?Math.max(0.01,Math.round(p.qtyLeft*frac*100)/100):p.qtyLeft*frac);
+  const qq=Math.min(q,p.qtyLeft),pnl=(p.side==='LONG'?px-p.entry:p.entry-px)*qq*perUnit(p);p.realized+=pnl;p.qtyLeft=+(p.qtyLeft-qq).toFixed(8);
+  p.parts=p.parts||[];p.parts.push({px,qty:qq,pnl,why,ts:Date.now()});
+  if(p.qtyLeft<=1e-9){POS=POS.filter(x=>x!==p);const net=p.realized-p.costUSD,riskUSD=p.risk*p.qty*perUnit(p);
+    const h={...p,exit:px,closeTs:Date.now(),why,net,R:riskUSD?net/riskUSD:0};HIST.push(h);
+    toast(`ปิดออเดอร์ #${p.no}: ${why}`,`${p.side==='LONG'?'ซื้อ':'ขาย'} ${fmt(p.entry)} → ${fmt(px)} · <b class="${net>=0?'up':'down'}">${m$(net)}</b> (${h.R>=0?'+':''}${h.R.toFixed(2)}R)`,net>=0?'up':'down',{key:'tr'+p.id,imp:true});
+    if($('msgOn').checked)trySend(`${net>=0?'✅':'❌'} ปิดออเดอร์ #${p.no} ${NAMES[p.asset]} (${why})\n${p.side==='LONG'?'ซื้อ':'ขาย'} ${fmt(p.entry)} → ${fmt(px)}\nผล: ${m$(net)} (${h.R>=0?'+':''}${h.R.toFixed(2)}R)`,'ปิด #'+p.no);}
+  else toast(`ปิดบางส่วน #${p.no}: ${why}`,`${fmt(px)} · ${m$(pnl)} · เหลือ ${qtyTxt(p)}`,pnl>=0?'up':'down',{key:'tr'+p.id,imp:true});
+  trSave();posRender();S.dirty=true;}
+function posTick(){const px=curPrice(),asset=$('asset').value;if(px==null||!S.feed)return posRender();
+  for(const p of POS.slice()){if(p.asset!==asset)continue;p.last=px;const f=floatUSD(p,px);p.mfe=Math.max(p.mfe||0,f);p.mae=Math.min(p.mae||0,f);
+    if(!$('autoManage').checked)continue;const L=p.side==='LONG';
+    if(L?px<=p.sl:px>=p.sl){closePart(p,p.sl,1,p.half?'โดน SL ที่ทุน':'โดน Stop Loss');continue;}
+    if(!p.half&&p.tp1&&(L?px>=p.tp1:px<=p.tp1)){p.half=true;closePart(p,p.tp1,0.5,'ถึง TP1 ปิดครึ่ง');p.sl=p.entry;trSave();
+      if(!POS.includes(p))continue;}
+    if(p.tp2&&(L?px>=p.tp2:px<=p.tp2))closePart(p,p.tp2,1,'ถึง TP2');}
+  posRender();}
+function posAction(id,act){const p=POS.find(x=>x.id===id);if(!p)return;const px=p.asset===$('asset').value&&S.feed?curPrice():p.last;
+  if(act==='close'){if(confirm(`ปิดออเดอร์ #${p.no} ทั้งหมดที่ราคา ${fmt(px)}?`))closePart(p,px,1,'ปิดเอง');}
+  else if(act==='half')closePart(p,px,0.5,'ปิดครึ่งเอง');
+  else if(act==='be'){p.sl=p.entry;trSave();posRender();S.dirty=true;toast(`#${p.no} เลื่อน SL มาที่ทุนแล้ว`,`SL = ${fmt(p.entry)} ไม้นี้จะไม่ขาดทุนแล้ว (ยกเว้นต้นทุน)`,'info',{key:'tr'+p.id});}}
+let posSig='';
+function posRender(){const asset=$('asset').value;
+  const plan=LAST&&LAST.plan;$('btnBuy').disabled=$('btnSell').disabled=!S.feed;
+  $('tradeHint').innerHTML=!S.feed?'เปิดออเดอร์ได้เฉพาะโหมดเรียลไทม์':plan&&plan.side==='LONG'?'บอทแนะนำ <b class="up">ซื้อ</b> · กดปุ่มซื้อเพื่อใช้แผน SL/TP และขนาดไม้ของบอท':plan&&plan.side==='SHORT'?'บอทแนะนำ <b class="down">ขาย</b> · กดปุ่มขายเพื่อใช้แผน SL/TP และขนาดไม้ของบอท':'บอทให้รอ · ถ้าเปิดเองจะตั้ง SL/TP จาก ATR และแนวรับ/ต้านให้อัตโนมัติ';
+  const closed=HIST,net=closed.reduce((a,h)=>a+h.net,0),wins=closed.filter(h=>h.net>0),loss=closed.filter(h=>h.net<=0);
+  const gp=wins.reduce((a,h)=>a+h.net,0),gl=-loss.reduce((a,h)=>a+h.net,0),flt=POS.reduce((a,p)=>a+floatUSD(p,p.last??p.entry)+p.realized-p.costUSD,0);
+  const paperNet=closed.filter(h=>h.mode==='paper').reduce((a,h)=>a+h.net,0)+POS.filter(p=>p.mode==='paper').reduce((a,p)=>a+floatUSD(p,p.last??p.entry)+p.realized-p.costUSD,0);
+  const sig=JSON.stringify([POS.map(p=>[p.id,p.last,p.qtyLeft,p.sl]),closed.length,$('accCur').value,numIn('fx'),numIn('accBal'),DEC]);if(sig===posSig)return;posSig=sig;
+  const tile=(k,v,c='')=>`<div class="stat"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`,cl=x=>x>0?'up':x<0?'down':'';
+  const bal=numIn('accBal');
+  $('portStats').innerHTML=tile('ยอดพอร์ตจำลอง',(accTHB()?'฿':'$')+Math.round(bal+toAcc(paperNet)).toLocaleString(),cl(paperNet))+
+    tile('กำไร/ขาดทุนลอยตัว',POS.length?m$(flt):'—',cl(flt))+tile('กำไรสุทธิ (ปิดแล้ว)',closed.length?m$(net):'—',cl(net))+
+    tile('ชนะ',closed.length?`${(wins.length/closed.length*100).toFixed(0)}% <span class="muted" style="font-size:12px">(${wins.length}/${closed.length})</span>`:'—')+
+    tile('เฉลี่ยต่อไม้',closed.length?m$(net/closed.length):'—',cl(net))+tile('Profit Factor',closed.length?(gl?(gp/gl).toFixed(2):'∞'):'—',gl&&gp/gl>=1.3?'up':gl&&gp/gl<1?'down':'');
+  $('posTable').innerHTML=POS.length?'<tr><th>#</th><th>ฝั่ง</th><th>จำนวน</th><th>เข้า</th><th>ตอนนี้</th><th>SL / TP</th><th>กำไร/ขาดทุน</th><th></th></tr>'+POS.map(p=>{
+      const px=p.last??p.entry,f=floatUSD(p,px)+p.realized-p.costUSD,riskUSD=p.risk*p.qty*perUnit(p),R=riskUSD?f/riskUSD:0,other=p.asset!==asset;
+      return `<tr><td>${p.no}<div class="muted" style="font-size:11px">${p.mode==='paper'?'จำลอง':'จริง'}</div></td><td class="${p.side==='LONG'?'up':'down'}">${p.side==='LONG'?'ซื้อ':'ขาย'}<div class="muted" style="font-size:11px">${NAMES[p.asset]} ${p.tf}</div></td>
+        <td>${qtyTxt(p)}${p.half?'<div class="muted" style="font-size:11px">ได้ TP1 แล้ว</div>':''}</td><td>${fmt(p.entry)}</td><td>${fmt(px)}${other?'<div class="muted" style="font-size:11px">(ราคาล่าสุดที่เห็น)</div>':''}</td>
+        <td>${fmt(p.sl)}<div class="muted" style="font-size:11px">${p.half?'':fmt(p.tp1)+' / '}${fmt(p.tp2)}</div></td>
+        <td class="${f>=0?'pnl-up':'pnl-dn'}">${m$(f)}<div style="font-size:11px">${R>=0?'+':''}${R.toFixed(2)}R</div></td>
+        <td style="white-space:nowrap"><button class="pbtn bGhost" onclick="posAction('${p.id}','be')" title="เลื่อน SL มาที่ทุน">SL→ทุน</button><button class="pbtn bGhost" onclick="posAction('${p.id}','half')">ปิดครึ่ง</button><button class="pbtn ${p.side==='LONG'?'bSell':'bBuy'}" onclick="posAction('${p.id}','close')">ปิด</button></td></tr>`;}).join('')
+    :'<tr><td class="muted" style="text-align:left">ยังไม่มีออเดอร์ที่เปิดอยู่ · กดปุ่ม "เปิดออเดอร์ซื้อ/ขาย" ใต้สัญญาณบอท</td></tr>';
+  $('histTable').innerHTML=closed.length?'<tr><th>#</th><th>เปิด–ปิด</th><th>ฝั่ง</th><th>จำนวน</th><th>เข้า → ออก</th><th>เหตุผล</th><th>ผล</th></tr>'+closed.slice().reverse().map(h=>{
+      const tm=t=>new Date(t).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),dur=Math.round((h.closeTs-h.openTs)/60000);
+      return `<tr><td>${h.no}<div class="muted" style="font-size:11px">${h.mode==='paper'?'จำลอง':'จริง'}</div></td><td>${tm(h.openTs)}<div class="muted" style="font-size:11px">ถือ ${dur<60?dur+' นาที':(dur/60).toFixed(1)+' ชม.'}</div></td>
+        <td class="${h.side==='LONG'?'up':'down'}">${h.side==='LONG'?'ซื้อ':'ขาย'}<div class="muted" style="font-size:11px">${NAMES[h.asset]}</div></td><td>${isGoldA(h.asset)?(+h.qty).toFixed(2)+' lot':+(+h.qty).toPrecision(4)}</td>
+        <td>${fmt(h.entry)} → ${fmt(h.exit)}${(h.parts||[]).length>1?`<div class="muted" style="font-size:11px">${h.parts.map(x=>fmt(x.px)).join(', ')}</div>`:''}</td><td>${esc(h.why)}${h.follow?'<div class="muted" style="font-size:11px">ตามสัญญาณบอท</div>':''}</td>
+        <td class="${h.net>=0?'pnl-up':'pnl-dn'}">${m$(h.net)}<div style="font-size:11px">${h.R>=0?'+':''}${h.R.toFixed(2)}R</div></td></tr>`;}).join('')
+    :'<tr><td class="muted" style="text-align:left">ยังไม่มีออเดอร์ที่ปิดแล้ว</td></tr>';}
+$('histCsv').onclick=()=>{const head=['no','mode','asset','side','qty','entry','exit','open','close','reason','pnl_usd','R'];
+  const rows=HIST.map(h=>[h.no,h.mode,h.asset,h.side,h.qty,h.entry,h.exit,new Date(h.openTs).toISOString(),new Date(h.closeTs).toISOString(),h.why,h.net.toFixed(2),h.R.toFixed(3)]);
+  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='my-trades.csv';a.click();};
+$('histClear').onclick=()=>{if(!confirm('ล้างประวัติออเดอร์ที่ปิดแล้วทั้งหมด? (ออเดอร์ที่เปิดอยู่ไม่ถูกลบ)'))return;HIST=[];trSave();posSig='';posRender();};
+setInterval(()=>{if(POS.length)posTick();},1000);
 
 // =============== Paste mode ===============
 $('btnPaste').onclick=()=>{
@@ -1357,7 +1521,7 @@ const tl=$('tabLive'),tp=$('tabPaste');
 tl.onclick=()=>{tl.classList.add('on');tp.classList.remove('on');$('panelLive').classList.remove('hidden');$('panelPaste').classList.add('hidden');loadAll();};
 tp.onclick=()=>{tp.classList.add('on');tl.classList.remove('on');$('panelPaste').classList.remove('hidden');$('panelLive').classList.add('hidden');};
 
-cfgLoad();MODE=$('mode').value;S.horizon=+$('horizon').value;setSpeed();snapOpts();riskBadge();jrRender();syncAssetUI();loadAll();loadThai();loadNews();
+cfgLoad();MODE=$('mode').value;S.horizon=+$('horizon').value;setSpeed();snapOpts();riskBadge();jrRender();posRender();syncAssetUI();loadAll();loadThai();loadNews();
 </script>
 </body>
 </html>
