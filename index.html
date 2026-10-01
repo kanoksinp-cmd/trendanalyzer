@@ -132,6 +132,20 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-siz
           <option value="12">12 แท่ง</option>
         </select>
       </label>
+      <label>ความไวสัญญาณ
+        <select id="speed">
+          <option value="normal">ปกติ (EMA 9/21/50)</option>
+          <option value="fast" selected>ไว (EMA 5/13/34)</option>
+          <option value="turbo">ไวมาก (EMA 3/8/21)</option>
+        </select>
+      </label>
+      <label>รูปแบบ
+        <select id="mode">
+          <option value="strict">เข้มงวด (ตัวชี้วัด+สถิติต้องตรงกัน)</option>
+          <option value="stat" selected>ตามสถิติ (รวมจังหวะเด้งกลับ)</option>
+        </select>
+      </label>
+      <label class="muted"><input type="checkbox" id="notify"> แจ้งเตือนเสียง+ป๊อปอัป</label>
       <button id="btnLoad">โหลดใหม่</button>
     </div>
     <div class="muted" style="margin-top:8px" id="srcNote">ทองคำ: Binance PAXG ผูกกับทอง 1 ออนซ์ ราคาใกล้ XAU/USD และส่งราคาสดทุกวินาที · XAUS เป็น XAU/USD ตรง แต่ใช้ได้เฉพาะ 1/5/15 นาทีและรายวัน</div>
@@ -215,14 +229,14 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-siz
     <div class="card">
       <div id="chart"></div>
       <div class="legend">
-        <span><b style="border-color:#42a5f5"></b>EMA9</span>
-        <span><b style="border-color:#ab47bc"></b>EMA21</span>
-        <span><b style="border-color:#ffa726"></b>EMA50 (เทรนด์ใหญ่)</span>
+        <span><b style="border-color:#42a5f5"></b><span class="nF">EMA9</span></span>
+        <span><b style="border-color:#ab47bc"></b><span class="nS">EMA21</span></span>
+        <span><b style="border-color:#ffa726"></b><span class="nT">EMA50</span> (เทรนด์ใหญ่)</span>
         <span><b style="border-color:#e0e0e0;border-top-style:dashed"></b>โซนเข้า</span>
         <span><b style="border-color:#ef5350"></b>Stop Loss</span>
         <span><b style="border-color:#26a69a"></b>Take Profit</span>
         <span><b style="border-color:#8a8f99;border-top-style:dotted"></b>แนวรับ/แนวต้าน</span>
-        <span>▲▼ จุดที่ EMA9 ตัด EMA21</span>
+        <span>▲▼ จุดที่ <span class="nF">EMA9</span> ตัด <span class="nS">EMA21</span></span>
       </div>
     </div>
 
@@ -243,7 +257,7 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-siz
     <div class="card">
       <h2>คะแนนจากตัวชี้วัด</h2>
       <div class="grid" style="margin-bottom:10px">
-        <div class="stat"><div class="k">คะแนนรวม (-5 ถึง +5)</div><div class="v" id="sScore">—</div></div>
+        <div class="stat"><div class="k">คะแนนรวม (-6 ถึง +6)</div><div class="v" id="sScore">—</div></div>
         <div class="stat"><div class="k">RSI(14)</div><div class="v" id="sRsi">—</div></div>
         <div class="stat"><div class="k">ATR(14) ความผันผวน</div><div class="v" id="sAtr">—</div></div>
       </div>
@@ -256,9 +270,11 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-siz
         <div class="stat"><div class="k">ทายถูกรวม (เมื่อมีสัญญาณ)</div><div class="v" id="bAcc">—</div></div>
         <div class="stat"><div class="k">จำนวนครั้งที่ทดสอบ</div><div class="v" id="bN">—</div></div>
         <div class="stat"><div class="k">ขึ้นเองตามธรรมชาติ</div><div class="v" id="bBase">—</div></div>
+        <div class="stat"><div class="k">ทดสอบไม่โกง · เข้มงวด</div><div class="v" id="oStrict">—</div></div>
+        <div class="stat"><div class="k">ทดสอบไม่โกง · ตามสถิติ</div><div class="v" id="oStat">—</div></div>
       </div>
       <table id="bucketTable"></table>
-      <div class="muted" style="margin-top:8px">ความน่าจะเป็นที่บอทใช้มาจากตารางนี้ คือ "เวลาที่คะแนนเท่านี้ในอดีต ราคาขึ้นจริงกี่ %" ไม่ใช่ตัวเลขที่ตั้งขึ้นเอง</div>
+      <div class="muted" style="margin-top:8px">ความน่าจะเป็นที่บอทใช้มาจากตารางนี้ คือ "เวลาที่คะแนนเท่านี้ในอดีต ราคาขึ้นจริงกี่ %" ไม่ใช่ตัวเลขที่ตั้งขึ้นเอง · <b>ทดสอบไม่โกง</b> = สร้างสถิติจาก 60% แรกของกราฟ แล้ววัดผลกับ 40% หลังที่บอทไม่เคยเห็น ใช้ตัวเลขนี้เลือกว่ารูปแบบไหนเหมาะกับตลาดตอนนี้</div>
     </div>
   </div>
 
@@ -276,39 +292,40 @@ function rsi(c,p=14){const out=new Array(c.length).fill(null);let g=0,l=0;
     if(i<=p){g+=up;l+=dn;if(i===p){g/=p;l/=p;out[i]=l===0?100:100-100/(1+g/l);}}
     else{g=(g*(p-1)+up)/p;l=(l*(p-1)+dn)/p;out[i]=l===0?100:100-100/(1+g/l);}}
   return out;}
-function macd(c){const e12=ema(c,12),e26=ema(c,26);const line=c.map((_,i)=>e12[i]!=null&&e26[i]!=null?e12[i]-e26[i]:null);
+function macd(c,m=[12,26,9]){const e12=ema(c,m[0]),e26=ema(c,m[1]);const line=c.map((_,i)=>e12[i]!=null&&e26[i]!=null?e12[i]-e26[i]:null);
   const start=line.findIndex(v=>v!=null);const sig=new Array(c.length).fill(null);
-  if(start>=0){const s=ema(line.slice(start),9);s.forEach((v,i)=>sig[start+i]=v);}
+  if(start>=0){const s=ema(line.slice(start),m[2]);s.forEach((v,i)=>sig[start+i]=v);}
   return line.map((v,i)=>v!=null&&sig[i]!=null?v-sig[i]:null);}
 function atr(h,l,c,p=14){const tr=c.map((_,i)=>i===0?h[0]-l[0]:Math.max(h[i]-l[i],Math.abs(h[i]-c[i-1]),Math.abs(l[i]-c[i-1])));
   const out=new Array(c.length).fill(null);let a=null;
   for(let i=0;i<c.length;i++){if(i<p-1)continue;if(a===null){let s=0;for(let j=i-p+1;j<=i;j++)s+=tr[j];a=s/p;}else a=(a*(p-1)+tr[i])/p;out[i]=a;}
   return out;}
-function levels(h,l,c,lookback=150,w=3){const n=c.length,start=Math.max(w,n-lookback),price=c[n-1];let sup=null,res=null;
+function levels(h,l,c,lookback=150,w=3,minD=0){const n=c.length,start=Math.max(w,n-lookback),price=c[n-1];let sup=null,res=null;
   for(let i=start;i<n-w;i++){let isH=true,isL=true;
     for(let j=i-w;j<=i+w;j++){if(h[j]>h[i])isH=false;if(l[j]<l[i])isL=false;}
-    if(isH&&h[i]>price&&(res===null||h[i]<res))res=h[i];
-    if(isL&&l[i]<price&&(sup===null||l[i]>sup))sup=l[i];}
+    if(isH&&h[i]>price+minD&&(res===null||h[i]<res))res=h[i];
+    if(isL&&l[i]<price-minD&&(sup===null||l[i]>sup))sup=l[i];}
   return {sup,res};}
 
 // =============== Scoring & backtest ===============
 function scoreAt(i,I){const {c,e9,e21,e50,r,mh}=I;
-  if(i<3||[e9[i],e21[i],e50[i],r[i],mh[i],e21[i-3]].some(v=>v==null))return null;
+  if(i<3||[e9[i],e21[i],e50[i],r[i],mh[i],e21[i-2]].some(v=>v==null))return null;
   const v=[];
-  v.push(['EMA9 เทียบ EMA21',e9[i]>e21[i]?1:-1,e9[i]>e21[i]?'EMA9 อยู่เหนือ (โมเมนตัมขึ้น)':'EMA9 อยู่ใต้ (โมเมนตัมลง)']);
-  v.push(['ราคาเทียบ EMA50',c[i]>e50[i]?1:-1,c[i]>e50[i]?'ราคาเหนือเส้นเทรนด์':'ราคาใต้เส้นเทรนด์']);
+  v.push([`ราคาเทียบ ${N9} (ไวสุด)`,c[i]>e9[i]?1:-1,c[i]>e9[i]?'ราคายืนเหนือเส้นเร็ว':'ราคาอยู่ใต้เส้นเร็ว']);
+  v.push([`${N9} เทียบ ${N21}`,e9[i]>e21[i]?1:-1,e9[i]>e21[i]?`${N9} อยู่เหนือ (โมเมนตัมขึ้น)`:`${N9} อยู่ใต้ (โมเมนตัมลง)`]);
+  v.push([`ราคาเทียบ ${N50}`,c[i]>e50[i]?1:-1,c[i]>e50[i]?'ราคาเหนือเส้นเทรนด์':'ราคาใต้เส้นเทรนด์']);
   v.push(['MACD Histogram',mh[i]>0?1:-1,mh[i]>0?'เป็นบวก':'เป็นลบ']);
   const rv=r[i];let rs=0,rt='กลางๆ';
   if(rv>=70){rs=0;rt='ซื้อมากเกิน ระวังย่อ';}else if(rv>55){rs=1;rt='ฝั่งซื้อได้เปรียบ';}
   else if(rv<=30){rs=0;rt='ขายมากเกิน ระวังเด้ง';}else if(rv<45){rs=-1;rt='ฝั่งขายได้เปรียบ';}
-  v.push(['RSI(14) = '+rv.toFixed(1),rs,rt]);
-  const sl=e21[i]-e21[i-3];
-  v.push(['ความชัน EMA21',sl>0?1:-1,sl>0?'ชันขึ้น':'ชันลง']);
+  v.push([`RSI(${CFG.r}) = `+rv.toFixed(1),rs,rt]);
+  const sl=e21[i]-e21[i-2];
+  v.push([`ความชัน ${N21}`,sl>0?1:-1,sl>0?'ชันขึ้น':'ชันลง']);
   return {score:v.reduce((a,x)=>a+x[1],0),votes:v};}
 
 function analyze(bars,horizon){
   const c=bars.map(b=>b.close),h=bars.map(b=>b.high),l=bars.map(b=>b.low);
-  const I={c,e9:ema(c,9),e21:ema(c,21),e50:ema(c,50),r:rsi(c),mh:macd(c)};
+  const I={c,e9:ema(c,CFG.f),e21:ema(c,CFG.s),e50:ema(c,CFG.t),r:rsi(c,CFG.r),mh:macd(c,CFG.m)};
   const a=atr(h,l,c);const n=c.length;
   const buckets={};let ups=0,tot=0,hit=0,sig=0;
   for(let i=55;i<n-horizon;i++){const s=scoreAt(i,I);if(!s)continue;
@@ -317,22 +334,41 @@ function analyze(bars,horizon){
     if(s.score!==0){sig++;if((s.score>0)===up)hit++;}}
   const cur=scoreAt(n-1,I);
   let pUp=null,basis='',bn=0;
-  if(cur){const b=buckets[cur.score];
-    if(b&&b.n>=15){pUp=b.up/b.n;bn=b.n;basis=`จากอดีต ${b.n} ครั้งที่คะแนน = ${sgn(cur.score)}`;}
-    else{let nn=0,uu=0;for(const k in buckets){if(Math.sign(+k)===Math.sign(cur.score)){nn+=buckets[k].n;uu+=buckets[k].up;}}
-      if(nn>0){pUp=uu/nn;bn=nn;basis=`จากอดีต ${nn} ครั้งที่คะแนนไปทางเดียวกัน`;}}}
-  return {I,a,cur,pUp,bn,basis,buckets,tot,ups,hit,sig,lv:levels(h,l,c),n,bars};}
+  if(cur){const pr=probFrom(buckets,cur.score);
+    if(pr){pUp=pr.p;bn=pr.n;basis=pr.same?`จากอดีต ${pr.n} ครั้งที่คะแนน = ${sgn(cur.score)}`:`จากอดีต ${pr.n} ครั้งที่คะแนนไปทางเดียวกัน`;}}
+    const oos=walkForward(I,n,horizon);
+  return {I,a,cur,pUp,bn,basis,buckets,tot,ups,hit,sig,oos,lv:levels(h,l,c,150,3,(a[n-1]||c[n-1]*0.002)*0.3),n,bars};}
+
+// โอกาสขึ้นจากตารางสถิติ (ใช้ร่วมกันทั้งตอนวิเคราะห์จริงและตอนทดสอบ)
+function probFrom(buckets,score){const b=buckets[score];
+  if(b&&b.n>=15)return {p:b.up/b.n,n:b.n,same:true};
+  let nn=0,uu=0;for(const k in buckets){if(Math.sign(+k)===Math.sign(score)){nn+=buckets[k].n;uu+=buckets[k].up;}}
+  return nn?{p:uu/nn,n:nn,same:false}:null;}
+// กฎตัดสินใจ: คืนค่า 'LONG' / 'SHORT' / null
+function decide(score,p,n,mode){
+  if(score>0&&p>=0.52)return 'LONG';if(score<0&&p<=0.48)return 'SHORT';
+  if(mode==='stat'&&n>=30&&Math.abs(p-0.5)>=0.05)return p>0.5?'LONG':'SHORT';
+  return null;}
+// ทดสอบแบบไม่โกง: สร้างตารางสถิติจาก 60% แรก แล้วทดสอบกับ 40% หลังที่ตารางไม่เคยเห็น
+function walkForward(I,n,horizon){const split=Math.floor(n*0.6),bk={};
+  for(let i=55;i<split-horizon;i++){const s=scoreAt(i,I);if(!s)continue;const b=bk[s.score]||(bk[s.score]={n:0,up:0});b.n++;if(I.c[i+horizon]>I.c[i])b.up++;}
+  const r={strict:{n:0,hit:0},stat:{n:0,hit:0}};
+  for(let i=split;i<n-horizon;i++){const s=scoreAt(i,I);if(!s)continue;const pr=probFrom(bk,s.score);if(!pr)continue;const up=I.c[i+horizon]>I.c[i];
+    for(const m of ['strict','stat']){const d=decide(s.score,pr.p,pr.n,m);if(d){r[m].n++;if((d==='LONG')===up)r[m].hit++;}}}
+  return r;}
 
 // =============== Trade plan ===============
 function makePlan(res){const {I,a,cur,pUp,lv,n}=res;const P=I.c[n-1],A=a[n-1]||P*0.002;
   if(!cur||pUp==null)return {side:'NONE',P,A};
   const conf=Math.max(pUp,1-pUp);
   // ต้องให้ทั้งตัวชี้วัด (คะแนน) และสถิติย้อนหลัง (pUp) ชี้ทางเดียวกันถึงจะออกสัญญาณ
-  let side='WAIT',conflict=false;
-  if(cur.score>0&&pUp>=0.52)side='LONG';else if(cur.score<0&&pUp<=0.48)side='SHORT';
-  else if(cur.score!==0&&conf>=0.52)conflict=true;
-  const plan={side,conflict,P,A,sup:lv.sup,res:lv.res,conf,pUp,warn:[]};
-  if(conflict)plan.warn.push(`ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตของคะแนนนี้กลับ${pUp>=0.5?'ขึ้น':'ลง'}มากกว่า (${(pUp*100).toFixed(0)}% ขึ้น) แปลว่าตลาดช่วงนี้มักกลับตัวหลังสัญญาณแบบนี้ สองอย่างขัดกัน บอทจึงไม่ออกสัญญาณ`);
+  const d=decide(cur.score,pUp,res.bn,MODE);let side=d||'WAIT',conflict=false,reversal=false;
+  if(d&&cur.score!==0&&(d==='LONG')!==(cur.score>0))reversal=true;
+  if(d&&cur.score===0)reversal=false;
+  if(!d&&cur.score!==0&&conf>=0.52)conflict=true;
+  const plan={side,conflict,reversal,P,A,sup:lv.sup,res:lv.res,conf,pUp,warn:[]};
+  if(reversal)plan.warn.push(`สัญญาณนี้เป็นแบบ<b>สวนตัวชี้วัด</b> (คะแนน ${sgn(cur.score)} แต่สถิติ ${res.bn} ครั้งที่ผ่านมาราคามัก${d==='LONG'?'เด้งขึ้น':'ย่อลง'}) เหมาะกับไม้สั้น ปิดกำไรเร็ว และต้องตั้ง Stop Loss เสมอ`);
+  if(conflict&&MODE==='strict')plan.warn.push(`ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตของคะแนนนี้กลับ${pUp>=0.5?'ขึ้น':'ลง'}มากกว่า (${(pUp*100).toFixed(0)}% ขึ้น) แปลว่าตลาดช่วงนี้มักกลับตัวหลังสัญญาณแบบนี้ สองอย่างขัดกัน บอทจึงไม่ออกสัญญาณ`);
   const S=lv.sup,R=lv.res;
   if(plan.side==='LONG'){
     let sl=(S!=null&&P-S<2*A)?S-0.3*A:P-1.5*A;if(P-sl<0.6*A)sl=P-0.8*A;const risk=P-sl;
@@ -357,9 +393,9 @@ function buildComment(res,plan,horizon){
   const {I,n,cur,a,hit,sig,bn}=res;const P=plan.P,A=plan.A,items=[];
   if(!cur)return {summary:'ข้อมูลยังไม่พอให้วิเคราะห์',items:[],invalid:''};
   const up9=I.e9[n-1]>I.e21[n-1],bc=barsSinceCross(I,n);
-  items.push([up9?'p':'n',`EMA9 (ฟ้า) ${up9?'อยู่เหนือ':'อยู่ใต้'} EMA21 (ม่วง)${bc?` ตัด${up9?'ขึ้น':'ลง'}มาแล้ว ${bc} แท่ง (ดูลูกศร ${up9?'▲':'▼'} ล่าสุดบนกราฟ)`:''} แปลว่าโมเมนตัมระยะสั้น${up9?'เป็นฝั่งซื้อ':'เป็นฝั่งขาย'}${bc&&bc<=3?' และเพิ่งเกิดใหม่ๆ':''}`]);
+  items.push([up9?'p':'n',`${N9} (ฟ้า) ${up9?'อยู่เหนือ':'อยู่ใต้'} ${N21} (ม่วง)${bc?` ตัด${up9?'ขึ้น':'ลง'}มาแล้ว ${bc} แท่ง (ดูลูกศร ${up9?'▲':'▼'} ล่าสุดบนกราฟ)`:''} แปลว่าโมเมนตัมระยะสั้น${up9?'เป็นฝั่งซื้อ':'เป็นฝั่งขาย'}${bc&&bc<=3?' และเพิ่งเกิดใหม่ๆ':''}`]);
   const d50=(P-I.e50[n-1])/I.e50[n-1]*100;
-  items.push([d50>0?'p':'n',`ราคาอยู่${d50>0?'เหนือ':'ใต้'} EMA50 (ส้ม) ${Math.abs(d50).toFixed(2)}% เทรนด์ใหญ่ของไทม์เฟรมนี้ยังเป็น${d50>0?'ขาขึ้น':'ขาลง'}`]);
+  items.push([d50>0?'p':'n',`ราคาอยู่${d50>0?'เหนือ':'ใต้'} ${N50} (ส้ม) ${Math.abs(d50).toFixed(2)}% เทรนด์ใหญ่ของไทม์เฟรมนี้ยังเป็น${d50>0?'ขาขึ้น':'ขาลง'}`]);
   const m0=I.mh[n-1],m1=I.mh[n-2];const grow=Math.abs(m0)>Math.abs(m1);
   items.push([m0>0?'p':'n',`MACD Histogram ${m0>0?'เป็นบวก':'เป็นลบ'}และ${grow?'กำลังแรงขึ้น':'เริ่มอ่อนแรงลง'}${!grow?' (แรงส่งเริ่มหมด ระวังกลับตัว)':''}`]);
   const rv=I.r[n-1];
@@ -378,11 +414,11 @@ function buildComment(res,plan,horizon){
 
   let summary,invalid;const pct=x=>(x*100).toFixed(0)+'%';
   if(plan.side==='LONG'){
-    summary=`<b class="up">บอทมองฝั่งซื้อ (LONG)</b> ตัวชี้วัดส่วนใหญ่ชี้ขึ้น (คะแนน ${sgn(cur.score)}) และสถิติในอดีตให้โอกาสขึ้น ${pct(plan.pUp)} แผนคือรอซื้อในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (ใต้แนวรับเล็กน้อย กันโดนสะบัด) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
-    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดต่ำกว่า ${fmt(plan.sl)} หรือ EMA9 ตัดลงใต้ EMA21 บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
+    summary=`<b class="up">บอทมองฝั่งซื้อ (LONG)</b> ${plan.reversal?`เล่นจังหวะเด้งกลับ: ตัวชี้วัดยังชี้ลง (คะแนน ${sgn(cur.score)}) แต่ราคาลงมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ขึ้น (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสขึ้น ${pct(plan.pUp)} แผนคือรอซื้อในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (ใต้แนวรับเล็กน้อย กันโดนสะบัด) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดต่ำกว่า ${fmt(plan.sl)} หรือ ${N9} ตัดลงใต้ ${N21} บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
   }else if(plan.side==='SHORT'){
-    summary=`<b class="down">บอทมองฝั่งขาย (SHORT)</b> ตัวชี้วัดส่วนใหญ่ชี้ลง (คะแนน ${sgn(cur.score)}) และสถิติในอดีตให้โอกาสลง ${pct(1-plan.pUp)} แผนคือรอขายในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (เหนือแนวต้านเล็กน้อย) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
-    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดสูงกว่า ${fmt(plan.sl)} หรือ EMA9 ตัดขึ้นเหนือ EMA21 บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
+    summary=`<b class="down">บอทมองฝั่งขาย (SHORT)</b> ${plan.reversal?`เล่นจังหวะย่อตัว: ตัวชี้วัดยังชี้ขึ้น (คะแนน ${sgn(cur.score)}) แต่ราคาขึ้นมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ลง (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสลง ${pct(1-plan.pUp)} แผนคือรอขายในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (เหนือแนวต้านเล็กน้อย) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดสูงกว่า ${fmt(plan.sl)} หรือ ${N9} ตัดขึ้นเหนือ ${N21} บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
   }else{
     summary=plan.conflict
       ?`<b class="neutral">บอทแนะนำให้รอก่อน</b> ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตบอกว่าหลังสัญญาณแบบนี้ราคามัก${plan.pUp>=0.5?'ขึ้น':'ลง'} (โอกาสขึ้น ${pct(plan.pUp)}) สองอย่างขัดกัน เข้าตอนนี้เสี่ยงโดนหลอก`
@@ -396,6 +432,18 @@ function buildComment(res,plan,horizon){
 
 // =============== Formatting ===============
 let DEC=2;
+const SPEEDS={normal:{f:9,s:21,t:50,r:14,m:[12,26,9]},fast:{f:5,s:13,t:34,r:9,m:[8,17,9]},turbo:{f:3,s:8,t:21,r:7,m:[5,13,5]}};
+let CFG=SPEEDS.fast,N9='EMA5',N21='EMA13',N50='EMA34';
+function setSpeed(){CFG=SPEEDS[$('speed').value]||SPEEDS.fast;N9='EMA'+CFG.f;N21='EMA'+CFG.s;N50='EMA'+CFG.t;
+  document.querySelectorAll('.nF').forEach(e=>e.textContent=N9);document.querySelectorAll('.nS').forEach(e=>e.textContent=N21);document.querySelectorAll('.nT').forEach(e=>e.textContent=N50);}
+// ---- แจ้งเตือน ----
+let actx=null,lastNotify={};
+function beep(up){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();
+  o.frequency.value=up?880:440;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.2,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+0.6);o.start();o.stop(actx.currentTime+0.6);}catch(e){}}
+function notifySignal(side,price){if(!$('notify').checked||(side!=='LONG'&&side!=='SHORT'))return;
+  const now=Date.now();if(lastNotify[side]&&now-lastNotify[side]<60000)return;lastNotify[side]=now; // กันเตือนรัวตอนสัญญาณสะบัด
+  beep(side==='LONG');const msg=`${NAMES[$('asset').value]}: ${side==='LONG'?'▲ ซื้อ':'▼ ขาย'} ที่ ${fmt(price)}`;
+  document.title=msg;try{if(window.Notification&&Notification.permission==='granted')new Notification('Trend Analyzer',{body:msg});}catch(e){}}
 function sgn(x){return (x>0?'+':'')+x;}
 function fmt(x,d=DEC){return x==null||!isFinite(x)?'—':x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
 const $=id=>document.getElementById(id);
@@ -478,12 +526,15 @@ function renderAll(res,full,hasTime){
   if(lastSide!==null&&plan.side!==lastSide){const t=new Date().toLocaleTimeString('th-TH');
     const lg=$('log');if(lg.querySelector('.muted'))lg.innerHTML='';
     const cls={LONG:'up',SHORT:'down'}[plan.side]||'neutral';
-    lg.insertAdjacentHTML('afterbegin',`<div><span class="muted">${t}</span> · ${lastSide} → <b class="${cls}">${plan.side}</b> ที่ราคา ${fmt(price)}</div>`);}
+    lg.insertAdjacentHTML('afterbegin',`<div><span class="muted">${t}</span> · ${lastSide} → <b class="${cls}">${plan.side}</b>${plan.reversal?' (เด้งกลับ)':''} ที่ราคา ${fmt(price)}</div>`);
+    notifySignal(plan.side,price);}
   lastSide=plan.side;
   // votes / stats
   $('sScore').textContent=cur?sgn(cur.score):'—';$('sRsi').textContent=fmt(I.r[n-1],1);$('sAtr').textContent=fmt(a[n-1]);
   $('votes').innerHTML='<tr><th>ตัวชี้วัด</th><th>สถานะ</th><th>คะแนน</th></tr>'+(cur?cur.votes.map(v=>`<tr><td>${v[0]}</td><td>${v[2]}</td><td class="${v[1]>0?'up':v[1]<0?'down':'neutral'}">${v[1]>0?'+1':v[1]<0?'-1':'0'}</td></tr>`).join(''):'');
   $('bAcc').textContent=sig?(hit/sig*100).toFixed(1)+'%':'—';$('bN').textContent=sig;$('bBase').textContent=tot?(ups/tot*100).toFixed(1)+'%':'—';
+  const oz=o=>o.n?`${(o.hit/o.n*100).toFixed(1)}% <span class="muted">(${o.n} ครั้ง)</span>`:'—';
+  $('oStrict').innerHTML=oz(res.oos.strict);$('oStat').innerHTML=oz(res.oos.stat);
   const keys=Object.keys(buckets).map(Number).sort((x,y)=>y-x);
   $('bucketTable').innerHTML='<tr><th>คะแนน</th><th>จำนวนครั้ง</th><th>ขึ้นจริง</th></tr>'+keys.map(k=>{const b=buckets[k];const p=b.up/b.n*100;
     return `<tr${cur&&k===cur.score?' style="background:#222734"':''}><td>${sgn(k)}</td><td>${b.n}</td><td class="${p>=55?'up':p<=45?'down':''}">${p.toFixed(1)}%</td></tr>`}).join('');
@@ -520,6 +571,7 @@ async function fetchKlines(tf,sym){
   throw lastErr;}
 
 // =============== Live engine ===============
+let MODE='stat';
 const S={bars:[],horizon:3,tf:'15m',feed:null,sym:null,used:'',gen:0,ws:null,poll:null,lastTick:0,dirty:false,hasTime:true};
 function setLive(on,text){$('liveBadge').classList.toggle('on',!!on);$('liveText').textContent=text||(on?'LIVE':'OFFLINE');}
 function stopFeed(){S.gen++;if(S.ws){try{S.ws.close()}catch(e){}S.ws=null;}clearInterval(S.poll);S.poll=null;setLive(false);}
@@ -710,12 +762,16 @@ function syncAssetUI(){const a=$('asset').value,g=a==='GOLD';
   $('h1').textContent=NAMES[a]+' Trend Analyzer';}
 $('asset').onchange=()=>{syncAssetUI();loadAll();loadThai();loadHeadlines();};
 $('src').onchange=loadAll;$('tf').onchange=loadAll;$('btnLoad').onclick=loadAll;
+const reAnalyze=()=>{if(S.bars.length>=70)renderAll(analyze(S.bars,S.horizon),false,S.hasTime);};
+$('speed').onchange=()=>{setSpeed();reAnalyze();};
+$('mode').onchange=()=>{MODE=$('mode').value;reAnalyze();};
+$('notify').onchange=()=>{if($('notify').checked){beep(true);try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission();}catch(e){}}};
 $('horizon').onchange=()=>{S.horizon=+$('horizon').value;if(S.bars.length>=70)renderAll(analyze(S.bars,S.horizon),false,S.hasTime);};
 const tl=$('tabLive'),tp=$('tabPaste');
 tl.onclick=()=>{tl.classList.add('on');tp.classList.remove('on');$('panelLive').classList.remove('hidden');$('panelPaste').classList.add('hidden');loadAll();};
 tp.onclick=()=>{tp.classList.add('on');tl.classList.remove('on');$('panelPaste').classList.remove('hidden');$('panelLive').classList.add('hidden');};
 
-syncAssetUI();loadAll();loadThai();loadNews();
+MODE=$('mode').value;setSpeed();syncAssetUI();loadAll();loadThai();loadNews();
 </script>
 </body>
 </html>
