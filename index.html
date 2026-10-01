@@ -88,6 +88,12 @@ details[open].card>summary::after{content:"▴"}
 .fld input{width:100%}
 .steps{margin:6px 0 0;padding-left:20px;color:var(--muted);font-size:13px;line-height:1.7}
 .ok{color:#22c55e}
+#toasts.center{top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(460px,calc(100vw - 24px));align-items:stretch}
+#toasts.center .toast{box-shadow:0 12px 40px rgba(0,0,0,.6);font-size:14px}
+#toasts.center .toast.big b.tt{font-size:19px}
+#toasts.center .toast.out{transform:scale(.95)}
+#toasts.center .toast{animation:tpop .25s ease-out}
+@keyframes tpop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
 #toasts{position:fixed;top:12px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:8px;width:min(360px,calc(100vw - 24px));pointer-events:none}
 .toast{pointer-events:auto;background:#1f232c;border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:10px;padding:10px 30px 10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.45);font-size:13px;line-height:1.5;position:relative;animation:tin .25s ease-out;cursor:pointer}
 .toast b.tt{display:block;font-size:14px;margin-bottom:2px}
@@ -101,7 +107,7 @@ details[open].card>summary::after{content:"▴"}
 </style>
 </head>
 <body>
-<div id="toasts"></div>
+<div id="toasts" class="center"></div>
 <div class="wrap">
   <div class="row" style="justify-content:space-between">
     <h1 id="h1">Gold Trend Analyzer</h1>
@@ -172,6 +178,9 @@ details[open].card>summary::after{content:"▴"}
       </label>
       <label>ป๊อปอัป
         <select id="toastLv"><option value="all" selected>ทุกการเปลี่ยนแปลง</option><option value="key">เฉพาะสำคัญ</option><option value="off">ปิด</option></select>
+      </label>
+      <label>ตำแหน่ง
+        <select id="toastPos"><option value="center" selected>กลางจอ</option><option value="corner">มุมขวาบน</option></select>
       </label>
       <label class="muted"><input type="checkbox" id="notify"> เสียง + แจ้งเตือนเมื่ออยู่แท็บอื่น</label>
       <button id="btnLoad">โหลดใหม่</button>
@@ -998,12 +1007,41 @@ const NAMES={GOLD:'Gold',BTCUSDT:'Bitcoin',ETHUSDT:'Ethereum',SOLUSDT:'Solana',B
 function syncAssetUI(){const a=$('asset').value,g=a==='GOLD';
   $('srcWrap').style.display=g?'':'none';$('srcNote').style.display=g?'':'none';$('thaiCard').style.display=g?'':'none';
   $('h1').textContent=NAMES[a]+' Trend Analyzer';}
-// ป๊อปอัปเมื่อเปลี่ยนการตั้งค่าใดๆ
-document.addEventListener('change',e=>{const el=e.target;if(!el.closest||el.id==='toastLv'&&el.value==='off')return;
-  if(!el.closest('#panelLive,#msgCard,#calPane,#panelPaste'))return;if(/^(tgToken|tgChat|dcHook|pasteBox)$/.test(el.id))return;
-  const lab=el.closest('label');let name=lab?[...lab.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent.trim()).join(' ').trim():el.id;
-  const val=el.type==='checkbox'?(el.checked?'เปิด':'ปิด'):el.options?el.options[el.selectedIndex].text:el.value;
-  toast('เปลี่ยนการตั้งค่า',`${esc(name)}: <b>${esc(val)}</b>`,'info',{key:'set',ms:3500});},true);
+// ป๊อปอัปเมื่อเปลี่ยนการตั้งค่าใดๆ: บอกค่าเดิม → ค่าใหม่, ตัวเลือกนี้ทำอะไร, และผลต่อสัญญาณ
+const OPT_HELP={
+  asset:{_:'เปลี่ยนสินทรัพย์ที่วิเคราะห์ โหลดกราฟและข่าวใหม่ทั้งหมด'},
+  src:{binance:'ใช้ Binance PAXG ราคาสดทุกวินาที',xaus:'ใช้ XAU/USD ตรง อัปเดตทุก 30 วินาที'},
+  tf:{_:'เปลี่ยนขนาดแท่งเทียน TF เล็ก = สัญญาณถี่แต่หลอกบ่อย, TF ใหญ่ = ช้าแต่แม่นกว่า'},
+  horizon:{_:'บอททายว่าราคาจะขึ้นหรือลงภายในกี่แท่งข้างหน้า สถิติทั้งหมดคำนวณใหม่'},
+  speed:{normal:'EMA 9/21/50 สัญญาณนิ่ง หลอกน้อย แต่ช้า',fast:'EMA 5/13/34 สมดุลระหว่างความเร็วกับความนิ่ง',turbo:'EMA 3/8/21 เร็วที่สุด แต่สะบัดบ่อย ควรใช้คู่กับ Stop Loss แคบ'},
+  mode:{strict:'ออกสัญญาณเฉพาะเมื่อตัวชี้วัดและสถิติชี้ทางเดียวกัน (สัญญาณน้อยแต่ชัด)',stat:'ตามสถิติด้วย รวมจังหวะเด้งกลับ (สัญญาณมากขึ้น)'},
+  newsUse:{on:'ข่าวกรองสัญญาณ: งดเทรดช่วงข่าวแรง, ยกเลิกเมื่อข่าวสวนทาง, ปรับขนาดไม้',off:'ใช้เทคนิคล้วน ไม่สนข่าว'},
+  toastPos:{center:'ป๊อปอัปเด้งกลางหน้าจอ เห็นชัด',corner:'ป๊อปอัปอยู่มุมขวาบน ไม่บังกราฟ'},
+  toastLv:{all:'แสดงป๊อปอัปทุกการเปลี่ยนแปลง',key:'แสดงเฉพาะเรื่องสำคัญ เช่น สัญญาณเปลี่ยน ข่าวแรง'},
+  notify:{on:'มีเสียง และเด้งแจ้งเตือนของ Windows เมื่ออยู่แท็บอื่น',off:'ปิดเสียงและแจ้งเตือนของระบบ'},
+  msgOn:{on:'ส่งข้อความไป Telegram/Discord เมื่อสัญญาณเปลี่ยน',off:'หยุดส่งข้อความ'},
+  msgCh:{tg:'ส่งผ่าน Telegram',dc:'ส่งผ่าน Discord'},
+  mHold:{_:'สัญญาณต้องคงอยู่นานเท่านี้ก่อนส่งข้อความ กันส่งรัวตอนสัญญาณสะบัด'},
+  col:{_:'คอลัมน์ราคาที่ใช้วิเคราะห์ในโหมดวางข้อมูล'}};
+const optVal=el=>el.type==='checkbox'?(el.checked?'เปิด':'ปิด'):el.options?el.options[el.selectedIndex]?.text:el.value;
+const optName=el=>{const lab=el.closest('label');return lab?[...lab.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent.trim()).join(' ').trim():el.id;};
+function snapOpts(){document.querySelectorAll('select,input[type=checkbox]').forEach(el=>el.dataset.prev=optVal(el));}
+document.addEventListener('change',e=>{const el=e.target;if(!el.matches||!el.matches('select,input[type=checkbox]'))return;
+  if(!el.closest('#panelLive,#msgCard,#calPane,#panelPaste'))return;
+  const old=el.dataset.prev,now=optVal(el);el.dataset.prev=now;
+  if(el.id==='toastLv'&&el.value==='off')return;
+  const h=OPT_HELP[el.id]||{},key=el.type==='checkbox'?(el.checked?'on':'off'):el.value,help=h[key]||h._||'';
+  const before=LAST?LAST.plan.side:null,beforeScore=LAST&&LAST.res.cur?LAST.res.cur.score:null;
+  const head=`${esc(optName(el))}: ${old&&old!==now?`${esc(old)} → `:''}<b>${esc(now)}</b>`;
+  toast('⚙ เปลี่ยนการตั้งค่า',head+(help?`<br><span class="muted">${esc(help)}</span>`:''),'info',{key:'set',imp:true,ms:9000});
+  // รอบอทวิเคราะห์ใหม่ แล้วบอกผลลัพธ์
+  if(!el.closest('#panelLive'))return;
+  const t0=Date.now(),chk=setInterval(()=>{const ready=LAST&&(!/^(asset|tf|src)$/.test(el.id)||PREV!==null);
+    if(!ready&&Date.now()-t0<8000)return;clearInterval(chk);if(!LAST)return;
+    const p=LAST.plan,r=LAST.res,sc=r.cur?r.cur.score:null;
+    const oz=o=>o&&o.n?(o.hit/o.n*100).toFixed(0)+'%':'—';
+    const res=before&&before!==p.side?`สัญญาณ ${SIDE_TH[before]} → <b>${SIDE_TH[p.side]}</b>`:`สัญญาณยังเป็น <b>${SIDE_TH[p.side]}</b>`;
+    toast('⚙ ผลหลังเปลี่ยนการตั้งค่า',`${head}${help?`<br><span class="muted">${esc(help)}</span>`:''}<br>${res}${sc!=null?` · คะแนน ${beforeScore!=null&&beforeScore!==sc?sgn(beforeScore)+' → ':''}${sgn(sc)}`:''}<br><span class="muted">ทดสอบไม่โกง: เข้มงวด ${oz(r.oos.strict)} · ตามสถิติ ${oz(r.oos.stat)}</span>`,SIDE_K[p.side],{key:'set',imp:true,ms:12000});},300);},true);
 // เฝ้าข่าว: ใกล้ประกาศ / ประกาศแล้ว / หัวข่าวใหม่
 const NW={seen:new Set(),heads:null};
 setInterval(()=>{const now=Date.now();
@@ -1017,6 +1055,7 @@ setInterval(()=>{const now=Date.now();
     else{const fresh=NEWS.heads.filter(x=>!NW.heads.has(x.title));fresh.forEach(x=>NW.heads.add(x.title));
       if(fresh.length){const f=fresh[0];toast(`หัวข่าวใหม่ ${fresh.length} ข่าว`,`${f.tone>0?'🟢':f.tone<0?'🔴':'⚪'} ${esc(f.title)}`,f.tone>0?'up':f.tone<0?'down':'info',{key:'heads'});}}}
 },5000);
+$('toastPos').onchange=()=>$('toasts').classList.toggle('center',$('toastPos').value==='center');
 $('asset').onchange=()=>{NW.heads=null;syncAssetUI();loadAll();loadThai();loadHeadlines();};
 $('src').onchange=loadAll;$('tf').onchange=loadAll;$('btnLoad').onclick=loadAll;
 const reAnalyze=()=>{if(S.bars.length>=70)renderAll(analyze(S.bars,S.horizon),false,S.hasTime);};
@@ -1029,7 +1068,7 @@ const tl=$('tabLive'),tp=$('tabPaste');
 tl.onclick=()=>{tl.classList.add('on');tp.classList.remove('on');$('panelLive').classList.remove('hidden');$('panelPaste').classList.add('hidden');loadAll();};
 tp.onclick=()=>{tp.classList.add('on');tl.classList.remove('on');$('panelPaste').classList.remove('hidden');$('panelLive').classList.add('hidden');};
 
-MODE=$('mode').value;setSpeed();syncAssetUI();loadAll();loadThai();loadNews();
+MODE=$('mode').value;setSpeed();snapOpts();syncAssetUI();loadAll();loadThai();loadNews();
 </script>
 </body>
 </html>
