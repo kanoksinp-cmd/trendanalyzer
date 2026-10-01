@@ -406,6 +406,13 @@ details[open].card>summary::after{content:"▴"}
       </div>
     </div>
 
+    <!-- Open orders (under chart) -->
+    <div class="card" id="posCard">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">ออเดอร์ที่เปิดอยู่ <span class="muted" id="posCount" style="font-weight:400;font-size:13px"></span></h2>
+        <label class="muted" style="font-size:12px"><input type="checkbox" id="autoManage" checked> ปิดอัตโนมัติเมื่อชน SL/TP</label></div>
+      <div style="overflow:auto;margin-top:8px"><table id="posTable"></table></div>
+    </div>
+
     <!-- Bot commentary -->
     <div class="card">
       <h2>ความเห็นของบอท: ทำไมถึงแนะนำแบบนี้</h2>
@@ -442,13 +449,10 @@ details[open].card>summary::after{content:"▴"}
     <div class="card" id="portCard">
       <div class="row" style="justify-content:space-between"><h2 style="margin:0">พอร์ตเทรดของฉัน</h2>
         <div class="row" style="gap:6px">
-          <label class="muted" style="font-size:12px"><input type="checkbox" id="autoManage" checked> ปิดอัตโนมัติเมื่อชน SL/TP</label>
           <button id="histCsv" type="button" class="pbtn bGhost">CSV</button>
           <button id="histClear" type="button" class="pbtn bGhost">ล้างประวัติ</button>
         </div></div>
       <div class="grid" id="portStats" style="margin:10px 0"></div>
-      <h2 style="font-size:14px;margin-top:6px">ออเดอร์ที่เปิดอยู่</h2>
-      <div style="overflow:auto"><table id="posTable"></table></div>
       <h2 style="font-size:14px;margin-top:14px">ผลแต่ละไม้ (ปิดแล้ว)</h2>
       <div style="max-height:360px;overflow:auto"><table id="histTable"></table></div>
       <div class="muted" style="margin-top:8px">กำไร/ขาดทุนคิดจากราคาบนกราฟ (รวมการปรับราคาโบรกเกอร์) หักต้นทุน/รอบตามที่ตั้งไว้ · โหมด <b>จำลอง</b> = เทรดด้วยเงินสมมติจากยอด "เงินทุนในพอร์ต" · โหมด <b>เงินจริง</b> = คุณส่งคำสั่งที่โบรกเกอร์เองแล้วกดบันทึกที่นี่ให้บอทติดตามผลให้ (หน้าเว็บนี้ไม่ได้ส่งคำสั่งไปโบรกเกอร์) · ปิดอัตโนมัติทำงานเฉพาะตอนเปิดหน้าเว็บ</div>
@@ -1405,6 +1409,7 @@ function posRender(){const asset=$('asset').value;
     tile('กำไร/ขาดทุนลอยตัว',POS.length?m$(flt):'—',cl(flt))+tile('กำไรสุทธิ (ปิดแล้ว)',closed.length?m$(net):'—',cl(net))+
     tile('ชนะ',closed.length?`${(wins.length/closed.length*100).toFixed(0)}% <span class="muted" style="font-size:12px">(${wins.length}/${closed.length})</span>`:'—')+
     tile('เฉลี่ยต่อไม้',closed.length?m$(net/closed.length):'—',cl(net))+tile('Profit Factor',closed.length?(gl?(gp/gl).toFixed(2):'∞'):'—',gl&&gp/gl>=1.3?'up':gl&&gp/gl<1?'down':'');
+  $('posCount').innerHTML=POS.length?`· ${POS.length} ออเดอร์ · ลอยตัว <span class="${flt>=0?'pnl-up':'pnl-dn'}">${m$(flt)}</span>`:'';
   $('posTable').innerHTML=POS.length?'<tr><th>#</th><th>ฝั่ง</th><th>จำนวน</th><th>เข้า</th><th>ตอนนี้</th><th>SL / TP</th><th>กำไร/ขาดทุน</th><th></th></tr>'+POS.map(p=>{
       const px=p.last??p.entry,f=floatUSD(p,px)+p.realized-p.costUSD,riskUSD=p.risk*p.qty*perUnit(p),R=riskUSD?f/riskUSD:0,other=p.asset!==asset;
       return `<tr><td>${p.no}<div class="muted" style="font-size:11px">${p.mode==='paper'?'จำลอง':'จริง'}</div></td><td class="${p.side==='LONG'?'up':'down'}">${p.side==='LONG'?'ซื้อ':'ขาย'}<div class="muted" style="font-size:11px">${NAMES[p.asset]} ${p.tf}</div></td>
