@@ -1,0 +1,48 @@
+name: trend-bot
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # ทุก 5 นาที (GitHub อาจดีเลย์ 5–15 นาทีช่วงคนใช้เยอะ)
+  workflow_dispatch:         # กดรันเองได้ที่แท็บ Actions
+concurrency:
+  group: trend-bot
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # เก็บสถานะบอทไว้ใน cache (ไม่ commit เข้า repo จะได้ไม่ทำให้ Render deploy ใหม่ทุก 5 นาที)
+      - uses: actions/cache/restore@v4
+        with:
+          path: bot/state.json
+          key: bot-state-${{ github.run_id }}
+          restore-keys: bot-state-
+      - name: Run bot
+        run: node bot/bot.js
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT: ${{ secrets.TG_CHAT }}
+          ASSET: ${{ vars.ASSET }}
+          TF: ${{ vars.TF }}
+          HORIZON: ${{ vars.HORIZON }}
+          SPEED: ${{ vars.SPEED }}
+          MODE: ${{ vars.MODE }}
+          HTF_MODE: ${{ vars.HTF_MODE }}
+          NEWS_BLOCK: ${{ vars.NEWS_BLOCK }}
+          COST_PCT: ${{ vars.COST_PCT }}
+          OFFSET: ${{ vars.OFFSET }}
+          ACC_BAL: ${{ vars.ACC_BAL }}
+          ACC_CUR: ${{ vars.ACC_CUR }}
+          FX: ${{ vars.FX }}
+          RISK_PCT: ${{ vars.RISK_PCT }}
+          OZ_PER_LOT: ${{ vars.OZ_PER_LOT }}
+          SEND_WAIT: ${{ vars.SEND_WAIT }}
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: bot/state.json
+          key: bot-state-${{ github.run_id }}
