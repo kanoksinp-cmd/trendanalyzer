@@ -413,6 +413,18 @@ details[open].card>summary::after{content:"▴"}
       <div style="overflow:auto;margin-top:8px"><table id="posTable"></table></div>
     </div>
 
+    <div class="card" id="portCard">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">พอร์ตเทรดของฉัน</h2>
+        <div class="row" style="gap:6px">
+          <button id="histCsv" type="button" class="pbtn bGhost">CSV</button>
+          <button id="histClear" type="button" class="pbtn bGhost">ล้างประวัติ</button>
+        </div></div>
+      <div class="grid" id="portStats" style="margin:10px 0"></div>
+      <h2 style="font-size:14px;margin-top:14px">ผลแต่ละไม้ (ปิดแล้ว)</h2>
+      <div style="max-height:360px;overflow:auto"><table id="histTable"></table></div>
+      <div class="muted" style="margin-top:8px">กำไร/ขาดทุนคิดจากราคาบนกราฟ (รวมการปรับราคาโบรกเกอร์) หักต้นทุน/รอบตามที่ตั้งไว้ · โหมด <b>จำลอง</b> = เทรดด้วยเงินสมมติจากยอด "เงินทุนในพอร์ต" · โหมด <b>เงินจริง</b> = คุณส่งคำสั่งที่โบรกเกอร์เองแล้วกดบันทึกที่นี่ให้บอทติดตามผลให้ (หน้าเว็บนี้ไม่ได้ส่งคำสั่งไปโบรกเกอร์) · ปิดอัตโนมัติทำงานเฉพาะตอนเปิดหน้าเว็บ</div>
+    </div>
+
     <!-- Bot commentary -->
     <div class="card">
       <h2>ความเห็นของบอท: ทำไมถึงแนะนำแบบนี้</h2>
@@ -444,18 +456,6 @@ details[open].card>summary::after{content:"▴"}
       <div id="eqChart" style="height:180px;margin-top:12px"></div>
       <div class="muted" style="margin-top:6px">กราฟเงินทุนสะสม (หน่วย R = ความเสี่ยงต่อ 1 ไม้) · จำลอง: เข้าที่ราคาปิดแท่งที่มีสัญญาณ, ปิดครึ่งที่ TP1 แล้วเลื่อน SL มาทุน, ที่เหลือถือไป TP2, ถ้าแท่งเดียวโดนทั้ง SL และ TP ถือว่าโดน SL ก่อน (มองแง่ร้าย), ถือไม่เกิน 50 แท่ง, หักต้นทุนสเปรด/ค่าคอมทุกไม้ · สถิติความน่าจะเป็นสร้างจากข้อมูลก่อนหน้าจุดเข้าเท่านั้น (ไม่แอบดูอนาคต) · ข่าวทดสอบย้อนหลังไม่ได้</div>
       <details style="margin-top:8px"><summary class="muted" style="cursor:pointer">ดู 20 เทรดล่าสุดในการทดสอบ</summary><table id="simTrades" style="margin-top:6px"></table></details>
-    </div>
-
-    <div class="card" id="portCard">
-      <div class="row" style="justify-content:space-between"><h2 style="margin:0">พอร์ตเทรดของฉัน</h2>
-        <div class="row" style="gap:6px">
-          <button id="histCsv" type="button" class="pbtn bGhost">CSV</button>
-          <button id="histClear" type="button" class="pbtn bGhost">ล้างประวัติ</button>
-        </div></div>
-      <div class="grid" id="portStats" style="margin:10px 0"></div>
-      <h2 style="font-size:14px;margin-top:14px">ผลแต่ละไม้ (ปิดแล้ว)</h2>
-      <div style="max-height:360px;overflow:auto"><table id="histTable"></table></div>
-      <div class="muted" style="margin-top:8px">กำไร/ขาดทุนคิดจากราคาบนกราฟ (รวมการปรับราคาโบรกเกอร์) หักต้นทุน/รอบตามที่ตั้งไว้ · โหมด <b>จำลอง</b> = เทรดด้วยเงินสมมติจากยอด "เงินทุนในพอร์ต" · โหมด <b>เงินจริง</b> = คุณส่งคำสั่งที่โบรกเกอร์เองแล้วกดบันทึกที่นี่ให้บอทติดตามผลให้ (หน้าเว็บนี้ไม่ได้ส่งคำสั่งไปโบรกเกอร์) · ปิดอัตโนมัติทำงานเฉพาะตอนเปิดหน้าเว็บ</div>
     </div>
 
     <div class="card" id="jrCard">
