@@ -145,6 +145,12 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-siz
           <option value="stat" selected>ตามสถิติ (รวมจังหวะเด้งกลับ)</option>
         </select>
       </label>
+      <label>ข่าว
+        <select id="newsUse">
+          <option value="on" selected>ใช้ข่าวร่วมตัดสินใจ</option>
+          <option value="off">ไม่ใช้ข่าว (เทคนิคล้วน)</option>
+        </select>
+      </label>
       <label class="muted"><input type="checkbox" id="notify"> แจ้งเตือนเสียง+ป๊อปอัป</label>
       <button id="btnLoad">โหลดใหม่</button>
     </div>
@@ -221,6 +227,7 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-siz
       </div>
       <div class="big" id="dir">—</div>
       <div id="probText" class="muted"></div>
+      <div id="newsStrip" class="muted" style="margin-top:4px"></div>
       <div class="bar"><div id="probBar"></div></div>
       <div class="plan" id="plan"></div>
     </div>
@@ -369,6 +376,7 @@ function makePlan(res){const {I,a,cur,pUp,lv,n}=res;const P=I.c[n-1],A=a[n-1]||P
   const plan={side,conflict,reversal,P,A,sup:lv.sup,res:lv.res,conf,pUp,warn:[]};
   if(reversal)plan.warn.push(`สัญญาณนี้เป็นแบบ<b>สวนตัวชี้วัด</b> (คะแนน ${sgn(cur.score)} แต่สถิติ ${res.bn} ครั้งที่ผ่านมาราคามัก${d==='LONG'?'เด้งขึ้น':'ย่อลง'}) เหมาะกับไม้สั้น ปิดกำไรเร็ว และต้องตั้ง Stop Loss เสมอ`);
   if(conflict&&MODE==='strict')plan.warn.push(`ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตของคะแนนนี้กลับ${pUp>=0.5?'ขึ้น':'ลง'}มากกว่า (${(pUp*100).toFixed(0)}% ขึ้น) แปลว่าตลาดช่วงนี้มักกลับตัวหลังสัญญาณแบบนี้ สองอย่างขัดกัน บอทจึงไม่ออกสัญญาณ`);
+  applyNews(plan,cur,res);
   const S=lv.sup,R=lv.res;
   if(plan.side==='LONG'){
     let sl=(S!=null&&P-S<2*A)?S-0.3*A:P-1.5*A;if(P-sl<0.6*A)sl=P-0.8*A;const risk=P-sl;
@@ -414,13 +422,17 @@ function buildComment(res,plan,horizon){
 
   let summary,invalid;const pct=x=>(x*100).toFixed(0)+'%';
   if(plan.side==='LONG'){
-    summary=`<b class="up">บอทมองฝั่งซื้อ (LONG)</b> ${plan.reversal?`เล่นจังหวะเด้งกลับ: ตัวชี้วัดยังชี้ลง (คะแนน ${sgn(cur.score)}) แต่ราคาลงมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ขึ้น (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสขึ้น ${pct(plan.pUp)} แผนคือรอซื้อในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (ใต้แนวรับเล็กน้อย กันโดนสะบัด) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    summary=`<b class="up">บอทมองฝั่งซื้อ (LONG)</b> ${plan.newsUpgrade?`ข่าวต่างประเทศเป็นบวกชัดเจน (${esc(plan.newsWhy)}) และตัวชี้วัดชี้ขึ้น (คะแนน ${sgn(cur.score)}) แม้สถิติยังไม่ได้เปรียบมาก`:plan.reversal?`เล่นจังหวะเด้งกลับ: ตัวชี้วัดยังชี้ลง (คะแนน ${sgn(cur.score)}) แต่ราคาลงมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ขึ้น (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสขึ้น ${pct(plan.pUp)} แผนคือรอซื้อในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (ใต้แนวรับเล็กน้อย กันโดนสะบัด) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
     invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดต่ำกว่า ${fmt(plan.sl)} หรือ ${N9} ตัดลงใต้ ${N21} บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
   }else if(plan.side==='SHORT'){
-    summary=`<b class="down">บอทมองฝั่งขาย (SHORT)</b> ${plan.reversal?`เล่นจังหวะย่อตัว: ตัวชี้วัดยังชี้ขึ้น (คะแนน ${sgn(cur.score)}) แต่ราคาขึ้นมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ลง (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสลง ${pct(1-plan.pUp)} แผนคือรอขายในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (เหนือแนวต้านเล็กน้อย) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    summary=`<b class="down">บอทมองฝั่งขาย (SHORT)</b> ${plan.newsUpgrade?`ข่าวต่างประเทศเป็นลบชัดเจน (${esc(plan.newsWhy)}) และตัวชี้วัดชี้ลง (คะแนน ${sgn(cur.score)}) แม้สถิติยังไม่ได้เปรียบมาก`:plan.reversal?`เล่นจังหวะย่อตัว: ตัวชี้วัดยังชี้ขึ้น (คะแนน ${sgn(cur.score)}) แต่ราคาขึ้นมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ลง (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสลง ${pct(1-plan.pUp)} แผนคือรอขายในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (เหนือแนวต้านเล็กน้อย) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
     invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดสูงกว่า ${fmt(plan.sl)} หรือ ${N9} ตัดขึ้นเหนือ ${N21} บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
   }else{
-    summary=plan.conflict
+    summary=plan.newsBlock
+      ?`<b class="neutral">บอทให้งดเข้าเทรดชั่วคราว (ช่วงข่าวแรง)</b> ${plan.newsBlock} ช่วงนี้ราคามักกระชากหลาย ATR ทั้งขึ้นและลง ตัวชี้วัดทางเทคนิคใช้ไม่ได้ ${plan.lean?`(ถ้าไม่มีข่าว บอทจะ${plan.lean==='LONG'?'ซื้อ':'ขาย'})`:''} รอให้ข่าวออกแล้วราคานิ่งก่อน บอทจะกลับมาให้สัญญาณเองอัตโนมัติ`
+      :plan.newsVeto
+      ?`<b class="neutral">บอทแนะนำให้รอก่อน (ข่าวสวนทาง)</b> ทางเทคนิคชี้${plan.newsVeto==='LONG'?'ซื้อ':'ขาย'} (คะแนน ${sgn(cur.score)}, โอกาสขึ้น ${pct(plan.pUp)}) แต่ข่าวต่างประเทศตอนนี้${plan.newsVeto==='LONG'?'เป็นลบ':'เป็นบวก'}ชัดเจน (${esc(plan.newsWhy)}) เข้าสวนข่าวมีโอกาสโดนลากไปอีกทาง รอให้เทคนิคกับข่าวไปทางเดียวกันก่อน`
+      :plan.conflict
       ?`<b class="neutral">บอทแนะนำให้รอก่อน</b> ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตบอกว่าหลังสัญญาณแบบนี้ราคามัก${plan.pUp>=0.5?'ขึ้น':'ลง'} (โอกาสขึ้น ${pct(plan.pUp)}) สองอย่างขัดกัน เข้าตอนนี้เสี่ยงโดนหลอก`
       :plan.lean
       ?`<b class="neutral">บอทแนะนำให้รอก่อน</b> สัญญาณเอียงไปทาง${plan.lean==='LONG'?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}, โอกาสขึ้น ${pct(plan.pUp)}) แต่${plan.lean==='LONG'?'แนวต้านอยู่ใกล้':'แนวรับอยู่ใกล้'}เกินไป กำไรที่ได้ไม่คุ้มความเสี่ยง รอให้ราคา${plan.lean==='LONG'?'เบรกขึ้นเหนือ '+fmt(plan.buyTrig):'หลุดลงต่ำกว่า '+fmt(plan.sellTrig)} ก่อน`
@@ -515,8 +527,9 @@ function renderAll(res,full,hasTime){
   const tile=(k,v,c='')=>`<div class="stat"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`;
   $('plan').innerHTML=(plan.side==='LONG'||plan.side==='SHORT')?
     tile('โซนเข้า',`${fmt(plan.entryLow)}<br>– ${fmt(plan.entryHigh)}`)+tile('Stop Loss',fmt(plan.sl),'down')+
-    tile('TP1 (ปิดครึ่ง)',fmt(plan.tp1),'up')+tile('TP2',fmt(plan.tp2),'up')+tile('Risk : Reward',`1 : ${plan.rr.toFixed(2)}`)
+    tile('TP1 (ปิดครึ่ง)',fmt(plan.tp1),'up')+tile('TP2',fmt(plan.tp2),'up')+tile('Risk : Reward',`1 : ${plan.rr.toFixed(2)}`)+tile('ขนาดไม้แนะนำ',plan.size<1?'ครึ่งไม้ (50%)':'เต็มไม้',plan.size<1?'neutral':'')
     :plan.side==='WAIT'?tile('ซื้อเมื่อปิดเหนือ',fmt(plan.buyTrig),'up')+tile('ขายเมื่อปิดต่ำกว่า',fmt(plan.sellTrig),'down')+tile('แนวรับ',fmt(plan.sup))+tile('แนวต้าน',fmt(plan.res)):'';
+  $('newsStrip').innerHTML=newsStripHtml(plan);
   // commentary
   const cm=buildComment(res,plan,h);
   $('summary').innerHTML=cm.summary;
@@ -658,7 +671,7 @@ async function loadCalendar(){
     catch(e){if(wk==='thisweek')err=e.message;}}
   if(ok){const seen=new Set();NEWS.events=all.filter(e=>{const k=e.t+e.title+e.cur;if(seen.has(k))return false;seen.add(k);return true;}).sort((a,b)=>a.t-b.t);NEWS.calErr='';}
   else NEWS.calErr=err||'โหลดไม่ได้';
-  renderCalendar();}
+  renderCalendar();if(S.bars.length>=70&&S.feed)S.dirty=true;}
 function renderCalendar(){const el=$('calList');
   if(NEWS.calErr&&!NEWS.events.length){el.innerHTML=`<div class="muted">ดึงปฏิทินข่าวไม่ได้ (${esc(NEWS.calErr)}) ลองกดรีเฟรช</div>`;renderAlert();return;}
   const usd=$('calUsdOnly').checked,hi=$('calHighOnly').checked,hide=$('calHidePast').checked,now=Date.now();
@@ -708,7 +721,7 @@ async function loadHeadlines(){const asset=$('asset').value;$('headList').innerH
   if(asset!==$('asset').value)return; // ผู้ใช้เปลี่ยนสินทรัพย์ระหว่างโหลด
   const seen=new Set();items=items.filter(x=>x.title&&x.t&&!seen.has(x.title.toLowerCase())&&seen.add(x.title.toLowerCase())).sort((a,b)=>b.t-a.t).slice(0,30);
   const kind=asset==='GOLD'?'gold':'crypto';items.forEach(x=>x.tone=toneOf(x.title,kind));
-  NEWS.heads=items;NEWS.headAsset=asset;NEWS.headErr=items.length?'':(err||'ไม่พบข่าว');
+  NEWS.heads=items;NEWS.headAsset=asset;NEWS.headErr=items.length?'':(err||'ไม่พบข่าว');S.dirty=S.bars.length>=70&&!!S.feed;
   renderHeadlines();}
 function renderHeadlines(){const el=$('headList'),items=NEWS.heads;
   if(!items.length){el.innerHTML=`<div class="muted">ดึงหัวข่าวไม่ได้ (${esc(NEWS.headErr)}) ลองกดรีเฟรช</div>`;$('toneRow').innerHTML='';return;}
@@ -719,6 +732,54 @@ function renderHeadlines(){const el=$('headList'),items=NEWS.heads;
     return `<div class="nitem"><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.title)}</a>
       <div class="nmeta">${chip}<span>${esc(x.src)}</span><span>${ago(x.t)}</span><a href="https://translate.google.com/?sl=en&tl=th&op=translate&text=${encodeURIComponent(x.title)}" target="_blank" rel="noopener">แปลไทย</a></div></div>`;}).join('');}
 
+// --- News → trading decision ---
+function numVal(x){if(x==null||x==='')return null;const t=String(x).replace(/,/g,'');const m=t.match(/-?\d+(\.\d+)?/);if(!m)return null;
+  let v=+m[0];if(/K/i.test(t))v*=1e3;else if(/M/i.test(t))v*=1e6;else if(/B/i.test(t))v*=1e9;else if(/T/i.test(t))v*=1e12;return v;}
+// ข่าวที่ "ตัวเลขสูง = ดอลลาร์อ่อน" (ว่างงานเยอะ = เศรษฐกิจแย่)
+const USD_INVERSE=/unemployment|jobless|claims/i;
+// ผลข่าวที่ออกแล้ว: ตัวเลขจริงดีกว่าคาด → ดอลลาร์แข็ง → ทอง/คริปโตมักลง
+function surprises(){const now=Date.now(),out=[];
+  for(const e of NEWS.events){if(e.cur!=='USD'||e.imp!=='High'||e.t>now||now-e.t>4*3600000)continue;
+    const a=numVal(e.act),f=numVal(e.fc!=null&&e.fc!==''?e.fc:e.prev);if(a==null||f==null||a===f)continue;
+    const usd=Math.sign(a-f)*(USD_INVERSE.test(e.title)?-1:1);out.push({e,usd,asset:-usd});}
+  return out;}
+// โทนหัวข่าว ถ่วงน้ำหนักให้ข่าวใหม่สำคัญกว่า (ครึ่งชีวิต ~4 ชม.) ดูเฉพาะ 24 ชม.ล่าสุด
+function headlineTone(){if(!NEWS.heads.length||NEWS.headAsset!==$('asset').value)return null;
+  const now=Date.now();let sw=0,st=0,nz=0,n=0;
+  for(const x of NEWS.heads){const hrs=(now-x.t)/3600000;if(hrs>24||hrs<-1)continue;const w=Math.pow(0.5,Math.max(hrs,0)/4);n++;sw+=w;st+=w*x.tone;if(x.tone)nz++;}
+  if(!n)return null;const net=st/sw;return {net,n,nz,score:nz<4?0:net>=0.45?2:net>=0.2?1:net<=-0.45?-2:net<=-0.2?-1:0};}
+function newsSignal(){const now=Date.now();
+  const block=NEWS.events.filter(e=>e.cur==='USD'&&e.imp==='High'&&e.t>now-15*60000&&e.t<now+30*60000);
+  const sp=surprises(),ht=headlineTone();
+  const spScore=Math.max(-2,Math.min(2,sp.reduce((a,x)=>a+x.asset*2,0)));
+  const dir=Math.max(-3,Math.min(3,(ht?ht.score:0)+spScore));
+  const why=[];if(ht&&ht.score)why.push(`หัวข่าว${ht.score>0?'บวก':'ลบ'} ${Math.abs(ht.net*100).toFixed(0)}%`);
+  sp.forEach(x=>why.push(`${x.e.title} ${x.e.act} vs คาด ${x.e.fc||x.e.prev} → ดอลลาร์${x.usd>0?'แข็ง':'อ่อน'}`));
+  return {block,sp,ht,dir,why:why.join(', ')};}
+function applyNews(plan,cur,res){plan.size=1;
+  if($('newsUse').value==='off'||!S.feed)return; // โหมดวางข้อมูลย้อนหลังไม่ใช้ข่าว
+  const N=newsSignal();plan.news=N;plan.newsWhy=N.why;const tech=plan.side;
+  // 1) ช่วงข่าวแรง USD: 30 นาทีก่อน ถึง 15 นาทีหลัง → งดเข้า
+  if(N.block.length){plan.newsBlock=N.block.map(e=>`${esc(e.title)} ${thTime(e.t)} (${countdown(e.t)})`).join(', ');
+    if(tech==='LONG'||tech==='SHORT')plan.lean=tech;plan.side='WAIT';plan.conflict=false;return;}
+  const lean=Math.sign(N.dir),strong=Math.abs(N.dir)>=2;
+  if(tech==='LONG'||tech==='SHORT'){const t=tech==='LONG'?1:-1;
+    if(strong&&lean===-t){plan.newsVeto=tech;plan.side='WAIT';plan.conflict=false;return;} // ข่าวสวนแรง → ยกเลิก
+    if(lean===-t){plan.size=0.5;plan.warn.push(`ข่าวเอียงสวนทางสัญญาณเล็กน้อย (${esc(N.why)}) จึงแนะนำแค่ครึ่งไม้`);}
+    else if(lean===t)plan.newsAgree=true;
+    if(plan.reversal&&lean!==t)plan.size=0.5;
+    return;}
+  // 2) เทคนิคยังไม่ชัด แต่ข่าวแรง + ตัวชี้วัดไปทางเดียวกัน + สถิติไม่สวน → ให้สัญญาณครึ่งไม้
+  if(tech==='WAIT'&&strong&&Math.sign(cur.score)===lean&&Math.abs(cur.score)>=3&&(lean>0?plan.pUp>=0.5:plan.pUp<=0.5)){
+    plan.side=lean>0?'LONG':'SHORT';plan.newsUpgrade=true;plan.conflict=false;plan.size=0.5;
+    plan.warn.push('สัญญาณนี้ได้มาเพราะข่าวช่วยยืนยัน ส่วนนี้ทดสอบย้อนหลังไม่ได้ (ไม่มีข่าวในอดีตให้ทดสอบ) จึงให้แค่ครึ่งไม้');}}
+function newsStripHtml(plan){if($('newsUse').value==='off')return 'ข่าว: ปิดอยู่ (ใช้เทคนิคล้วน)';
+  if(!S.feed)return 'ข่าว: ไม่ใช้ในโหมดวางข้อมูลย้อนหลัง';
+  const N=plan.news||newsSignal(),tgt=$('asset').value==='GOLD'?'ทอง':NAMES[$('asset').value];
+  const d=N.dir,lab=d>=2?`<b class="up">หนุนขึ้นชัด</b>`:d===1?`<span class="up">เอียงบวก</span>`:d<=-2?`<b class="down">กดดันลงชัด</b>`:d===-1?`<span class="down">เอียงลบ</span>`:'กลางๆ';
+  const nx=highUsdWindow().next;
+  return `ข่าวต่อ${tgt}: ${lab} (${sgn(d)})${N.why?' · '+esc(N.why):''}${N.block.length?' · <b class="down">อยู่ในช่วงงดเทรด</b>':nx?` · ข่าวแรงถัดไป ${countdown(nx.t)}`:''}${plan.newsAgree?' · <span class="up">ข่าวไปทางเดียวกับสัญญาณ ✓</span>':''}`;}
+
 // --- What the bot says about news ---
 function newsContext(){const items=[];let alert='';const {hot,next}=highUsdWindow();
   if(hot.length){alert=`⚠ มีข่าวแรง USD (${hot.map(e=>esc(e.title)).join(', ')}) ภายใน 1 ชั่วโมง ตัวชี้วัดทางเทคนิคมักใช้ไม่ได้ช่วงข่าวออก ควรรอให้ข่าวออกและราคานิ่งก่อน 15–30 นาที หรือลดขนาดไม้`;
@@ -726,7 +787,8 @@ function newsContext(){const items=[];let alert='';const {hot,next}=highUsdWindo
   else if(next&&next.t-Date.now()<24*3600000)items.push(['',`ข่าวแรง USD ตัวถัดไป: ${esc(next.title)}${evTh(next.title)?' ('+evTh(next.title)+')':''} ${thTime(next.t)} (${countdown(next.t)}) ถ้าถือออเดอร์ข้ามช่วงนั้นควรขยับ Stop Loss หรือปิดบางส่วนก่อน`]);
   if(NEWS.heads.length&&NEWS.headAsset===$('asset').value){const h=NEWS.heads,up=h.filter(x=>x.tone>0).length,dn=h.filter(x=>x.tone<0).length;
     const lean=up>=dn*1.5&&up-dn>=3?'p':dn>=up*1.5&&dn-up>=3?'n':'';
-    items.push([lean,`โทนหัวข่าวต่างประเทศ ${h.length} ชิ้นล่าสุด: บวก ${up} / ลบ ${dn}${lean==='p'?' ข่าวเอียงบวก':lean==='n'?' ข่าวเอียงลบ':' ไม่เอียงชัด'} (ใช้ประกอบ ไม่ได้นำไปคิดคะแนน)`]);}
+    items.push([lean,`โทนหัวข่าวต่างประเทศ ${h.length} ชิ้นล่าสุด: บวก ${up} / ลบ ${dn}${lean==='p'?' ข่าวเอียงบวก':lean==='n'?' ข่าวเอียงลบ':' ไม่เอียงชัด'} ${$('newsUse').value==='on'?' บอทนำไปใช้กรองสัญญาณแล้ว (ไม่ได้บวกเข้าคะแนนเทคนิค)':''}`]);}
+  const sp=surprises();sp.forEach(x=>items.push([x.asset>0?'p':'n',`ผลข่าว ${esc(x.e.title)}: จริง ${esc(x.e.act)} เทียบคาด ${esc(x.e.fc||x.e.prev)} → ดอลลาร์${x.usd>0?'แข็ง':'อ่อน'} มักทำให้${$('asset').value==='GOLD'?'ทอง':NAMES[$('asset').value]}${x.asset>0?'ขึ้น':'ลง'} (มีผลประมาณ 4 ชม.หลังประกาศ)`]));
   return {items,alert};}
 
 async function loadNews(){$('newsTime').textContent='กำลังโหลด...';
@@ -764,6 +826,7 @@ $('asset').onchange=()=>{syncAssetUI();loadAll();loadThai();loadHeadlines();};
 $('src').onchange=loadAll;$('tf').onchange=loadAll;$('btnLoad').onclick=loadAll;
 const reAnalyze=()=>{if(S.bars.length>=70)renderAll(analyze(S.bars,S.horizon),false,S.hasTime);};
 $('speed').onchange=()=>{setSpeed();reAnalyze();};
+$('newsUse').onchange=()=>reAnalyze();
 $('mode').onchange=()=>{MODE=$('mode').value;reAnalyze();};
 $('notify').onchange=()=>{if($('notify').checked){beep(true);try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission();}catch(e){}}};
 $('horizon').onchange=()=>{S.horizon=+$('horizon').value;if(S.bars.length>=70)renderAll(analyze(S.bars,S.horizon),false,S.hasTime);};
