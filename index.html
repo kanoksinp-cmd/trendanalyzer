@@ -21,18 +21,6 @@ button{background:var(--gold);color:#111;border:none;font-weight:600;cursor:poin
 .tabs button{flex:1}
 .tabs button:not(.on){background:transparent;color:var(--muted);border:1px solid var(--line)}
 #chart{height:420px;width:100%}
-#chartCard{position:relative}
-.cbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
-.cbar button{padding:5px 12px;font-size:13px}
-#fsInfo{display:none}
-#chartCard.fs{position:fixed;inset:0;z-index:9000;margin:0;border-radius:0;border:none;display:flex;flex-direction:column;padding:10px 12px}
-#chartCard.fs #chart{flex:1;height:auto!important;min-height:0}
-#chartCard.fs #fsInfo{display:flex}
-body.fsOn{overflow:hidden}
-body.fsOn #toasts:not(.center){top:56px}
-#fsInfo{flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px}
-#fsInfo .sd{font-size:18px;font-weight:700}
-#fsInfo .kv{color:var(--muted)}#fsInfo .kv b{color:var(--text)}
 .big{font-size:28px;font-weight:700;line-height:1.2}
 .up{color:var(--up)}.down{color:var(--down)}.neutral{color:var(--warn)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
@@ -69,86 +57,9 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,monospace;font-siz
 .log{max-height:220px;overflow:auto;font-size:13px}
 .log div{padding:5px 0;border-bottom:1px solid var(--line)}
 .bubble{background:var(--card2);border-radius:10px;padding:12px 14px;line-height:1.6;font-size:14px}
-.ntabs{display:flex;gap:6px;margin:10px 0}
-.ntabs button{flex:1;padding:6px 8px;font-size:13px}
-.ntabs button:not(.on){background:transparent;color:var(--muted);border:1px solid var(--line)}
-.news{max-height:420px;overflow:auto}
-.nitem{padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}
-.nitem:last-child{border-bottom:none}
-.nitem a{color:var(--text);text-decoration:none}
-.nitem a:hover{text-decoration:underline}
-.nmeta{color:var(--muted);font-size:12px;margin-top:3px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.nmeta a{color:var(--blue);font-size:12px}
-.chip{font-size:11px;padding:1px 7px;border-radius:999px;background:var(--card2);border:1px solid var(--line);white-space:nowrap}
-.chip.up{background:rgba(38,166,154,.15);border-color:transparent}
-.chip.down{background:rgba(239,83,80,.15);border-color:transparent}
-.chip.hi{background:rgba(239,83,80,.2);color:var(--down);border-color:transparent}
-.chip.md{background:rgba(245,166,35,.18);color:var(--warn);border-color:transparent}
-.ev{display:grid;grid-template-columns:92px 1fr auto;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:center}
-.ev.past{opacity:.5}
-.ev.soon{background:rgba(239,83,80,.08);border-radius:6px;padding:8px 6px}
-.ev .t{color:var(--muted);font-size:12px}
-.ev .fc{color:var(--muted);font-size:12px;text-align:right;white-space:nowrap}
-.tone{display:flex;gap:10px;align-items:center;font-size:13px;margin-top:4px}
-.tone .bar{flex:1;margin:0;display:flex}
-.alert{border-left:3px solid var(--down);background:rgba(239,83,80,.08);padding:8px 12px;border-radius:6px;font-size:13px;margin-top:8px}
-details.card>summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
-details.card>summary::-webkit-details-marker{display:none}
-details.card>summary::after{content:"▾";color:var(--muted)}
-details[open].card>summary::after{content:"▴"}
-.fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);flex:1;min-width:220px}
-.fld input{width:100%}
-.steps{margin:6px 0 0;padding-left:20px;color:var(--muted);font-size:13px;line-height:1.7}
-.ok{color:#22c55e}
-#toasts.center{top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(460px,calc(100vw - 24px));align-items:stretch}
-#toasts.center .toast{box-shadow:0 12px 40px rgba(0,0,0,.6);font-size:14px}
-#toasts.center .toast.big b.tt{font-size:19px}
-#toasts.center .toast.out{transform:scale(.95)}
-#toasts.center .toast{animation:tpop .25s ease-out}
-@keyframes tpop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
-#toasts{position:fixed;top:12px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:8px;width:min(360px,calc(100vw - 24px));pointer-events:none}
-.toast{pointer-events:auto;background:#1f232c;border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:10px;padding:10px 30px 10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.45);font-size:13px;line-height:1.5;position:relative;animation:tin .25s ease-out;cursor:pointer}
-.toast b.tt{display:block;font-size:14px;margin-bottom:2px}
-.toast .tm{color:var(--muted);font-size:11px;margin-top:3px}
-.toast .x{position:absolute;top:6px;right:10px;color:var(--muted);font-size:16px}
-.toast{color:var(--text);font-weight:400}.toast.t-up{border-left-color:var(--up)}.toast.t-down{border-left-color:var(--down)}.toast.t-warn{border-left-color:var(--warn)}.toast.t-info{border-left-color:var(--blue)}
-.toast.t-up b.tt{color:var(--up)}.toast.t-down b.tt{color:var(--down)}.toast.t-warn b.tt{color:var(--warn)}
-.toast.big{border-width:1px 1px 1px 6px;background:#222733}.toast.big b.tt{font-size:17px}
-.toast.out{opacity:0;transform:translateX(30px);transition:.3s}
-@keyframes tin{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
-.tbtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.tbtns button{flex:1;min-width:140px;padding:11px;font-size:15px;border-radius:10px}
-.bBuy{background:var(--up)!important;color:#fff!important}.bSell{background:var(--down)!important;color:#fff!important}
-.bGhost{background:transparent!important;color:var(--muted)!important;border:1px solid var(--line)!important}
-#tradeModal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9500;display:none;align-items:center;justify-content:center;padding:16px}
-#tradeModal.on{display:flex}
-#tradeModal .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;width:min(460px,100%);max-height:90vh;overflow:auto}
-#tradeModal .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-#tradeModal label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
-#tradeModal input,#tradeModal select{width:100%}
-.seg{display:flex;gap:6px}.seg button{flex:1;padding:9px}
-.seg button.off{background:transparent!important;color:var(--muted)!important;border:1px solid var(--line)!important}
-.pnl-up{color:var(--up);font-weight:600}.pnl-dn{color:var(--down);font-weight:600}
-.pbtn{padding:4px 8px;font-size:12px;margin:1px}
-#posTable td,#histTable td{vertical-align:middle}
 </style>
 </head>
 <body>
-<div id="toasts"></div>
-<div id="tradeModal"><div class="box">
-  <div class="row" style="justify-content:space-between"><b id="tmTitle" style="font-size:17px">เปิดออเดอร์</b><span class="muted" id="tmAsset"></span></div>
-  <div class="seg" style="margin-top:12px"><button id="tmLong" class="bBuy">▲ ซื้อ (LONG)</button><button id="tmShort" class="bSell off">▼ ขาย (SHORT)</button></div>
-  <div class="g2">
-    <label>ราคาเข้า<input id="tmEntry" type="number" step="0.01"></label>
-    <label><span id="tmQtyLab">จำนวน (lot)</span><input id="tmQty" type="number" step="0.01" min="0"></label>
-    <label>Stop Loss<input id="tmSL" type="number" step="0.01"></label>
-    <label>TP1 (ปิดครึ่ง)<input id="tmTP1" type="number" step="0.01"></label>
-    <label>TP2<input id="tmTP2" type="number" step="0.01"></label>
-    <label>บัญชี<select id="tmMode"><option value="paper" selected>จำลอง (Paper)</option><option value="real">เงินจริง (ส่งที่โบรกเกอร์แล้ว)</option></select></label>
-  </div>
-  <div class="bubble" id="tmCalc" style="margin-top:12px;font-size:13px"></div>
-  <div class="row" style="margin-top:12px;gap:8px"><button id="tmOk" style="flex:1;padding:11px">ยืนยันเปิดออเดอร์</button><button id="tmCancel" class="bGhost" style="flex:1;padding:11px">ยกเลิก</button></div>
-</div></div>
 <div class="wrap">
   <div class="row" style="justify-content:space-between">
     <h1 id="h1">Gold Trend Analyzer</h1>
@@ -198,51 +109,7 @@ details[open].card>summary::after{content:"▴"}
           <option value="12">12 แท่ง</option>
         </select>
       </label>
-      <label>ความไวสัญญาณ
-        <select id="speed">
-          <option value="normal">ปกติ (EMA 9/21/50)</option>
-          <option value="fast" selected>ไว (EMA 5/13/34)</option>
-          <option value="turbo">ไวมาก (EMA 3/8/21)</option>
-        </select>
-      </label>
-      <label>รูปแบบ
-        <select id="mode">
-          <option value="strict">เข้มงวด (ตัวชี้วัด+สถิติต้องตรงกัน)</option>
-          <option value="stat" selected>ตามสถิติ (รวมจังหวะเด้งกลับ)</option>
-        </select>
-      </label>
-      <label>ข่าว
-        <select id="newsUse">
-          <option value="on" selected>ใช้ข่าวร่วมตัดสินใจ</option>
-          <option value="off">ไม่ใช้ข่าว (เทคนิคล้วน)</option>
-        </select>
-      </label>
-      <label>ป๊อปอัป
-        <select id="toastLv"><option value="all" selected>ทุกการเปลี่ยนแปลง</option><option value="key">เฉพาะสำคัญ</option><option value="off">ปิด</option></select>
-      </label>
-      <label>ตำแหน่ง
-        <select id="toastPos"><option value="corner" selected>มุมขวาบน</option><option value="center">กลางจอ</option></select>
-      </label>
-      <label class="muted"><input type="checkbox" id="notify"> เสียง + แจ้งเตือนเมื่ออยู่แท็บอื่น</label>
       <button id="btnLoad">โหลดใหม่</button>
-    </div>
-    <div class="row" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">
-      <b style="font-size:13px;color:var(--gold)">ระบบเทรด</b>
-      <label>ยืนยันสัญญาณ
-        <select id="confirm"><option value="close" selected>เมื่อปิดแท่ง (แนะนำ)</option><option value="live">ทันที (ไวแต่สะบัด)</option></select>
-      </label>
-      <label>เทรนด์ TF ใหญ่
-        <select id="htfMode"><option value="block" selected>ห้ามเทรดสวน</option><option value="align">ต้องไปทางเดียวกัน</option><option value="off">ไม่ใช้</option></select>
-      </label>
-      <label>ต้นทุน/รอบ %
-        <input id="cost" type="number" step="0.005" min="0" style="width:80px" placeholder="อัตโนมัติ">
-      </label>
-      <label id="offWrap">ปรับราคาโบรกเกอร์ ±
-        <input id="offset" type="number" step="0.01" value="0" style="width:80px">
-        <button id="btnAutoOff" type="button" style="padding:6px 8px;font-size:12px">อัตโนมัติ</button>
-      </label>
-      <label class="muted"><input type="checkbox" id="lockCfg"> ล็อกการตั้งค่า</label>
-      <button id="btnPreset" type="button" style="padding:6px 10px;font-size:12px">ใช้ค่ามาตรฐาน</button>
     </div>
     <div class="muted" style="margin-top:8px" id="srcNote">ทองคำ: Binance PAXG ผูกกับทอง 1 ออนซ์ ราคาใกล้ XAU/USD และส่งราคาสดทุกวินาที · XAUS เป็น XAU/USD ตรง แต่ใช้ได้เฉพาะ 1/5/15 นาทีและรายวัน</div>
   </div>
@@ -280,87 +147,6 @@ details[open].card>summary::after{content:"▴"}
     </div>
   </div>
 
-  <div class="card" id="newsCard">
-    <div class="row" style="justify-content:space-between">
-      <div style="font-weight:600">ข่าวต่างประเทศ</div>
-      <div class="row" style="gap:6px"><span class="muted" id="newsTime">กำลังโหลด...</span><button id="btnNews" style="padding:4px 10px;font-size:12px">รีเฟรช</button></div>
-    </div>
-    <div id="newsAlert"></div>
-    <div class="ntabs">
-      <button id="ntCal" class="on">ปฏิทินข่าวเศรษฐกิจ</button>
-      <button id="ntHead">หัวข่าวล่าสุด</button>
-    </div>
-    <div id="calPane">
-      <div class="row" style="margin-bottom:6px">
-        <label class="muted"><input type="checkbox" id="calUsdOnly" checked> เฉพาะ USD</label>
-        <label class="muted"><input type="checkbox" id="calHighOnly"> เฉพาะผลกระทบสูง</label>
-        <label class="muted"><input type="checkbox" id="calHidePast" checked> ซ่อนที่ผ่านไปแล้ว</label>
-      </div>
-      <div class="news" id="calList"><div class="muted">กำลังโหลด...</div></div>
-      <div class="muted" style="margin-top:6px">เวลาเป็นเวลาไทย · ข้อมูลจาก ForexFactory · ข่าวสีแดงมักทำให้ทองและคริปโตกระชากแรงทั้งสองทาง</div>
-    </div>
-    <div id="headPane" class="hidden">
-      <div class="tone" id="toneRow"></div>
-      <div class="news" id="headList"><div class="muted">กำลังโหลด...</div></div>
-      <div class="muted" style="margin-top:6px">โทนข่าวประเมินจากคำในหัวข่าวแบบคร่าวๆ ไม่ได้อ่านเนื้อหา ใช้ดูภาพรวมเท่านั้น · กด "แปลไทย" เพื่อเปิด Google Translate</div>
-    </div>
-  </div>
-
-  <details class="card" id="riskCard">
-    <summary><span>คำนวณขนาดไม้ (Position Size) <span class="muted" id="riskBadge" style="font-weight:400"></span></span></summary>
-    <div class="row" style="margin-top:10px">
-      <label class="fld" style="min-width:140px">เงินทุนในพอร์ต<input id="accBal" type="number" min="0" step="100" value="100000"></label>
-      <label>สกุลเงิน<select id="accCur"><option value="THB" selected>บาท (THB)</option><option value="USD">ดอลลาร์ (USD)</option></select></label>
-      <label class="fld" style="min-width:110px">USD/THB<input id="fx" type="number" step="0.01" value="33"></label>
-      <label class="fld" style="min-width:110px">เสี่ยงต่อไม้ %<input id="riskPct" type="number" step="0.1" min="0.1" max="10" value="1"></label>
-      <label class="fld" style="min-width:140px">ทอง: ออนซ์ต่อ 1 lot<input id="contract" type="number" step="1" value="100"></label>
-    </div>
-    <div class="muted" style="margin-top:8px">บอทคำนวณ lot จากระยะ Stop Loss ของแต่ละสัญญาณ ให้ถ้าโดน SL จะเสียไม่เกิน % ที่ตั้งไว้ · มืออาชีพนิยมเสี่ยง 0.5–1% ต่อไม้ · ทอง XAU/USD มาตรฐาน 1 lot = 100 ออนซ์ (เช็กกับโบรกเกอร์ของคุณ) · USD/THB ใส่เองให้ตรงปัจจุบัน</div>
-  </details>
-
-  <details class="card" id="msgCard">
-    <summary><span>ส่งข้อความแจ้งเตือน (Telegram / Discord) <span class="muted" id="msgBadge" style="font-weight:400">· ปิดอยู่</span></span></summary>
-    <div class="row" style="margin-top:10px">
-      <label class="muted"><input type="checkbox" id="msgOn"> เปิดส่งข้อความ</label>
-      <label>ช่องทาง
-        <select id="msgCh"><option value="tg" selected>Telegram</option><option value="dc">Discord</option></select>
-      </label>
-    </div>
-    <div id="tgBox">
-      <div class="row" style="margin-top:8px">
-        <label class="fld">Bot Token<input id="tgToken" type="password" placeholder="123456789:AA..." autocomplete="off"></label>
-        <label class="fld">Chat ID<input id="tgChat" placeholder="เช่น 123456789" autocomplete="off"></label>
-        <button id="tgFind" style="align-self:flex-end">หา Chat ID ให้</button>
-      </div>
-      <ol class="steps">
-        <li>ใน Telegram ค้นหา <b>@BotFather</b> → พิมพ์ <code>/newbot</code> → ตั้งชื่อ → จะได้ Bot Token มาวางช่องซ้าย</li>
-        <li>เปิดแชทกับบอทที่เพิ่งสร้าง แล้วพิมพ์อะไรก็ได้ 1 ข้อความ (เช่น hi)</li>
-        <li>กลับมากด "หา Chat ID ให้" แล้วกด "ส่งข้อความทดสอบ"</li>
-      </ol>
-    </div>
-    <div id="dcBox" class="hidden">
-      <div class="row" style="margin-top:8px">
-        <label class="fld">Discord Webhook URL<input id="dcHook" type="password" placeholder="https://discord.com/api/webhooks/..." autocomplete="off"></label>
-      </div>
-      <ol class="steps"><li>ในห้อง Discord กดตั้งค่าห้อง → Integrations → Webhooks → New Webhook → Copy Webhook URL มาวาง</li></ol>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <label class="muted"><input type="checkbox" id="mSig" checked> สัญญาณซื้อ/ขาย พร้อมจุดเข้า SL TP</label>
-      <label class="muted"><input type="checkbox" id="mWait"> เมื่อสัญญาณกลับเป็น "รอ"</label>
-      <label class="muted"><input type="checkbox" id="mNews" checked> เตือน 30 นาทีก่อนข่าวแรง USD</label>
-      <label class="muted"><input type="checkbox" id="mBlock" checked> เมื่อข่าวทำให้บอทยกเลิกสัญญาณ</label>
-      <label>ต้องคงสัญญาณนาน
-        <select id="mHold"><option value="10">10 วินาที</option><option value="30" selected>30 วินาที</option><option value="60">1 นาที</option><option value="close">จนปิดแท่ง</option></select>
-      </label>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button id="msgTest">ส่งข้อความทดสอบ</button>
-      <span class="muted" id="msgStatus"></span>
-    </div>
-    <div class="muted" style="margin-top:8px">⚠ ข้อความจะถูกส่งเฉพาะตอนที่<b>เปิดหน้าเว็บนี้ค้างไว้</b> (มือถือ/คอมปิดจอหรือปิดแท็บ = ไม่ส่ง) · Token เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น <b>อย่าใส่ Token ลงในไฟล์ index.html</b> เพราะ repo GitHub เป็นสาธารณะ ใครก็อ่านได้ · "ต้องคงสัญญาณนาน" กันส่งรัวตอนสัญญาณสะบัดไปมา</div>
-    <div class="log" id="msgLog" style="margin-top:8px;max-height:150px"></div>
-  </details>
-
   <div id="status" class="muted" style="margin-bottom:10px"></div>
 
   <div id="result" class="hidden">
@@ -372,57 +158,23 @@ details[open].card>summary::after{content:"▴"}
       </div>
       <div class="big" id="dir">—</div>
       <div id="probText" class="muted"></div>
-      <div id="newsStrip" class="muted" style="margin-top:4px"></div>
-      <div id="proStrip" class="muted" style="margin-top:4px"></div>
       <div class="bar"><div id="probBar"></div></div>
       <div class="plan" id="plan"></div>
-      <div class="tbtns">
-        <button class="bBuy" id="btnBuy">▲ เปิดออเดอร์ซื้อ</button>
-        <button class="bSell" id="btnSell">▼ เปิดออเดอร์ขาย</button>
-      </div>
-      <div class="muted" id="tradeHint" style="margin-top:6px;font-size:12px"></div>
     </div>
 
     <!-- Chart -->
-    <div class="card" id="chartCard">
-      <div class="cbar">
-        <div id="fsInfo"></div>
-        <span class="muted" id="cbarHint" style="font-size:12px">ลากเพื่อเลื่อน · ล้อเมาส์เพื่อซูม</span>
-        <div class="row" style="gap:6px;margin-left:auto">
-          <button id="btnFit" title="แสดง 150 แท่งล่าสุด">↺ รีเซ็ตมุมมอง</button>
-          <button id="btnFull" title="แสดงกราฟเต็มจอ (กด Esc เพื่อออก)">⛶ เต็มจอ</button>
-        </div>
-      </div>
+    <div class="card">
       <div id="chart"></div>
       <div class="legend">
-        <span><b style="border-color:#42a5f5"></b><span class="nF">EMA9</span></span>
-        <span><b style="border-color:#ab47bc"></b><span class="nS">EMA21</span></span>
-        <span><b style="border-color:#ffa726"></b><span class="nT">EMA50</span> (เทรนด์ใหญ่)</span>
+        <span><b style="border-color:#42a5f5"></b>EMA9</span>
+        <span><b style="border-color:#ab47bc"></b>EMA21</span>
+        <span><b style="border-color:#ffa726"></b>EMA50 (เทรนด์ใหญ่)</span>
         <span><b style="border-color:#e0e0e0;border-top-style:dashed"></b>โซนเข้า</span>
         <span><b style="border-color:#ef5350"></b>Stop Loss</span>
         <span><b style="border-color:#26a69a"></b>Take Profit</span>
         <span><b style="border-color:#8a8f99;border-top-style:dotted"></b>แนวรับ/แนวต้าน</span>
-        <span>▲▼ จุดที่ <span class="nF">EMA9</span> ตัด <span class="nS">EMA21</span></span>
+        <span>▲▼ จุดที่ EMA9 ตัด EMA21</span>
       </div>
-    </div>
-
-    <!-- Open orders (under chart) -->
-    <div class="card" id="posCard">
-      <div class="row" style="justify-content:space-between"><h2 style="margin:0">ออเดอร์ที่เปิดอยู่ <span class="muted" id="posCount" style="font-weight:400;font-size:13px"></span></h2>
-        <label class="muted" style="font-size:12px"><input type="checkbox" id="autoManage" checked> ปิดอัตโนมัติเมื่อชน SL/TP</label></div>
-      <div style="overflow:auto;margin-top:8px"><table id="posTable"></table></div>
-    </div>
-
-    <div class="card" id="portCard">
-      <div class="row" style="justify-content:space-between"><h2 style="margin:0">พอร์ตเทรดของฉัน</h2>
-        <div class="row" style="gap:6px">
-          <button id="histCsv" type="button" class="pbtn bGhost">CSV</button>
-          <button id="histClear" type="button" class="pbtn bGhost">ล้างประวัติ</button>
-        </div></div>
-      <div class="grid" id="portStats" style="margin:10px 0"></div>
-      <h2 style="font-size:14px;margin-top:14px">ผลแต่ละไม้ (ปิดแล้ว)</h2>
-      <div style="max-height:360px;overflow:auto"><table id="histTable"></table></div>
-      <div class="muted" style="margin-top:8px">กำไร/ขาดทุนคิดจากราคาบนกราฟ (รวมการปรับราคาโบรกเกอร์) หักต้นทุน/รอบตามที่ตั้งไว้ · โหมด <b>จำลอง</b> = เทรดด้วยเงินสมมติจากยอด "เงินทุนในพอร์ต" · โหมด <b>เงินจริง</b> = คุณส่งคำสั่งที่โบรกเกอร์เองแล้วกดบันทึกที่นี่ให้บอทติดตามผลให้ (หน้าเว็บนี้ไม่ได้ส่งคำสั่งไปโบรกเกอร์) · ปิดอัตโนมัติทำงานเฉพาะตอนเปิดหน้าเว็บ</div>
     </div>
 
     <!-- Bot commentary -->
@@ -442,29 +194,11 @@ details[open].card>summary::after{content:"▴"}
     <div class="card">
       <h2>คะแนนจากตัวชี้วัด</h2>
       <div class="grid" style="margin-bottom:10px">
-        <div class="stat"><div class="k">คะแนนรวม (-6 ถึง +6)</div><div class="v" id="sScore">—</div></div>
+        <div class="stat"><div class="k">คะแนนรวม (-5 ถึง +5)</div><div class="v" id="sScore">—</div></div>
         <div class="stat"><div class="k">RSI(14)</div><div class="v" id="sRsi">—</div></div>
         <div class="stat"><div class="k">ATR(14) ความผันผวน</div><div class="v" id="sAtr">—</div></div>
       </div>
       <table id="votes"></table>
-    </div>
-
-    <div class="card" id="simCard">
-      <h2>ทดสอบแบบเทรดจริง (กำไร/ขาดทุน ตามแผน SL/TP)</h2>
-      <div class="bubble" id="simVerdict" style="margin-bottom:10px">—</div>
-      <table id="simTable"></table>
-      <div id="eqChart" style="height:180px;margin-top:12px"></div>
-      <div class="muted" style="margin-top:6px">กราฟเงินทุนสะสม (หน่วย R = ความเสี่ยงต่อ 1 ไม้) · จำลอง: เข้าที่ราคาปิดแท่งที่มีสัญญาณ, ปิดครึ่งที่ TP1 แล้วเลื่อน SL มาทุน, ที่เหลือถือไป TP2, ถ้าแท่งเดียวโดนทั้ง SL และ TP ถือว่าโดน SL ก่อน (มองแง่ร้าย), ถือไม่เกิน 50 แท่ง, หักต้นทุนสเปรด/ค่าคอมทุกไม้ · สถิติความน่าจะเป็นสร้างจากข้อมูลก่อนหน้าจุดเข้าเท่านั้น (ไม่แอบดูอนาคต) · ข่าวทดสอบย้อนหลังไม่ได้</div>
-      <details style="margin-top:8px"><summary class="muted" style="cursor:pointer">ดู 20 เทรดล่าสุดในการทดสอบ</summary><table id="simTrades" style="margin-top:6px"></table></details>
-    </div>
-
-    <div class="card" id="jrCard">
-      <div class="row" style="justify-content:space-between"><h2 style="margin:0">บันทึกผลสัญญาณจริง (Forward Test)</h2>
-        <div class="row" style="gap:6px"><button id="jrCsv" type="button" style="padding:5px 10px;font-size:12px">ดาวน์โหลด CSV</button><button id="jrClear" type="button" style="padding:5px 10px;font-size:12px;background:transparent;color:var(--muted);border:1px solid var(--line)">ล้าง</button></div></div>
-      <div class="grid" id="jrStats" style="margin:10px 0"></div>
-      <div class="muted" id="jrNote" style="margin-bottom:8px"></div>
-      <div style="max-height:320px;overflow:auto"><table id="jrTable"></table></div>
-      <div class="muted" style="margin-top:6px">บอทจดทุกสัญญาณซื้อ/ขายที่ยืนยันแล้วอัตโนมัติ แล้วติดตามว่าชน TP หรือ SL ก่อน (ใช้กติกาเดียวกับการทดสอบ) · เก็บไว้ในเบราว์เซอร์เครื่องนี้ · ผลจริงไปข้างหน้าน่าเชื่อกว่าการทดสอบย้อนหลังทุกแบบ ควรเห็นผลบวกอย่างน้อย 50–100 สัญญาณก่อนใช้เงินจริง</div>
     </div>
 
     <div class="card">
@@ -473,11 +207,9 @@ details[open].card>summary::after{content:"▴"}
         <div class="stat"><div class="k">ทายถูกรวม (เมื่อมีสัญญาณ)</div><div class="v" id="bAcc">—</div></div>
         <div class="stat"><div class="k">จำนวนครั้งที่ทดสอบ</div><div class="v" id="bN">—</div></div>
         <div class="stat"><div class="k">ขึ้นเองตามธรรมชาติ</div><div class="v" id="bBase">—</div></div>
-        <div class="stat"><div class="k">ทดสอบไม่โกง · เข้มงวด</div><div class="v" id="oStrict">—</div></div>
-        <div class="stat"><div class="k">ทดสอบไม่โกง · ตามสถิติ</div><div class="v" id="oStat">—</div></div>
       </div>
       <table id="bucketTable"></table>
-      <div class="muted" style="margin-top:8px">ความน่าจะเป็นที่บอทใช้มาจากตารางนี้ คือ "เวลาที่คะแนนเท่านี้ในอดีต ราคาขึ้นจริงกี่ %" ไม่ใช่ตัวเลขที่ตั้งขึ้นเอง · <b>ทดสอบไม่โกง</b> = สร้างสถิติจาก 60% แรกของกราฟ แล้ววัดผลกับ 40% หลังที่บอทไม่เคยเห็น ใช้ตัวเลขนี้เลือกว่ารูปแบบไหนเหมาะกับตลาดตอนนี้</div>
+      <div class="muted" style="margin-top:8px">ความน่าจะเป็นที่บอทใช้มาจากตารางนี้ คือ "เวลาที่คะแนนเท่านี้ในอดีต ราคาขึ้นจริงกี่ %" ไม่ใช่ตัวเลขที่ตั้งขึ้นเอง</div>
     </div>
   </div>
 
@@ -495,40 +227,39 @@ function rsi(c,p=14){const out=new Array(c.length).fill(null);let g=0,l=0;
     if(i<=p){g+=up;l+=dn;if(i===p){g/=p;l/=p;out[i]=l===0?100:100-100/(1+g/l);}}
     else{g=(g*(p-1)+up)/p;l=(l*(p-1)+dn)/p;out[i]=l===0?100:100-100/(1+g/l);}}
   return out;}
-function macd(c,m=[12,26,9]){const e12=ema(c,m[0]),e26=ema(c,m[1]);const line=c.map((_,i)=>e12[i]!=null&&e26[i]!=null?e12[i]-e26[i]:null);
+function macd(c){const e12=ema(c,12),e26=ema(c,26);const line=c.map((_,i)=>e12[i]!=null&&e26[i]!=null?e12[i]-e26[i]:null);
   const start=line.findIndex(v=>v!=null);const sig=new Array(c.length).fill(null);
-  if(start>=0){const s=ema(line.slice(start),m[2]);s.forEach((v,i)=>sig[start+i]=v);}
+  if(start>=0){const s=ema(line.slice(start),9);s.forEach((v,i)=>sig[start+i]=v);}
   return line.map((v,i)=>v!=null&&sig[i]!=null?v-sig[i]:null);}
 function atr(h,l,c,p=14){const tr=c.map((_,i)=>i===0?h[0]-l[0]:Math.max(h[i]-l[i],Math.abs(h[i]-c[i-1]),Math.abs(l[i]-c[i-1])));
   const out=new Array(c.length).fill(null);let a=null;
   for(let i=0;i<c.length;i++){if(i<p-1)continue;if(a===null){let s=0;for(let j=i-p+1;j<=i;j++)s+=tr[j];a=s/p;}else a=(a*(p-1)+tr[i])/p;out[i]=a;}
   return out;}
-function levels(h,l,c,lookback=150,w=3,minD=0){const n=c.length,start=Math.max(w,n-lookback),price=c[n-1];let sup=null,res=null;
+function levels(h,l,c,lookback=150,w=3){const n=c.length,start=Math.max(w,n-lookback),price=c[n-1];let sup=null,res=null;
   for(let i=start;i<n-w;i++){let isH=true,isL=true;
     for(let j=i-w;j<=i+w;j++){if(h[j]>h[i])isH=false;if(l[j]<l[i])isL=false;}
-    if(isH&&h[i]>price+minD&&(res===null||h[i]<res))res=h[i];
-    if(isL&&l[i]<price-minD&&(sup===null||l[i]>sup))sup=l[i];}
+    if(isH&&h[i]>price&&(res===null||h[i]<res))res=h[i];
+    if(isL&&l[i]<price&&(sup===null||l[i]>sup))sup=l[i];}
   return {sup,res};}
 
 // =============== Scoring & backtest ===============
 function scoreAt(i,I){const {c,e9,e21,e50,r,mh}=I;
-  if(i<3||[e9[i],e21[i],e50[i],r[i],mh[i],e21[i-2]].some(v=>v==null))return null;
+  if(i<3||[e9[i],e21[i],e50[i],r[i],mh[i],e21[i-3]].some(v=>v==null))return null;
   const v=[];
-  v.push([`ราคาเทียบ ${N9} (ไวสุด)`,c[i]>e9[i]?1:-1,c[i]>e9[i]?'ราคายืนเหนือเส้นเร็ว':'ราคาอยู่ใต้เส้นเร็ว']);
-  v.push([`${N9} เทียบ ${N21}`,e9[i]>e21[i]?1:-1,e9[i]>e21[i]?`${N9} อยู่เหนือ (โมเมนตัมขึ้น)`:`${N9} อยู่ใต้ (โมเมนตัมลง)`]);
-  v.push([`ราคาเทียบ ${N50}`,c[i]>e50[i]?1:-1,c[i]>e50[i]?'ราคาเหนือเส้นเทรนด์':'ราคาใต้เส้นเทรนด์']);
+  v.push(['EMA9 เทียบ EMA21',e9[i]>e21[i]?1:-1,e9[i]>e21[i]?'EMA9 อยู่เหนือ (โมเมนตัมขึ้น)':'EMA9 อยู่ใต้ (โมเมนตัมลง)']);
+  v.push(['ราคาเทียบ EMA50',c[i]>e50[i]?1:-1,c[i]>e50[i]?'ราคาเหนือเส้นเทรนด์':'ราคาใต้เส้นเทรนด์']);
   v.push(['MACD Histogram',mh[i]>0?1:-1,mh[i]>0?'เป็นบวก':'เป็นลบ']);
   const rv=r[i];let rs=0,rt='กลางๆ';
   if(rv>=70){rs=0;rt='ซื้อมากเกิน ระวังย่อ';}else if(rv>55){rs=1;rt='ฝั่งซื้อได้เปรียบ';}
   else if(rv<=30){rs=0;rt='ขายมากเกิน ระวังเด้ง';}else if(rv<45){rs=-1;rt='ฝั่งขายได้เปรียบ';}
-  v.push([`RSI(${CFG.r}) = `+rv.toFixed(1),rs,rt]);
-  const sl=e21[i]-e21[i-2];
-  v.push([`ความชัน ${N21}`,sl>0?1:-1,sl>0?'ชันขึ้น':'ชันลง']);
+  v.push(['RSI(14) = '+rv.toFixed(1),rs,rt]);
+  const sl=e21[i]-e21[i-3];
+  v.push(['ความชัน EMA21',sl>0?1:-1,sl>0?'ชันขึ้น':'ชันลง']);
   return {score:v.reduce((a,x)=>a+x[1],0),votes:v};}
 
 function analyze(bars,horizon){
   const c=bars.map(b=>b.close),h=bars.map(b=>b.high),l=bars.map(b=>b.low);
-  const I={c,e9:ema(c,CFG.f),e21:ema(c,CFG.s),e50:ema(c,CFG.t),r:rsi(c,CFG.r),mh:macd(c,CFG.m)};
+  const I={c,e9:ema(c,9),e21:ema(c,21),e50:ema(c,50),r:rsi(c),mh:macd(c)};
   const a=atr(h,l,c);const n=c.length;
   const buckets={};let ups=0,tot=0,hit=0,sig=0;
   for(let i=55;i<n-horizon;i++){const s=scoreAt(i,I);if(!s)continue;
@@ -537,117 +268,38 @@ function analyze(bars,horizon){
     if(s.score!==0){sig++;if((s.score>0)===up)hit++;}}
   const cur=scoreAt(n-1,I);
   let pUp=null,basis='',bn=0;
-  if(cur){const pr=probFrom(buckets,cur.score);
-    if(pr){pUp=pr.p;bn=pr.n;basis=pr.same?`จากอดีต ${pr.n} ครั้งที่คะแนน = ${sgn(cur.score)}`:`จากอดีต ${pr.n} ครั้งที่คะแนนไปทางเดียวกัน`;}}
-    const oos=walkForward(I,n,horizon);
-  return {I,a,cur,pUp,bn,basis,buckets,tot,ups,hit,sig,oos,lv:levels(h,l,c,150,3,(a[n-1]||c[n-1]*0.002)*0.3),n,bars};}
-
-// โอกาสขึ้นจากตารางสถิติ (ใช้ร่วมกันทั้งตอนวิเคราะห์จริงและตอนทดสอบ)
-function probFrom(buckets,score){const b=buckets[score];
-  if(b&&b.n>=15)return {p:b.up/b.n,n:b.n,same:true};
-  let nn=0,uu=0;for(const k in buckets){if(Math.sign(+k)===Math.sign(score)){nn+=buckets[k].n;uu+=buckets[k].up;}}
-  return nn?{p:uu/nn,n:nn,same:false}:null;}
-// กฎตัดสินใจ: คืนค่า 'LONG' / 'SHORT' / null
-function decide(score,p,n,mode){
-  if(score>0&&p>=0.52)return 'LONG';if(score<0&&p<=0.48)return 'SHORT';
-  if(mode==='stat'&&n>=30&&Math.abs(p-0.5)>=0.05)return p>0.5?'LONG':'SHORT';
-  return null;}
-// ทดสอบแบบไม่โกง: สร้างตารางสถิติจาก 60% แรก แล้วทดสอบกับ 40% หลังที่ตารางไม่เคยเห็น
-function walkForward(I,n,horizon){const split=Math.floor(n*0.6),bk={};
-  for(let i=55;i<split-horizon;i++){const s=scoreAt(i,I);if(!s)continue;const b=bk[s.score]||(bk[s.score]={n:0,up:0});b.n++;if(I.c[i+horizon]>I.c[i])b.up++;}
-  const r={strict:{n:0,hit:0},stat:{n:0,hit:0}};
-  for(let i=split;i<n-horizon;i++){const s=scoreAt(i,I);if(!s)continue;const pr=probFrom(bk,s.score);if(!pr)continue;const up=I.c[i+horizon]>I.c[i];
-    for(const m of ['strict','stat']){const d=decide(s.score,pr.p,pr.n,m);if(d){r[m].n++;if((d==='LONG')===up)r[m].hit++;}}}
-  return r;}
+  if(cur){const b=buckets[cur.score];
+    if(b&&b.n>=15){pUp=b.up/b.n;bn=b.n;basis=`จากอดีต ${b.n} ครั้งที่คะแนน = ${sgn(cur.score)}`;}
+    else{let nn=0,uu=0;for(const k in buckets){if(Math.sign(+k)===Math.sign(cur.score)){nn+=buckets[k].n;uu+=buckets[k].up;}}
+      if(nn>0){pUp=uu/nn;bn=nn;basis=`จากอดีต ${nn} ครั้งที่คะแนนไปทางเดียวกัน`;}}}
+  return {I,a,cur,pUp,bn,basis,buckets,tot,ups,hit,sig,lv:levels(h,l,c),n,bars};}
 
 // =============== Trade plan ===============
-// ระยะ SL/TP มาตรฐาน (ใช้ร่วมกันทั้งหน้าเว็บ การทดสอบ และบันทึกผล)
-function tradeLevels(side,P,A,S,R){
-  if(side==='LONG'){let sl=(S!=null&&P-S<2*A)?S-0.3*A:P-1.5*A;if(P-sl<0.6*A)sl=P-0.8*A;const risk=P-sl;
-    const tp1=(R!=null&&R-P>=risk)?R:P+1.5*risk;let tp2=P+2.5*risk;if(tp2<=tp1+0.3*risk)tp2=tp1+risk;
-    return {entryLow:Math.max(S!=null?S:-Infinity,P-0.5*A),entryHigh:P,sl,tp1,tp2,risk,rr:(tp1-P)/risk,tooClose:R!=null&&R-P<0.8*risk};}
-  let sl=(R!=null&&R-P<2*A)?R+0.3*A:P+1.5*A;if(sl-P<0.6*A)sl=P+0.8*A;const risk=sl-P;
-  const tp1=(S!=null&&P-S>=risk)?S:P-1.5*risk;let tp2=P-2.5*risk;if(tp2>=tp1-0.3*risk)tp2=tp1-risk;
-  return {entryLow:P,entryHigh:Math.min(R!=null?R:Infinity,P+0.5*A),sl,tp1,tp2,risk,rr:(P-tp1)/risk,tooClose:S!=null&&P-S<0.8*risk};}
-// แนวรับ/ต้าน ณ แท่ง i โดยใช้ข้อมูลถึงแท่ง i เท่านั้น
-function levelsAt(h,l,c,i,lookback=150,w=3,minD=0){const start=Math.max(w,i+1-lookback),price=c[i];let sup=null,res=null;
-  for(let k=start;k<=i-w;k++){let isH=true,isL=true;
-    for(let j=k-w;j<=k+w;j++){if(h[j]>h[k])isH=false;if(l[j]<l[k])isL=false;}
-    if(isH&&h[k]>price+minD&&(res===null||h[k]<res))res=h[k];
-    if(isL&&l[k]<price-minD&&(sup===null||l[k]>sup))sup=l[k];}
-  return {sup,res};}
-// ตลาดทองโลก (เวลานิวยอร์ก): ปิด ศ. 17:00 – อา. 18:00 และพักทุกวัน 17:00–18:00
-const NYF=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',hourCycle:'h23'});
-function goldOpen(ms){const p=NYF.formatToParts(new Date(ms));const wd=p.find(x=>x.type==='weekday').value,hr=+p.find(x=>x.type==='hour').value%24;
-  if(wd==='Sat')return false;if(wd==='Sun')return hr>=18;if(wd==='Fri')return hr<17;return hr!==17;}
-const isGold=()=>$('asset').value==='GOLD';
-// ตัวกรองมืออาชีพ: เทรนด์ TF ใหญ่ + เวลาตลาด
-function proFilters(plan,tSec){const tech=plan.side,live=tSec==null;
-  const hm=$('htfMode').value;
-  if(hm!=='off'&&S.htf){const dir=htfDirAt(live?Math.floor(Date.now()/1000)+TZ:tSec);plan.htfDir=dir;
-    if((tech==='LONG'||tech==='SHORT')&&dir!=null){const t=tech==='LONG'?1:-1;
-      if(dir===-t||(hm==='align'&&dir!==t)){plan.htfBlock=tech;plan.lean=tech;plan.side='WAIT';plan.conflict=false;}}}
-  if(isGold()&&S.hasTime&&S.feed){const open=goldOpen(live?Date.now():(tSec-TZ)*1000);plan.mktOpen=open;
-    if(!open){if(plan.side==='LONG'||plan.side==='SHORT')plan.lean=plan.side;if(plan.side!=='NONE'){plan.mktClosed=true;plan.side='WAIT';plan.conflict=false;}}}}
 function makePlan(res){const {I,a,cur,pUp,lv,n}=res;const P=I.c[n-1],A=a[n-1]||P*0.002;
-  if(!cur||pUp==null)return {side:'NONE',P,A,size:1};
+  if(!cur||pUp==null)return {side:'NONE',P,A};
   const conf=Math.max(pUp,1-pUp);
-  const d=decide(cur.score,pUp,res.bn,MODE);let side=d||'WAIT',conflict=false,reversal=false;
-  if(d&&cur.score!==0&&(d==='LONG')!==(cur.score>0))reversal=true;
-  if(!d&&cur.score!==0&&conf>=0.52)conflict=true;
-  const plan={side,conflict,reversal,P,A,sup:lv.sup,res:lv.res,conf,pUp,warn:[],size:1};
-  if(reversal)plan.warn.push(`สัญญาณนี้เป็นแบบ<b>สวนตัวชี้วัด</b> (คะแนน ${sgn(cur.score)} แต่สถิติ ${res.bn} ครั้งที่ผ่านมาราคามัก${d==='LONG'?'เด้งขึ้น':'ย่อลง'}) เหมาะกับไม้สั้น ปิดกำไรเร็ว และต้องตั้ง Stop Loss เสมอ`);
-  if(conflict&&MODE==='strict')plan.warn.push(`ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตของคะแนนนี้กลับ${pUp>=0.5?'ขึ้น':'ลง'}มากกว่า (${(pUp*100).toFixed(0)}% ขึ้น) แปลว่าตลาดช่วงนี้มักกลับตัวหลังสัญญาณแบบนี้ สองอย่างขัดกัน บอทจึงไม่ออกสัญญาณ`);
-  applyNews(plan,cur,res);
-  proFilters(plan);
-  const Sp=lv.sup,Rs=lv.res;
-  if(plan.side==='LONG'||plan.side==='SHORT'){const L=tradeLevels(plan.side,P,A,Sp,Rs);Object.assign(plan,L);
-    if(L.tooClose){const up=plan.side==='LONG';
-      plan.warn.push(up?`แนวต้าน ${fmt(Rs)} อยู่ใกล้เกินไป (ห่างแค่ ${((Rs-P)/A).toFixed(1)} ATR) กำไรไม่คุ้มความเสี่ยง จึงให้รอราคาเบรกขึ้นก่อน`:`แนวรับ ${fmt(Sp)} อยู่ใกล้เกินไป (ห่างแค่ ${((P-Sp)/A).toFixed(1)} ATR) กำไรไม่คุ้มความเสี่ยง จึงให้รอราคาหลุดลงก่อน`);
-      plan.lean=plan.side;plan.side='WAIT';}
-    else if(plan.side==='LONG'&&I.r[n-1]>=70)plan.warn.push(`RSI ${I.r[n-1].toFixed(0)} สูงเกิน 70 ไล่ซื้อตอนนี้เสี่ยงโดนย่อ ควรรอราคาย่อลงมาในโซนเข้า`);
-    else if(plan.side==='SHORT'&&I.r[n-1]<=30)plan.warn.push(`RSI ${I.r[n-1].toFixed(0)} ต่ำกว่า 30 ไล่ขายตอนนี้เสี่ยงโดนเด้ง ควรรอราคาเด้งขึ้นมาในโซนเข้า`);}
-  plan.buyTrig=Rs!=null?Rs:P+A;plan.sellTrig=Sp!=null?Sp:P-A;
+  // ต้องให้ทั้งตัวชี้วัด (คะแนน) และสถิติย้อนหลัง (pUp) ชี้ทางเดียวกันถึงจะออกสัญญาณ
+  let side='WAIT',conflict=false;
+  if(cur.score>0&&pUp>=0.52)side='LONG';else if(cur.score<0&&pUp<=0.48)side='SHORT';
+  else if(cur.score!==0&&conf>=0.52)conflict=true;
+  const plan={side,conflict,P,A,sup:lv.sup,res:lv.res,conf,pUp,warn:[]};
+  if(conflict)plan.warn.push(`ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตของคะแนนนี้กลับ${pUp>=0.5?'ขึ้น':'ลง'}มากกว่า (${(pUp*100).toFixed(0)}% ขึ้น) แปลว่าตลาดช่วงนี้มักกลับตัวหลังสัญญาณแบบนี้ สองอย่างขัดกัน บอทจึงไม่ออกสัญญาณ`);
+  const S=lv.sup,R=lv.res;
+  if(plan.side==='LONG'){
+    let sl=(S!=null&&P-S<2*A)?S-0.3*A:P-1.5*A;if(P-sl<0.6*A)sl=P-0.8*A;const risk=P-sl;
+    const tp1=(R!=null&&R-P>=risk)?R:P+1.5*risk;let tp2=P+2.5*risk;if(tp2<=tp1+0.3*risk)tp2=tp1+risk;
+    Object.assign(plan,{entryLow:Math.max(S!=null?S:-Infinity,P-0.5*A),entryHigh:P,sl,tp1,tp2,risk,rr:(tp1-P)/risk});
+    if(R!=null&&R-P<0.8*risk){plan.warn.push(`แนวต้าน ${fmt(R)} อยู่ใกล้เกินไป (ห่างแค่ ${((R-P)/A).toFixed(1)} ATR) กำไรไม่คุ้มความเสี่ยง จึงให้รอราคาเบรกขึ้นก่อน`);plan.side='WAIT';plan.lean='LONG';}
+    if(I.r[n-1]>=70){plan.warn.push(`RSI ${I.r[n-1].toFixed(0)} สูงเกิน 70 ไล่ซื้อตอนนี้เสี่ยงโดนย่อ ควรรอราคาย่อลงมาในโซนเข้า`);}
+  }else if(plan.side==='SHORT'){
+    let sl=(R!=null&&R-P<2*A)?R+0.3*A:P+1.5*A;if(sl-P<0.6*A)sl=P+0.8*A;const risk=sl-P;
+    const tp1=(S!=null&&P-S>=risk)?S:P-1.5*risk;let tp2=P-2.5*risk;if(tp2>=tp1-0.3*risk)tp2=tp1-risk;
+    Object.assign(plan,{entryLow:P,entryHigh:Math.min(R!=null?R:Infinity,P+0.5*A),sl,tp1,tp2,risk,rr:(P-tp1)/risk});
+    if(S!=null&&P-S<0.8*risk){plan.warn.push(`แนวรับ ${fmt(S)} อยู่ใกล้เกินไป (ห่างแค่ ${((P-S)/A).toFixed(1)} ATR) กำไรไม่คุ้มความเสี่ยง จึงให้รอราคาหลุดลงก่อน`);plan.side='WAIT';plan.lean='SHORT';}
+    if(I.r[n-1]<=30){plan.warn.push(`RSI ${I.r[n-1].toFixed(0)} ต่ำกว่า 30 ไล่ขายตอนนี้เสี่ยงโดนเด้ง ควรรอราคาเด้งขึ้นมาในโซนเข้า`);}
+  }
+  plan.buyTrig=R!=null?R:P+A;plan.sellTrig=S!=null?S:P-A;
   return plan;}
-
-// =============== Higher timeframe ===============
-const HTF_MAP={'1m':'15m','5m':'1h','15m':'1h','1h':'4h','4h':'1d'};
-function htfDirAt(tSec){const h=S.htf;if(!h||!h.arr.length)return null;let lo=0,hi=h.arr.length-1,ans=-1;
-  while(lo<=hi){const m=(lo+hi)>>1;if(h.arr[m].ct<=tSec){ans=m;lo=m+1;}else hi=m-1;}return ans<0?null:h.arr[ans].dir;}
-async function loadHTF(){const tf=HTF_MAP[S.tf];if(!tf||!S.feed||$('htfMode').value==='off'){S.htf=null;S.htfVer++;return;}
-  const g=S.gen,sym=isGold()?'PAXGUSDT':$('asset').value;
-  try{const b=await fetchKlines(tf,sym);if(g!==S.gen)return;const c=b.map(x=>x.close),e9=ema(c,9),e21=ema(c,21),e50=ema(c,50),sec=TF_SEC[tf];
-    S.htf={tf,arr:b.map((x,i)=>({ct:x.time+sec,dir:e50[i]==null?0:(c[i]>e50[i]&&e9[i]>e21[i])?1:(c[i]<e50[i]&&e9[i]<e21[i])?-1:0}))};S.htfVer++;S.dirty=true;}
-  catch(e){S.htf=null;S.htfVer++;toast('โหลดเทรนด์ TF ใหญ่ไม่ได้',esc(e.message)+' · ปิดตัวกรองนี้ชั่วคราว','warn',{key:'htf'});}}
-setInterval(()=>{if(S.feed)loadHTF();},5*60000);
-
-// =============== Trade simulation (backtest P&L) ===============
-function costPct(){const v=parseFloat($('cost').value);if(isFinite(v)&&v>=0)return v;return isGold()?0.012:0.1;}
-function manageTrade(pos,hi,lo,cl,i,maxHold=50){const L=pos.side==='LONG',r=pos.risk,P=pos.P,mv=x=>(L?x-P:P-x)/r;
-  const hitSL=L?lo<=pos.sl:hi>=pos.sl;
-  if(hitSL)return {R:pos.half?0.5*pos.r1+0.5*mv(pos.sl):mv(pos.sl),why:pos.half?'TP1+ทุน':'SL'};
-  if(!pos.half&&(L?hi>=pos.tp1:lo<=pos.tp1)){pos.half=true;pos.r1=mv(pos.tp1);pos.sl=P;}
-  if(pos.half&&(L?hi>=pos.tp2:lo<=pos.tp2))return {R:0.5*pos.r1+0.5*mv(pos.tp2),why:'TP2'};
-  if(i-pos.i0>=maxHold)return {R:pos.half?0.5*pos.r1+0.5*mv(cl):mv(cl),why:'หมดเวลา'};
-  return null;}
-function simulate(bars,horizon){
-  const c=bars.map(b=>b.close),h=bars.map(b=>b.high),l=bars.map(b=>b.low),n=c.length;
-  const I={c,e9:ema(c,CFG.f),e21:ema(c,CFG.s),e50:ema(c,CFG.t),r:rsi(c,CFG.r),mh:macd(c,CFG.m)},a=atr(h,l,c);
-  const sc=c.map((_,i)=>scoreAt(i,I)),bk={},trades=[],tfSec=TF_SEC[S.tf]||3600,cp=costPct()/100;let pos=null;
-  for(let i=60;i<n;i++){const j=i-horizon;
-    if(j>=55&&sc[j]){const b=bk[sc[j].score]||(bk[sc[j].score]={n:0,up:0});b.n++;if(c[i]>c[j])b.up++;}
-    if(pos){const r=manageTrade(pos,h[i],l[i],c[i],i);if(r){trades.push({side:pos.side,i0:pos.i0,i1:i,t0:bars[pos.i0].time,t1:bars[i].time,P:pos.P,R:r.R-pos.cost,why:r.why});pos=null;}}
-    if(pos||i>=n-1||!sc[i]||!a[i])continue;
-    const pr=probFrom(bk,sc[i].score);if(!pr||pr.n<20)continue;
-    const d=decide(sc[i].score,pr.p,pr.n,MODE);if(!d)continue;
-    const plan={side:d};proFilters(plan,bars[i].time+tfSec);if(plan.side!==d)continue;
-    const lv=levelsAt(h,l,c,i,150,3,a[i]*0.3),L=tradeLevels(d,c[i],a[i],lv.sup,lv.res);if(L.tooClose||!(L.risk>0))continue;
-    pos={side:d,i0:i,P:c[i],sl:L.sl,tp1:L.tp1,tp2:L.tp2,risk:L.risk,half:false,cost:c[i]*cp/L.risk};}
-  const split=Math.floor(n*0.6);
-  return {trades,all:tStats(trades),first:tStats(trades.filter(t=>t.i0<split)),last:tStats(trades.filter(t=>t.i0>=split)),splitTime:bars[split]?.time};}
-function tStats(ts){const n=ts.length;let gp=0,gl=0,eq=0,pk=0,dd=0,st=0,mst=0,w=0,hold=0;
-  for(const t of ts){if(t.R>0){gp+=t.R;w++;st=0;}else{gl-=t.R;st++;mst=Math.max(mst,st);}eq+=t.R;pk=Math.max(pk,eq);dd=Math.max(dd,pk-eq);if(t.i1!=null)hold+=t.i1-t.i0;}
-  return {n,win:n?w/n:0,pf:gl?gp/gl:(gp?Infinity:0),net:eq,exp:n?eq/n:0,dd,mst,hold:n?hold/n:0};}
 
 // =============== Bot commentary ===============
 function barsSinceCross(I,n){const d=i=>Math.sign(I.e9[i]-I.e21[i]);const s=d(n-1);let k=0;
@@ -656,9 +308,9 @@ function buildComment(res,plan,horizon){
   const {I,n,cur,a,hit,sig,bn}=res;const P=plan.P,A=plan.A,items=[];
   if(!cur)return {summary:'ข้อมูลยังไม่พอให้วิเคราะห์',items:[],invalid:''};
   const up9=I.e9[n-1]>I.e21[n-1],bc=barsSinceCross(I,n);
-  items.push([up9?'p':'n',`${N9} (ฟ้า) ${up9?'อยู่เหนือ':'อยู่ใต้'} ${N21} (ม่วง)${bc?` ตัด${up9?'ขึ้น':'ลง'}มาแล้ว ${bc} แท่ง (ดูลูกศร ${up9?'▲':'▼'} ล่าสุดบนกราฟ)`:''} แปลว่าโมเมนตัมระยะสั้น${up9?'เป็นฝั่งซื้อ':'เป็นฝั่งขาย'}${bc&&bc<=3?' และเพิ่งเกิดใหม่ๆ':''}`]);
+  items.push([up9?'p':'n',`EMA9 (ฟ้า) ${up9?'อยู่เหนือ':'อยู่ใต้'} EMA21 (ม่วง)${bc?` ตัด${up9?'ขึ้น':'ลง'}มาแล้ว ${bc} แท่ง (ดูลูกศร ${up9?'▲':'▼'} ล่าสุดบนกราฟ)`:''} แปลว่าโมเมนตัมระยะสั้น${up9?'เป็นฝั่งซื้อ':'เป็นฝั่งขาย'}${bc&&bc<=3?' และเพิ่งเกิดใหม่ๆ':''}`]);
   const d50=(P-I.e50[n-1])/I.e50[n-1]*100;
-  items.push([d50>0?'p':'n',`ราคาอยู่${d50>0?'เหนือ':'ใต้'} ${N50} (ส้ม) ${Math.abs(d50).toFixed(2)}% เทรนด์ใหญ่ของไทม์เฟรมนี้ยังเป็น${d50>0?'ขาขึ้น':'ขาลง'}`]);
+  items.push([d50>0?'p':'n',`ราคาอยู่${d50>0?'เหนือ':'ใต้'} EMA50 (ส้ม) ${Math.abs(d50).toFixed(2)}% เทรนด์ใหญ่ของไทม์เฟรมนี้ยังเป็น${d50>0?'ขาขึ้น':'ขาลง'}`]);
   const m0=I.mh[n-1],m1=I.mh[n-2];const grow=Math.abs(m0)>Math.abs(m1);
   items.push([m0>0?'p':'n',`MACD Histogram ${m0>0?'เป็นบวก':'เป็นลบ'}และ${grow?'กำลังแรงขึ้น':'เริ่มอ่อนแรงลง'}${!grow?' (แรงส่งเริ่มหมด ระวังกลับตัว)':''}`]);
   const rv=I.r[n-1];
@@ -672,96 +324,26 @@ function buildComment(res,plan,horizon){
   if(sig&&acc<0.52)items.push(['w',`ภาพรวมระบบนี้บนกราฟนี้ทายถูกแค่ ${(acc*100).toFixed(1)}% ใกล้เคียงการโยนเหรียญ ควรใช้เป็นข้อมูลประกอบ ไม่ใช่ตัวตัดสินใจหลัก`]);
   if(bn<40)items.push(['w',`ข้อมูลสถิติของสถานการณ์นี้มีแค่ ${bn} ครั้ง ตัวเลขความน่าจะเป็นยังไม่นิ่ง`]);
   plan.warn.forEach(w=>items.push(['w',w]));
-  const nw=newsContext();
-  nw.items.forEach(x=>items.push(x));
 
   let summary,invalid;const pct=x=>(x*100).toFixed(0)+'%';
   if(plan.side==='LONG'){
-    summary=`<b class="up">บอทมองฝั่งซื้อ (LONG)</b> ${plan.newsUpgrade?`ข่าวต่างประเทศเป็นบวกชัดเจน (${esc(plan.newsWhy)}) และตัวชี้วัดชี้ขึ้น (คะแนน ${sgn(cur.score)}) แม้สถิติยังไม่ได้เปรียบมาก`:plan.reversal?`เล่นจังหวะเด้งกลับ: ตัวชี้วัดยังชี้ลง (คะแนน ${sgn(cur.score)}) แต่ราคาลงมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ขึ้น (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสขึ้น ${pct(plan.pUp)} แผนคือรอซื้อในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (ใต้แนวรับเล็กน้อย กันโดนสะบัด) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
-    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดต่ำกว่า ${fmt(plan.sl)} หรือ ${N9} ตัดลงใต้ ${N21} บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
+    summary=`<b class="up">บอทมองฝั่งซื้อ (LONG)</b> ตัวชี้วัดส่วนใหญ่ชี้ขึ้น (คะแนน ${sgn(cur.score)}) และสถิติในอดีตให้โอกาสขึ้น ${pct(plan.pUp)} แผนคือรอซื้อในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (ใต้แนวรับเล็กน้อย กันโดนสะบัด) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดต่ำกว่า ${fmt(plan.sl)} หรือ EMA9 ตัดลงใต้ EMA21 บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
   }else if(plan.side==='SHORT'){
-    summary=`<b class="down">บอทมองฝั่งขาย (SHORT)</b> ${plan.newsUpgrade?`ข่าวต่างประเทศเป็นลบชัดเจน (${esc(plan.newsWhy)}) และตัวชี้วัดชี้ลง (คะแนน ${sgn(cur.score)}) แม้สถิติยังไม่ได้เปรียบมาก`:plan.reversal?`เล่นจังหวะย่อตัว: ตัวชี้วัดยังชี้ขึ้น (คะแนน ${sgn(cur.score)}) แต่ราคาขึ้นมามากแล้ว`:`ตัวชี้วัดส่วนใหญ่ชี้ลง (คะแนน ${sgn(cur.score)})`} และสถิติในอดีตให้โอกาสลง ${pct(1-plan.pUp)} แผนคือรอขายในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (เหนือแนวต้านเล็กน้อย) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
-    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดสูงกว่า ${fmt(plan.sl)} หรือ ${N9} ตัดขึ้นเหนือ ${N21} บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
+    summary=`<b class="down">บอทมองฝั่งขาย (SHORT)</b> ตัวชี้วัดส่วนใหญ่ชี้ลง (คะแนน ${sgn(cur.score)}) และสถิติในอดีตให้โอกาสลง ${pct(1-plan.pUp)} แผนคือรอขายในโซน <b>${fmt(plan.entryLow)} – ${fmt(plan.entryHigh)}</b> ตั้ง Stop Loss ที่ <b>${fmt(plan.sl)}</b> (เหนือแนวต้านเล็กน้อย) ปิดกำไรครึ่งแรกที่ <b>${fmt(plan.tp1)}</b> ที่เหลือถือไป <b>${fmt(plan.tp2)}</b> ได้ Risk:Reward ราว 1 : ${plan.rr.toFixed(2)}`;
+    invalid=`<b>แผนนี้ใช้ไม่ได้ถ้า:</b> ราคาปิดสูงกว่า ${fmt(plan.sl)} หรือ EMA9 ตัดขึ้นเหนือ EMA21 บอทจะเปลี่ยนสัญญาณให้เองอัตโนมัติ`;
   }else{
-    summary=plan.mktClosed
-      ?`<b class="neutral">ตลาดทองโลกปิดอยู่</b> (ปิด ศ. 04:00 – จ. 05:00 เวลาไทยโดยประมาณ และพักทุกวันราว 04:00–05:00) ราคา PAXG ช่วงนี้ยังขยับได้แต่โบรกเกอร์เทรดไม่ได้ และมักมีช่องว่างราคาตอนเปิด บอทจึงงดให้สัญญาณ${plan.lean?` (ถ้าตลาดเปิด บอทจะ${plan.lean==='LONG'?'ซื้อ':'ขาย'})`:''}`
-      :plan.htfBlock&&!plan.newsBlock
-      ?`<b class="neutral">บอทแนะนำให้รอก่อน (สวนเทรนด์ TF ใหญ่)</b> TF นี้ชี้${plan.htfBlock==='LONG'?'ซื้อ':'ขาย'} แต่เทรนด์ ${S.htf?TF_TH[S.htf.tf]:''} ${plan.htfDir>0?'เป็นขาขึ้น':plan.htfDir<0?'เป็นขาลง':'ยังไม่ชัด'} การเทรดสวนเทรนด์ใหญ่มักโดนลากกลับ รอให้ทั้งสอง TF ไปทางเดียวกัน`
-      :plan.newsBlock
-      ?`<b class="neutral">บอทให้งดเข้าเทรดชั่วคราว (ช่วงข่าวแรง)</b> ${plan.newsBlock} ช่วงนี้ราคามักกระชากหลาย ATR ทั้งขึ้นและลง ตัวชี้วัดทางเทคนิคใช้ไม่ได้ ${plan.lean?`(ถ้าไม่มีข่าว บอทจะ${plan.lean==='LONG'?'ซื้อ':'ขาย'})`:''} รอให้ข่าวออกแล้วราคานิ่งก่อน บอทจะกลับมาให้สัญญาณเองอัตโนมัติ`
-      :plan.newsVeto
-      ?`<b class="neutral">บอทแนะนำให้รอก่อน (ข่าวสวนทาง)</b> ทางเทคนิคชี้${plan.newsVeto==='LONG'?'ซื้อ':'ขาย'} (คะแนน ${sgn(cur.score)}, โอกาสขึ้น ${pct(plan.pUp)}) แต่ข่าวต่างประเทศตอนนี้${plan.newsVeto==='LONG'?'เป็นลบ':'เป็นบวก'}ชัดเจน (${esc(plan.newsWhy)}) เข้าสวนข่าวมีโอกาสโดนลากไปอีกทาง รอให้เทคนิคกับข่าวไปทางเดียวกันก่อน`
-      :plan.conflict
+    summary=plan.conflict
       ?`<b class="neutral">บอทแนะนำให้รอก่อน</b> ตัวชี้วัดชี้${cur.score>0?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}) แต่สถิติในอดีตบอกว่าหลังสัญญาณแบบนี้ราคามัก${plan.pUp>=0.5?'ขึ้น':'ลง'} (โอกาสขึ้น ${pct(plan.pUp)}) สองอย่างขัดกัน เข้าตอนนี้เสี่ยงโดนหลอก`
       :plan.lean
       ?`<b class="neutral">บอทแนะนำให้รอก่อน</b> สัญญาณเอียงไปทาง${plan.lean==='LONG'?'ขึ้น':'ลง'} (คะแนน ${sgn(cur.score)}, โอกาสขึ้น ${pct(plan.pUp)}) แต่${plan.lean==='LONG'?'แนวต้านอยู่ใกล้':'แนวรับอยู่ใกล้'}เกินไป กำไรที่ได้ไม่คุ้มความเสี่ยง รอให้ราคา${plan.lean==='LONG'?'เบรกขึ้นเหนือ '+fmt(plan.buyTrig):'หลุดลงต่ำกว่า '+fmt(plan.sellTrig)} ก่อน`
       :`<b class="neutral">บอทแนะนำให้รอก่อน</b> ยังไม่มีความได้เปรียบชัดพอ (คะแนน ${sgn(cur.score)}, โอกาสขึ้น ${pct(plan.pUp)}) การเข้าตอนนี้เหมือนโยนเหรียญ`;
     invalid=`<b>เงื่อนไขที่รอ:</b> ถ้าราคา<span class="up">ปิดเหนือ ${fmt(plan.buyTrig)}</span> จะเริ่มมีสัญญาณซื้อ ถ้า<span class="down">ปิดต่ำกว่า ${fmt(plan.sellTrig)}</span> จะเริ่มมีสัญญาณขาย (เส้นประสีเทาบนกราฟ)`;
   }
-  if(nw.alert)summary=`<div class="alert" style="margin:0 0 8px">${nw.alert}</div>`+summary;
   return {summary,items,invalid};}
-
-// =============== Popups (toasts) ===============
-// toast(หัวข้อ, รายละเอียด, ชนิด up/down/warn/info, {key:แทนที่ป๊อปอัปเดิมที่ key เดียวกัน, imp:สำคัญ, ms:เวลาแสดง})
-function toast(title,body='',kind='info',o={}){
-  const lv=document.getElementById('toastLv')?.value||'all';
-  if(lv==='off'||(lv==='key'&&!o.imp))return;
-  const box=document.getElementById('toasts');if(!box)return;
-  if(o.key){const old=box.querySelector(`[data-key="${o.key}"]`);if(old)old.remove();}
-  const el=document.createElement('div');el.className=`toast t-${kind}${o.imp?' big':''}`;if(o.key)el.dataset.key=o.key;
-  el.innerHTML=`<span class="x">×</span><b class="tt">${title}</b>${body?`<div>${body}</div>`:''}<div class="tm">${new Date().toLocaleTimeString('th-TH')}</div>`;
-  const kill=()=>{el.classList.add('out');setTimeout(()=>el.remove(),300);};el.onclick=kill;
-  box.prepend(el);while(box.children.length>5)box.lastChild.remove();
-  setTimeout(kill,o.ms||(o.imp?15000:6000));
-  // อยู่แท็บอื่น → ส่งแจ้งเตือนของระบบด้วย (ถ้าเปิดไว้)
-  if(o.imp&&document.hidden&&document.getElementById('notify')?.checked){
-    try{if(window.Notification&&Notification.permission==='granted')new Notification(title.replace(/<[^>]+>/g,''),{body:body.replace(/<[^>]+>/g,''),tag:o.key||undefined});}catch(e){}}}
-const SIDE_TH={LONG:'▲ ซื้อ (LONG)',SHORT:'▼ ขาย (SHORT)',WAIT:'รอก่อน',NONE:'ข้อมูลไม่พอ'};
-const SIDE_K={LONG:'up',SHORT:'down',WAIT:'warn',NONE:'info'};
-let PREV=null,lastScoreToast=0;
-function diffToasts(plan,res,price){const cur=res.cur;
-  const st={side:plan.side,block:!!plan.newsBlock,veto:!!plan.newsVeto,rev:!!plan.reversal,up:!!plan.newsUpgrade,size:plan.size,
-    nd:plan.news?plan.news.dir:0,score:cur?cur.score:null,conflict:!!plan.conflict,lean:plan.lean||null};
-  const P=PREV;PREV=st;
-  if(!P){toast(`สัญญาณตอนนี้: ${SIDE_TH[st.side]}`,`${NAMES[$('asset').value]} · TF ${S.tf} · ราคา ${fmt(price)}${cur?` · คะแนน ${sgn(cur.score)}`:''}`,SIDE_K[st.side],{key:'sig',imp:true,ms:8000});return;}
-  // 1) สัญญาณหลักเปลี่ยน
-  if(st.side!==P.side){let why='';
-    if(plan.mktClosed)why='ตลาดทองโลกปิด';else if(plan.htfBlock)why='สวนเทรนด์ TF ใหญ่';
-    else if(st.block)why='เพราะเข้าช่วงข่าวแรง USD งดเทรดชั่วคราว';else if(st.veto)why='เพราะข่าวสวนทางสัญญาณ';
-    else if(st.up)why='ข่าวช่วยยืนยัน (ครึ่งไม้)';else if(st.rev)why='จังหวะเด้งกลับตามสถิติ';
-    else if(st.side==='WAIT')why=st.conflict?'ตัวชี้วัดกับสถิติขัดกัน':st.lean?'แนวรับ/แนวต้านใกล้เกินไป':'ความได้เปรียบหายไป';
-    const plan2=(st.side==='LONG'||st.side==='SHORT')?`<br>เข้า ${fmt(plan.entryLow)}–${fmt(plan.entryHigh)} · SL ${fmt(plan.sl)} · TP1 ${fmt(plan.tp1)}`:'';
-    toast(`${SIDE_TH[P.side]} → ${SIDE_TH[st.side]}`,`ราคา ${fmt(price)}${why?' · '+why:''}${plan2}`,SIDE_K[st.side],{key:'sig',imp:true});}
-  else{
-    // 2) เหตุผลเปลี่ยนแม้ฝั่งเดิม
-    if(st.block!==P.block)toast(st.block?'เข้าช่วงงดเทรด (ข่าวแรง)':'พ้นช่วงข่าวแรงแล้ว',st.block?plan.newsBlock:'บอทกลับมาใช้สัญญาณทางเทคนิคตามปกติ','warn',{key:'block',imp:true});
-    if(st.veto!==P.veto)toast(st.veto?'ข่าวสวนทาง: ยกเลิกสัญญาณ':'ข่าวไม่สวนทางแล้ว',esc(plan.newsWhy||''),'warn',{key:'veto',imp:true});
-    if(st.size!==P.size&&(st.side==='LONG'||st.side==='SHORT'))toast(`ขนาดไม้แนะนำ: ${st.size<1?'ครึ่งไม้':'เต็มไม้'}`,st.size<1?'มีปัจจัยสวนทาง (ข่าว/สวนเทรนด์)':'ปัจจัยสวนทางหายไป','info',{key:'size',imp:true});
-    if(st.rev!==P.rev&&st.side!=='WAIT')toast(st.rev?'สัญญาณเปลี่ยนเป็นแบบเด้งกลับ':'สัญญาณกลับเป็นแบบตามเทรนด์','','info',{key:'rev'});
-    if(st.side==='WAIT'&&(st.conflict!==P.conflict||st.lean!==P.lean)&&!st.block&&!st.veto)toast('เหตุผลที่ให้รอเปลี่ยน',st.conflict?'ตัวชี้วัดกับสถิติขัดกัน':st.lean?`เอียง${st.lean==='LONG'?'ขึ้น':'ลง'} แต่แนวรับ/ต้านใกล้เกินไป`:'ยังไม่มีความได้เปรียบชัด','info',{key:'why'});}
-  // 3) ข่าวเปลี่ยนทิศ
-  if(st.nd!==P.nd){const d=st.nd;toast(`คะแนนข่าว ${sgn(P.nd)} → ${sgn(d)}`,d>=2?'ข่าวหนุนขึ้นชัด':d<=-2?'ข่าวกดดันลงชัด':d>0?'ข่าวเอียงบวก':d<0?'ข่าวเอียงลบ':'ข่าวกลางๆ',d>0?'up':d<0?'down':'info',{key:'nd',imp:Math.abs(d)>=2||Math.abs(P.nd)>=2});}
-  // 4) คะแนนเทคนิคเปลี่ยน (รวมเป็นป๊อปอัปเดียว ไม่เกินทุก 5 วินาที)
-  if(st.score!==P.score&&st.score!=null&&Date.now()-lastScoreToast>5000){lastScoreToast=Date.now();
-    toast(`คะแนนเทคนิค ${sgn(P.score)} → ${sgn(st.score)}`,`ราคา ${fmt(price)} · โอกาสขึ้น ${(plan.pUp*100).toFixed(0)}%`,st.score>P.score?'up':'down',{key:'score',ms:4000});}
-  else if(st.score!==P.score)PREV.score=P.score; // ยังไม่ครบ 5 วิ เก็บค่าเดิมไว้เทียบรอบหน้า
-}
-let liveWas=null;
 
 // =============== Formatting ===============
 let DEC=2;
-const SPEEDS={normal:{f:9,s:21,t:50,r:14,m:[12,26,9]},fast:{f:5,s:13,t:34,r:9,m:[8,17,9]},turbo:{f:3,s:8,t:21,r:7,m:[5,13,5]}};
-let CFG=SPEEDS.fast,N9='EMA5',N21='EMA13',N50='EMA34';
-function setSpeed(){CFG=SPEEDS[$('speed').value]||SPEEDS.fast;N9='EMA'+CFG.f;N21='EMA'+CFG.s;N50='EMA'+CFG.t;
-  document.querySelectorAll('.nF').forEach(e=>e.textContent=N9);document.querySelectorAll('.nS').forEach(e=>e.textContent=N21);document.querySelectorAll('.nT').forEach(e=>e.textContent=N50);}
-// ---- แจ้งเตือน ----
-let actx=null,lastNotify={};
-function beep(up){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();
-  o.frequency.value=up?880:440;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.2,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+0.6);o.start();o.stop(actx.currentTime+0.6);}catch(e){}}
-function notifySignal(side,price){if(!$('notify').checked||(side!=='LONG'&&side!=='SHORT'))return;
-  const now=Date.now();if(lastNotify[side]&&now-lastNotify[side]<60000)return;lastNotify[side]=now; // กันเตือนรัวตอนสัญญาณสะบัด
-  beep(side==='LONG');const msg=`${NAMES[$('asset').value]}: ${side==='LONG'?'▲ ซื้อ':'▼ ขาย'} ที่ ${fmt(price)}`;
-  document.title=msg;try{if(window.Notification&&Notification.permission==='granted')new Notification('Trend Analyzer',{body:msg});}catch(e){}}
 function sgn(x){return (x>0?'+':'')+x;}
 function fmt(x,d=DEC){return x==null||!isFinite(x)?'—':x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
 const $=id=>document.getElementById(id);
@@ -776,7 +358,7 @@ function ensureChart(){if(chart)return;const el=$('chart');
   candle=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
   const opt=c=>({color:c,lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
   l9=chart.addLineSeries(opt('#42a5f5'));l21=chart.addLineSeries(opt('#ab47bc'));l50=chart.addLineSeries({...opt('#ffa726'),lineWidth:2});
-  new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight||420})).observe(el);}
+  new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth})).observe(el);}
 function drawChart(res,plan,full,hasTime){ensureChart();const {bars,I,n}=res;
   const pf={type:'price',precision:DEC,minMove:Math.pow(10,-DEC)};
   const line=arr=>bars.map((b,i)=>arr[i]!=null?{time:b.time,value:arr[i]}:null).filter(Boolean);
@@ -813,20 +395,15 @@ function drawChart(res,plan,full,hasTime){ensureChart();const {bars,I,n}=res;
     if(plan.side==='SHORT'&&plan.sup!=null&&Math.abs(plan.sup-plan.tp1)>plan.A*0.05)add(plan.sup,'#8a8f99','แนวรับ',1);
   }else if(plan.side==='WAIT'){
     add(plan.buyTrig,'#8a8f99','ซื้อถ้าเบรก',2);add(plan.sellTrig,'#8a8f99','ขายถ้าหลุด',2);
-  }
-  // ออเดอร์ที่เปิดอยู่ของสินทรัพย์นี้
-  (typeof POS!=='undefined'?POS:[]).filter(p=>p.asset===$('asset').value).forEach((p,k)=>{const L=p.side==='LONG';
-    add(p.entry,'#e6b422',`#${p.no} ${L?'BUY':'SELL'} ${p.qtyLeft}`,0,2);add(p.sl,'#ff7043',`#${p.no} SL`,1,1);
-    if(!p.half&&p.tp1)add(p.tp1,'#66bb6a',`#${p.no} TP1`,1,1);if(p.tp2)add(p.tp2,'#66bb6a',`#${p.no} TP2`,1,1);});}
+  }}
 
 // =============== Panels ===============
 let lastSide=null;
-function renderAll(res,full,hasTime,resL){resL=resL||res;
+function renderAll(res,full,hasTime){
   $('result').classList.remove('hidden');
-  const {I,a,cur,pUp,buckets,tot,ups,hit,sig,n}=res;const price=resL.I.c[resL.n-1];
+  const {I,a,cur,pUp,buckets,tot,ups,hit,sig,n}=res;const price=I.c[n-1];
   DEC=price>=100?2:price>=1?4:6;
   const plan=makePlan(res);const h=S.horizon;
-  const planL=resL!==res?makePlan(resL):plan;
   // headline
   const dirEl=$('dir'),bar=$('probBar');
   const lab={LONG:['▲ ซื้อ (LONG)','up'],SHORT:['▼ ขาย (SHORT)','down'],WAIT:['รอก่อน / ยังไม่ชัด','neutral'],NONE:['ข้อมูลไม่พอ','neutral']}[plan.side];
@@ -838,10 +415,8 @@ function renderAll(res,full,hasTime,resL){resL=resL||res;
   const tile=(k,v,c='')=>`<div class="stat"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`;
   $('plan').innerHTML=(plan.side==='LONG'||plan.side==='SHORT')?
     tile('โซนเข้า',`${fmt(plan.entryLow)}<br>– ${fmt(plan.entryHigh)}`)+tile('Stop Loss',fmt(plan.sl),'down')+
-    tile('TP1 (ปิดครึ่ง)',fmt(plan.tp1),'up')+tile('TP2',fmt(plan.tp2),'up')+tile('Risk : Reward',`1 : ${plan.rr.toFixed(2)}`)+tile('ขนาดไม้ (lot)',sizeText(plan),plan.size<1?'neutral':'')
+    tile('TP1 (ปิดครึ่ง)',fmt(plan.tp1),'up')+tile('TP2',fmt(plan.tp2),'up')+tile('Risk : Reward',`1 : ${plan.rr.toFixed(2)}`)
     :plan.side==='WAIT'?tile('ซื้อเมื่อปิดเหนือ',fmt(plan.buyTrig),'up')+tile('ขายเมื่อปิดต่ำกว่า',fmt(plan.sellTrig),'down')+tile('แนวรับ',fmt(plan.sup))+tile('แนวต้าน',fmt(plan.res)):'';
-  $('newsStrip').innerHTML=newsStripHtml(plan);
-  $('proStrip').innerHTML=proStripHtml(plan,planL,resL!==res);
   // commentary
   const cm=buildComment(res,plan,h);
   $('summary').innerHTML=cm.summary;
@@ -851,27 +426,16 @@ function renderAll(res,full,hasTime,resL){resL=resL||res;
   if(lastSide!==null&&plan.side!==lastSide){const t=new Date().toLocaleTimeString('th-TH');
     const lg=$('log');if(lg.querySelector('.muted'))lg.innerHTML='';
     const cls={LONG:'up',SHORT:'down'}[plan.side]||'neutral';
-    lg.insertAdjacentHTML('afterbegin',`<div><span class="muted">${t}</span> · ${lastSide} → <b class="${cls}">${plan.side}</b>${plan.reversal?' (เด้งกลับ)':''} ที่ราคา ${fmt(price)}</div>`);
-    notifySignal(plan.side,price);
-    if((plan.side==='LONG'||plan.side==='SHORT')&&S.feed)jrAdd(plan,res);}
-  lastSide=plan.side;LAST={plan,res,price};
-  diffToasts(plan,res,price);
-  // แถบสรุปบนกราฟตอนเต็มจอ
-  const kv=(k,v,c='')=>`<span class="kv">${k} <b class="${c}">${v}</b></span>`;
-  $('fsInfo').innerHTML=`<span class="sd ${lab[1]}">${lab[0]}</span>`+kv(NAMES[$('asset').value]+' · TF '+S.tf,fmt(price))+
-    (plan.side==='LONG'||plan.side==='SHORT'?kv('เข้า',`${fmt(plan.entryLow)}–${fmt(plan.entryHigh)}`)+kv('SL',fmt(plan.sl),'down')+kv('TP1',fmt(plan.tp1),'up')+kv('TP2',fmt(plan.tp2),'up')+kv('ไม้',(calcSize(plan)||{}).txt||(plan.size<1?'ครึ่ง':'เต็ม'))
-    :plan.side==='WAIT'?kv('ซื้อเหนือ',fmt(plan.buyTrig),'up')+kv('ขายต่ำกว่า',fmt(plan.sellTrig),'down'):'')+
-    (pUp!=null?kv('โอกาสขึ้น',(pUp*100).toFixed(0)+'%'):'')+(plan.newsBlock?'<span class="kv down">⚠ ช่วงข่าวแรง</span>':'');
+    lg.insertAdjacentHTML('afterbegin',`<div><span class="muted">${t}</span> · ${lastSide} → <b class="${cls}">${plan.side}</b> ที่ราคา ${fmt(price)}</div>`);}
+  lastSide=plan.side;
   // votes / stats
   $('sScore').textContent=cur?sgn(cur.score):'—';$('sRsi').textContent=fmt(I.r[n-1],1);$('sAtr').textContent=fmt(a[n-1]);
   $('votes').innerHTML='<tr><th>ตัวชี้วัด</th><th>สถานะ</th><th>คะแนน</th></tr>'+(cur?cur.votes.map(v=>`<tr><td>${v[0]}</td><td>${v[2]}</td><td class="${v[1]>0?'up':v[1]<0?'down':'neutral'}">${v[1]>0?'+1':v[1]<0?'-1':'0'}</td></tr>`).join(''):'');
   $('bAcc').textContent=sig?(hit/sig*100).toFixed(1)+'%':'—';$('bN').textContent=sig;$('bBase').textContent=tot?(ups/tot*100).toFixed(1)+'%':'—';
-  const oz=o=>o.n?`${(o.hit/o.n*100).toFixed(1)}% <span class="muted">(${o.n} ครั้ง)</span>`:'—';
-  $('oStrict').innerHTML=oz(res.oos.strict);$('oStat').innerHTML=oz(res.oos.stat);
   const keys=Object.keys(buckets).map(Number).sort((x,y)=>y-x);
   $('bucketTable').innerHTML='<tr><th>คะแนน</th><th>จำนวนครั้ง</th><th>ขึ้นจริง</th></tr>'+keys.map(k=>{const b=buckets[k];const p=b.up/b.n*100;
     return `<tr${cur&&k===cur.score?' style="background:#222734"':''}><td>${sgn(k)}</td><td>${b.n}</td><td class="${p>=55?'up':p<=45?'down':''}">${p.toFixed(1)}%</td></tr>`}).join('');
-  drawChart(resL,plan,full,hasTime);}
+  drawChart(res,plan,full,hasTime);}
 
 // =============== Data sources ===============
 const TZ=7*3600;
@@ -894,46 +458,26 @@ async function fetchXaus(tf){
   const bars=toCandles(pts,TF_SEC[tf]);
   if(bars.length<70)throw new Error('ได้แค่ '+bars.length+' แท่ง');
   return bars;}
-async function fetchKlinesPage(tf,sym,end){const q=`symbol=${sym}&interval=${tf}&limit=1000${end?'&endTime='+end:''}`;
-  const urls=[`https://data-api.binance.vision/api/v3/klines?${q}`,`https://api.binance.com/api/v3/klines?${q}`];
+async function fetchKlines(tf,sym){
+  const urls=[`https://data-api.binance.vision/api/v3/klines?symbol=${sym}&interval=${tf}&limit=1000`,
+              `https://api.binance.com/api/v3/klines?symbol=${sym}&interval=${tf}&limit=1000`];
   let lastErr;
-  for(const u of urls){try{return await getJSON(u);}catch(e){lastErr=e;}}
+  for(const u of urls){try{const d=await getJSON(u);
+      return d.map(k=>({time:Math.floor(k[0]/1000)+TZ,open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));}
+    catch(e){lastErr=e;}}
   throw lastErr;}
-// ดึงย้อนหลังหลายหน้า (ค่าเริ่มต้น 3,000 แท่ง) ให้การทดสอบมีจำนวนเทรดพอสรุปผลได้
-async function fetchKlines(tf,sym,pages=1){let all=await fetchKlinesPage(tf,sym);
-  for(let p=1;p<pages&&all.length;p++){try{const more=await fetchKlinesPage(tf,sym,all[0][0]-1);if(!more.length)break;all=more.concat(all);if(more.length<1000)break;}catch(e){break;}}
-  return all.map(k=>({time:Math.floor(k[0]/1000)+TZ,open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));}
-const MAX_BARS=3000;
 
 // =============== Live engine ===============
-let MODE='stat';
-const S={htf:null,htfVer:0,offset:0,offOn:false,bars:[],horizon:3,tf:'15m',feed:null,sym:null,used:'',gen:0,ws:null,poll:null,lastTick:0,dirty:false,hasTime:true};
-function setLive(on,text){$('liveBadge').classList.toggle('on',!!on);$('liveText').textContent=text||(on?'LIVE':'OFFLINE');
-  if(liveWas!==null&&!!on!==liveWas)toast(on?'เชื่อมต่อราคาสดแล้ว':'ราคาสดหลุด',on?'กลับมารับราคาเรียลไทม์':(text||'')+' บอทจะต่อใหม่ให้อัตโนมัติ',on?'up':'down',{key:'live',imp:!on});
-  liveWas=!!on;}
-const shiftBar=(b,d)=>({time:b.time,open:b.open+d,high:b.high+d,low:b.low+d,close:b.close+d});
+const S={bars:[],horizon:3,tf:'15m',feed:null,sym:null,used:'',gen:0,ws:null,poll:null,lastTick:0,dirty:false,hasTime:true};
+function setLive(on,text){$('liveBadge').classList.toggle('on',!!on);$('liveText').textContent=text||(on?'LIVE':'OFFLINE');}
 function stopFeed(){S.gen++;if(S.ws){try{S.ws.close()}catch(e){}S.ws=null;}clearInterval(S.poll);S.poll=null;setLive(false);}
 function onTick(bar){const B=S.bars,last=B[B.length-1];
   if(last&&bar.time===last.time)B[B.length-1]=bar;
-  else if(!last||bar.time>last.time){B.push(bar);if(B.length>MAX_BARS)B.shift();}
+  else if(!last||bar.time>last.time){B.push(bar);if(B.length>1000)B.shift();}
   else return;
   S.lastTick=Date.now();S.dirty=true;}
-// วิเคราะห์: สัญญาณหลักใช้เฉพาะแท่งที่ปิดแล้ว (ถ้าเลือก) ส่วนกราฟใช้ทุกแท่งรวมแท่งที่กำลังก่อตัว
-const CACHE={key:null,res:null,simKey:null,sim:null};
-function cfgKey(){return [CFG.f,CFG.s,CFG.t,S.horizon,MODE,$('htfMode').value,S.htfVer,costPct(),S.offset,$('asset').value,S.tf].join('|');}
-function refresh(full){if(S.bars.length<71)return;
-  const conf=!!S.feed&&$('confirm').value==='close';
-  const closed=S.feed?S.bars.slice(0,-1):S.bars,lt=closed[closed.length-1];
-  let resC;
-  if(conf){const key=cfgKey()+'|'+closed.length+'|'+lt.time+'|'+lt.close;if(CACHE.key!==key){CACHE.key=key;CACHE.res=analyze(closed,S.horizon);}resC=CACHE.res;}
-  else resC=analyze(S.bars,S.horizon);
-  const resL=conf?analyze(S.bars,S.horizon):resC;
-  renderAll(resC,full,S.hasTime,resL);
-  const sk=cfgKey()+'|'+closed.length+'|'+lt.time;
-  if(CACHE.simKey!==sk){CACHE.simKey=sk;try{CACHE.sim=simulate(closed,S.horizon);renderSim(CACHE.sim);}catch(e){console.error(e);}}
-  jrUpdate();posTick();}
 setInterval(()=>{ // throttled re-analysis ≈ 1/sec
-  if(S.dirty&&S.bars.length>=70){S.dirty=false;refresh(false);
+  if(S.dirty&&S.bars.length>=70){S.dirty=false;renderAll(analyze(S.bars,S.horizon),false,S.hasTime);
     const pn=$('priceNow');pn.classList.remove('flash');void pn.offsetWidth;pn.classList.add('flash');}
   if(S.feed){const age=S.lastTick?Math.round((Date.now()-S.lastTick)/1000):null;
     $('status').textContent=`${S.used} · ${S.bars.length} แท่ง · ราคาล่าสุดเมื่อ ${age==null?'—':age+' วิที่แล้ว'} · บอทวิเคราะห์ใหม่ทุกครั้งที่ราคาขยับ`;}
@@ -943,7 +487,7 @@ function openWS(sym,tf){const g=S.gen,s=sym.toLowerCase();
   const connect=()=>{if(g!==S.gen)return;let opened=false;const ws=new WebSocket(urls[idx%urls.length]);S.ws=ws;
     ws.onopen=()=>{opened=true;setLive(true);};
     ws.onmessage=e=>{if(g!==S.gen)return;const k=JSON.parse(e.data).k;if(!k)return;
-      const bb={time:Math.floor(k.t/1000)+TZ,open:+k.o,high:+k.h,low:+k.l,close:+k.c};onTick(S.offOn&&S.offset?shiftBar(bb,S.offset):bb);};
+      onTick({time:Math.floor(k.t/1000)+TZ,open:+k.o,high:+k.h,low:+k.l,close:+k.c});};
     ws.onclose=()=>{if(g!==S.gen)return;setLive(false,'กำลังต่อใหม่...');if(!opened)idx++;setTimeout(connect,3000);};
     ws.onerror=()=>{try{ws.close()}catch(e){}};};
   connect();}
@@ -958,8 +502,7 @@ function startXausPoll(tf){const g=S.gen,sec=TF_SEC[tf],off=tf==='1d'?0:TZ;
   tick();S.poll=setInterval(tick,30000);}
 
 async function loadAll(){
-  stopFeed();liveWas=null;PREV=null;const asset=$('asset').value,tf=$('tf').value,src=$('src').value;
-  toast('กำลังโหลดข้อมูล',`${NAMES[asset]} · TF ${tf}`,'info',{key:'load',ms:3000});
+  stopFeed();const asset=$('asset').value,tf=$('tf').value,src=$('src').value;
   S.tf=tf;S.horizon=+$('horizon').value;S.hasTime=tf!=='1d';lastSide=null;
   $('log').innerHTML='<div class="muted">ยังไม่มีการเปลี่ยนสัญญาณ</div>';
   $('status').textContent='กำลังโหลดข้อมูลย้อนหลัง...';
@@ -968,469 +511,21 @@ async function loadAll(){
       if(['1m','5m','15m','1d'].includes(tf)){try{bars=await fetchXaus(tf);S.feed='xaus';S.used='XAUS XAU/USD (อัปเดตทุก 30 วิ)';}
         catch(e){note=` · XAUS ใช้ไม่ได้ (${e.message}) สลับไป Binance`;}}
       else note=' · XAUS มีข้อมูลไม่พอสำหรับไทม์เฟรมนี้ ใช้ Binance แทน';}
-    S.offOn=false;
-    if(!bars){const sym=asset==='GOLD'?'PAXGUSDT':asset;bars=await fetchKlines(tf,sym,3);S.feed='binance';S.sym=sym;
-      S.offOn=asset==='GOLD';if(S.offOn&&S.offset)bars=bars.map(b=>shiftBar(b,S.offset));
+    if(!bars){const sym=asset==='GOLD'?'PAXGUSDT':asset;bars=await fetchKlines(tf,sym);S.feed='binance';S.sym=sym;
       S.used=`Binance ${sym.replace('USDT','/USDT')} (สดทุกวินาที)${note}`;}
     S.bars=bars;S.dirty=false;S.lastTick=Date.now();
-    $('toasts').querySelector('[data-key="load"]')?.remove();
-    refresh(true);loadHTF();
-    if(note)toast('เปลี่ยนแหล่งข้อมูล',esc(note.replace(/^ · /,'')),'warn',{imp:true});
+    renderAll(analyze(S.bars,S.horizon),true,S.hasTime);
     if(S.feed==='binance')openWS(S.sym,tf);else startXausPoll(tf);}
-  catch(e){S.feed=null;$('status').textContent='ดึงข้อมูลไม่สำเร็จ ('+e.message+') ลองกด "โหลดใหม่" หรือใช้แท็บวางข้อมูลแทน';toast('ดึงข้อมูลราคาไม่สำเร็จ',esc(e.message),'down',{key:'load',imp:true});}}
+  catch(e){S.feed=null;$('status').textContent='ดึงข้อมูลไม่สำเร็จ ('+e.message+') ลองกด "โหลดใหม่" หรือใช้แท็บวางข้อมูลแทน';}}
 
 // =============== Thai gold ===============
 async function loadThai(){if($('asset').value!=='GOLD')return;const el=$('thaiTime');
   try{const d=await getJSON('https://api.chnwt.dev/thai-gold-api/latest');const r=d.response||{},p=r.price||{};
     const g=p.gold||{},b=p.gold_bar||{};
-    if(window._thaiPrev&&b.sell&&b.sell!==window._thaiPrev){const d=numVal(b.sell)-numVal(window._thaiPrev);
-      toast('ราคาทองไทยเปลี่ยน',`ทองแท่งขายออก ${esc(window._thaiPrev)} → <b>${esc(b.sell)}</b> (${d>0?'+':''}${d.toLocaleString()} บาท)`,d>0?'up':'down',{key:'thai',imp:true});}
-    if(b.sell)window._thaiPrev=b.sell;
     $('tBarBuy').textContent=b.buy||'—';$('tBarSell').textContent=b.sell||'—';$('tOrnBuy').textContent=g.buy||'—';$('tOrnSell').textContent=g.sell||'—';
     el.textContent=[r.update_date,r.update_time].filter(Boolean).join(' ');}
   catch(e){el.textContent='ดึงราคาทองไทยไม่ได้ ('+e.message+')';}}
 setInterval(loadThai,60000);
-
-// =============== Foreign news ===============
-const NEWS={events:[],heads:[],headAsset:null,calErr:'',headErr:''};
-const PROXIES=[u=>u,u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),u=>'https://corsproxy.io/?url='+encodeURIComponent(u),u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u)];
-async function fetchText(url){let last;
-  for(const p of PROXIES){try{const r=await fetch(p(url),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();if(t&&t.length>20)return t;throw new Error('ว่างเปล่า');}catch(e){last=e;}}
-  throw last||new Error('โหลดไม่ได้');}
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function ago(ms){const m=Math.round((Date.now()-ms)/60000);if(m<1)return 'เมื่อสักครู่';if(m<60)return m+' นาทีที่แล้ว';const h=Math.floor(m/60);if(h<24)return h+' ชม.ที่แล้ว';return Math.floor(h/24)+' วันที่แล้ว';}
-function countdown(ms){const m=Math.round((ms-Date.now())/60000);if(m<=0)return m>-1?'ตอนนี้':'ผ่านมา '+(-m<60?-m+' นาที':Math.floor(-m/60)+' ชม.');
-  if(m<60)return 'อีก '+m+' นาที';const h=Math.floor(m/60);if(h<24)return 'อีก '+h+' ชม. '+(m%60)+' นาที';return 'อีก '+Math.floor(h/24)+' วัน';}
-const thTime=ms=>new Date(ms).toLocaleString('th-TH',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'});
-
-// --- Economic calendar (ForexFactory weekly JSON) ---
-const EV_TH=[[/non-farm/i,'การจ้างงานนอกภาคเกษตร (NFP)'],[/core pce|pce price/i,'ดัชนี PCE (เงินเฟ้อที่ Fed ใช้)'],[/core cpi|^cpi/i,'ดัชนีราคาผู้บริโภค CPI (เงินเฟ้อ)'],
-  [/ppi/i,'ดัชนีราคาผู้ผลิต PPI'],[/unemployment claims/i,'ผู้ขอรับสวัสดิการว่างงานรายสัปดาห์'],[/unemployment rate/i,'อัตราว่างงาน'],
-  [/federal funds rate/i,'ประกาศอัตราดอกเบี้ย Fed'],[/fomc.*(minutes)/i,'รายงานการประชุม Fed'],[/fomc|fed chair|powell/i,'ถ้อยแถลง/ประชุม Fed'],
-  [/speaks/i,'สุนทรพจน์เจ้าหน้าที่ธนาคารกลาง'],[/gdp/i,'GDP (การเติบโตเศรษฐกิจ)'],[/retail sales/i,'ยอดค้าปลีก'],[/ism manufacturing/i,'ดัชนีภาคการผลิต ISM'],
-  [/ism services/i,'ดัชนีภาคบริการ ISM'],[/jolts/i,'ตำแหน่งงานว่าง JOLTS'],[/adp/i,'การจ้างงานภาคเอกชน ADP'],[/consumer (confidence|sentiment)/i,'ความเชื่อมั่นผู้บริโภค'],
-  [/average hourly/i,'ค่าจ้างเฉลี่ยรายชั่วโมง'],[/durable goods/i,'คำสั่งซื้อสินค้าคงทน'],[/pmi/i,'ดัชนี PMI'],[/crude oil inventories/i,'สต็อกน้ำมันดิบ'],[/bank holiday/i,'วันหยุดธนาคาร']];
-const evTh=t=>{for(const [r,s] of EV_TH)if(r.test(t))return s;return '';};
-async function loadCalendar(){
-  const base='https://nfs.faireconomy.media/ff_calendar_';const all=[];let ok=false,err='';
-  for(const wk of ['thisweek','nextweek']){try{const d=JSON.parse(await fetchText(base+wk+'.json'));
-      if(Array.isArray(d)){ok=true;d.forEach(e=>{const t=Date.parse(e.date);if(t)all.push({t,title:e.title,cur:e.country,imp:e.impact,fc:e.forecast,prev:e.previous,act:e.actual});});}}
-    catch(e){if(wk==='thisweek')err=e.message;}}
-  if(ok){const seen=new Set();NEWS.events=all.filter(e=>{const k=e.t+e.title+e.cur;if(seen.has(k))return false;seen.add(k);return true;}).sort((a,b)=>a.t-b.t);NEWS.calErr='';}
-  else NEWS.calErr=err||'โหลดไม่ได้';
-  renderCalendar();if(S.bars.length>=70&&S.feed)S.dirty=true;}
-function renderCalendar(){const el=$('calList');
-  if(NEWS.calErr&&!NEWS.events.length){el.innerHTML=`<div class="muted">ดึงปฏิทินข่าวไม่ได้ (${esc(NEWS.calErr)}) ลองกดรีเฟรช</div>`;renderAlert();return;}
-  const usd=$('calUsdOnly').checked,hi=$('calHighOnly').checked,hide=$('calHidePast').checked,now=Date.now();
-  const list=NEWS.events.filter(e=>(!usd||e.cur==='USD')&&(hi?e.imp==='High':(e.imp==='High'||e.imp==='Medium'||e.imp==='Holiday'))&&(!hide||e.t>now-30*60000));
-  if(!list.length){el.innerHTML='<div class="muted">ไม่มีข่าวตามเงื่อนไขที่เลือกในช่วงนี้</div>';renderAlert();return;}
-  el.innerHTML=list.slice(0,60).map(e=>{const past=e.t<now-5*60000,soon=!past&&e.imp==='High'&&e.t-now<60*60000;
-    const chip=e.imp==='High'?'<span class="chip hi">สูง</span>':e.imp==='Medium'?'<span class="chip md">กลาง</span>':'<span class="chip">หยุด</span>';
-    const th=evTh(e.title);const nums=[e.act?`จริง <b>${esc(e.act)}</b>`:'',e.fc?`คาด ${esc(e.fc)}`:'',e.prev?`ก่อน ${esc(e.prev)}`:''].filter(Boolean).join(' · ');
-    return `<div class="ev${past?' past':''}${soon?' soon':''}"><div><div>${thTime(e.t)}</div><div class="t">${countdown(e.t)}</div></div>
-      <div>${chip} <b>${esc(e.cur)}</b> ${esc(e.title)}${th?`<div class="t">${th}</div>`:''}</div><div class="fc">${nums}</div></div>`;}).join('');
-  renderAlert();}
-function highUsdWindow(){const now=Date.now();
-  const hot=NEWS.events.filter(e=>e.cur==='USD'&&e.imp==='High'&&e.t>now-15*60000&&e.t<now+60*60000);
-  const next=NEWS.events.find(e=>e.cur==='USD'&&e.imp==='High'&&e.t>now);return {hot,next};}
-function renderAlert(){const {hot}=highUsdWindow();
-  $('newsAlert').innerHTML=hot.length?`<div class="alert">⚠ ข่าวแรง USD ช่วงนี้: ${hot.map(e=>`<b>${esc(e.title)}</b> (${thTime(e.t)}, ${countdown(e.t)})`).join(', ')} ราคามักกระชากทั้งสองทาง Stop Loss อาจโดนง่าย</div>`:'';}
-
-// --- Headlines ---
-const TONE={
-  gold:{up:[/rate cuts?\b|cuts? rates?|dovish|easing/i,/(dollar|greenback|usd)\s+(falls?|slips?|drops?|weakens?|slides?|retreats?|eases?)|weak(er)? dollar/i,/yields?\s+(fall|drop|slip|ease|decline)/i,/safe[- ]haven|geopolitic|tension|conflict|\bwar\b|missile|attack|shutdown|uncertaint|recession|turmoil/i,/record|all-time high|rall(y|ies)|surg|soar|jump|climb|\brise|rises|rising|gain|higher|boost|inflow|central banks? buy/i],
-        dn:[/rate hikes?|hikes? rates?|hawkish|tighten/i,/(dollar|greenback|usd)\s+(rises?|gains?|jumps?|climbs?|strengthens?|firms?|rall(y|ies))|strong(er)? dollar/i,/yields?\s+(rise|climb|jump|surge)/i,/ceasefire|truce|peace (deal|talks)|eases? tensions?/i,/\bfall|falls|drop|slide|slump|tumbl|plung|sell-?off|lower|declin|retreat|\bloss|profit[- ]taking|outflow/i]},
-  crypto:{up:[/rate cuts?\b|dovish/i,/etf (inflow|approv)|approv|adopt|reserve|bullish|breakout/i,/record|all-time high|rall(y|ies)|surg|soar|jump|climb|\brise|rises|rising|gain|higher|rebound|inflow/i],
-        dn:[/rate hikes?|hawkish/i,/hack|exploit|ban\b|bans|lawsuit|\bsues?\b|fraud|crackdown|bearish|liquidat|outflow/i,/\bfall|falls|drop|slide|slump|tumbl|plung|crash|sell-?off|lower|declin|retreat|\bloss/i]}};
-function toneOf(title,kind){let s=title,sc=0;const T=TONE[kind];
-  // จับวลีเฉพาะก่อน (เช่น "dollar falls") แล้วลบออก กันไปนับคำว่า falls ซ้ำเป็นข่าวลบของทอง
-  const groups=[...T.up.slice(0,-1).map(r=>[r,1]),...T.dn.slice(0,-1).map(r=>[r,-1]),[T.up[T.up.length-1],1],[T.dn[T.dn.length-1],-1]];
-  for(const [r,v] of groups){const g=new RegExp(r.source,'gi');if(g.test(s)){sc+=v;s=s.replace(g,' ');}}
-  return Math.sign(sc);}
-const gnews=q=>`https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`;
-async function fetchRss(url){
-  try{const d=await getJSON('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(url));
-    if(d.status==='ok'&&d.items&&d.items.length)return d.items.map(x=>({title:x.title,link:x.link,t:Date.parse(x.pubDate.replace(' ','T')+'Z'),src:x.author||''}));}catch(e){}
-  const xml=new DOMParser().parseFromString(await fetchText(url),'text/xml');
-  return [...xml.querySelectorAll('item')].map(it=>({title:it.querySelector('title')?.textContent||'',link:it.querySelector('link')?.textContent||'',
-    t:Date.parse(it.querySelector('pubDate')?.textContent||''),src:it.querySelector('source')?.textContent||''}));}
-function cleanGoogle(x){const i=x.title.lastIndexOf(' - ');if(i>20){if(!x.src)x.src=x.title.slice(i+3);x.title=x.title.slice(0,i);}return x;}
-const COIN={BTCUSDT:['BTC','Bitcoin'],ETHUSDT:['ETH','Ethereum'],SOLUSDT:['SOL','Solana'],BNBUSDT:['BNB','BNB crypto'],XRPUSDT:['XRP','XRP Ripple'],DOGEUSDT:['DOGE','Dogecoin']};
-async function loadHeadlines(){const asset=$('asset').value;$('headList').innerHTML='<div class="muted">กำลังโหลด...</div>';let items=[],err='';
-  try{if(asset==='GOLD'){
-      const res=await Promise.allSettled([fetchRss(gnews('gold price OR "gold prices" OR XAUUSD when:2d')),fetchRss(gnews('Federal Reserve OR "US dollar" OR Treasury yields when:1d'))]);
-      res.forEach(r=>{if(r.status==='fulfilled')items.push(...r.value.map(cleanGoogle));else err=r.reason?.message||'';});
-    }else{const [cat,name]=COIN[asset];
-      try{const d=await getJSON(`https://min-api.cryptocompare.com/data/v2/news/?lang=EN&categories=${cat}`);
-        if(Array.isArray(d.Data)&&d.Data.length)items=d.Data.map(x=>({title:x.title,link:x.url,t:x.published_on*1000,src:x.source_info?.name||x.source||''}));}catch(e){err=e.message;}
-      if(!items.length)items=(await fetchRss(gnews(`${name} price when:2d`))).map(cleanGoogle);}
-  }catch(e){err=e.message;}
-  if(asset!==$('asset').value)return; // ผู้ใช้เปลี่ยนสินทรัพย์ระหว่างโหลด
-  const seen=new Set();items=items.filter(x=>x.title&&x.t&&!seen.has(x.title.toLowerCase())&&seen.add(x.title.toLowerCase())).sort((a,b)=>b.t-a.t).slice(0,30);
-  const kind=asset==='GOLD'?'gold':'crypto';items.forEach(x=>x.tone=toneOf(x.title,kind));
-  NEWS.heads=items;NEWS.headAsset=asset;NEWS.headErr=items.length?'':(err||'ไม่พบข่าว');S.dirty=S.bars.length>=70&&!!S.feed;
-  renderHeadlines();}
-function renderHeadlines(){const el=$('headList'),items=NEWS.heads;
-  if(!items.length){el.innerHTML=`<div class="muted">ดึงหัวข่าวไม่ได้ (${esc(NEWS.headErr)}) ลองกดรีเฟรช</div>`;$('toneRow').innerHTML='';return;}
-  const tgt=NEWS.headAsset==='GOLD'?'ทอง':NAMES[NEWS.headAsset];
-  const up=items.filter(x=>x.tone>0).length,dn=items.filter(x=>x.tone<0).length,nt=items.length-up-dn;
-  $('toneRow').innerHTML=`<span class="up">บวกต่อ${tgt} ${up}</span><div class="bar"><div style="width:${up/items.length*100}%;background:var(--up)"></div><div style="width:${nt/items.length*100}%;background:#444"></div><div style="width:${dn/items.length*100}%;background:var(--down)"></div></div><span class="down">ลบ ${dn}</span>`;
-  el.innerHTML=items.map(x=>{const chip=x.tone>0?`<span class="chip up">บวกต่อ${tgt}</span>`:x.tone<0?`<span class="chip down">ลบต่อ${tgt}</span>`:'<span class="chip">กลาง</span>';
-    return `<div class="nitem"><a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.title)}</a>
-      <div class="nmeta">${chip}<span>${esc(x.src)}</span><span>${ago(x.t)}</span><a href="https://translate.google.com/?sl=en&tl=th&op=translate&text=${encodeURIComponent(x.title)}" target="_blank" rel="noopener">แปลไทย</a></div></div>`;}).join('');}
-
-// --- News → trading decision ---
-function numVal(x){if(x==null||x==='')return null;const t=String(x).replace(/,/g,'');const m=t.match(/-?\d+(\.\d+)?/);if(!m)return null;
-  let v=+m[0];if(/K/i.test(t))v*=1e3;else if(/M/i.test(t))v*=1e6;else if(/B/i.test(t))v*=1e9;else if(/T/i.test(t))v*=1e12;return v;}
-// ข่าวที่ "ตัวเลขสูง = ดอลลาร์อ่อน" (ว่างงานเยอะ = เศรษฐกิจแย่)
-const USD_INVERSE=/unemployment|jobless|claims/i;
-// ผลข่าวที่ออกแล้ว: ตัวเลขจริงดีกว่าคาด → ดอลลาร์แข็ง → ทอง/คริปโตมักลง
-function surprises(){const now=Date.now(),out=[];
-  for(const e of NEWS.events){if(e.cur!=='USD'||e.imp!=='High'||e.t>now||now-e.t>4*3600000)continue;
-    const a=numVal(e.act),f=numVal(e.fc!=null&&e.fc!==''?e.fc:e.prev);if(a==null||f==null||a===f)continue;
-    const usd=Math.sign(a-f)*(USD_INVERSE.test(e.title)?-1:1);out.push({e,usd,asset:-usd});}
-  return out;}
-// โทนหัวข่าว ถ่วงน้ำหนักให้ข่าวใหม่สำคัญกว่า (ครึ่งชีวิต ~4 ชม.) ดูเฉพาะ 24 ชม.ล่าสุด
-function headlineTone(){if(!NEWS.heads.length||NEWS.headAsset!==$('asset').value)return null;
-  const now=Date.now();let sw=0,st=0,nz=0,n=0;
-  for(const x of NEWS.heads){const hrs=(now-x.t)/3600000;if(hrs>24||hrs<-1)continue;const w=Math.pow(0.5,Math.max(hrs,0)/4);n++;sw+=w;st+=w*x.tone;if(x.tone)nz++;}
-  if(!n)return null;const net=st/sw;return {net,n,nz,score:nz<4?0:net>=0.45?2:net>=0.2?1:net<=-0.45?-2:net<=-0.2?-1:0};}
-function newsSignal(){const now=Date.now();
-  const block=NEWS.events.filter(e=>e.cur==='USD'&&e.imp==='High'&&e.t>now-15*60000&&e.t<now+30*60000);
-  const sp=surprises(),ht=headlineTone();
-  const spScore=Math.max(-2,Math.min(2,sp.reduce((a,x)=>a+x.asset*2,0)));
-  const dir=Math.max(-3,Math.min(3,(ht?ht.score:0)+spScore));
-  const why=[];if(ht&&ht.score)why.push(`หัวข่าว${ht.score>0?'บวก':'ลบ'} ${Math.abs(ht.net*100).toFixed(0)}%`);
-  sp.forEach(x=>why.push(`${x.e.title} ${x.e.act} vs คาด ${x.e.fc||x.e.prev} → ดอลลาร์${x.usd>0?'แข็ง':'อ่อน'}`));
-  return {block,sp,ht,dir,why:why.join(', ')};}
-function applyNews(plan,cur,res){plan.size=1;
-  if($('newsUse').value==='off'||!S.feed)return; // โหมดวางข้อมูลย้อนหลังไม่ใช้ข่าว
-  const N=newsSignal();plan.news=N;plan.newsWhy=N.why;const tech=plan.side;
-  // 1) ช่วงข่าวแรง USD: 30 นาทีก่อน ถึง 15 นาทีหลัง → งดเข้า
-  if(N.block.length){plan.newsBlock=N.block.map(e=>`${esc(e.title)} ${thTime(e.t)} (${countdown(e.t)})`).join(', ');
-    if(tech==='LONG'||tech==='SHORT')plan.lean=tech;plan.side='WAIT';plan.conflict=false;return;}
-  const lean=Math.sign(N.dir),strong=Math.abs(N.dir)>=2;
-  if(tech==='LONG'||tech==='SHORT'){const t=tech==='LONG'?1:-1;
-    if(strong&&lean===-t){plan.newsVeto=tech;plan.side='WAIT';plan.conflict=false;return;} // ข่าวสวนแรง → ยกเลิก
-    if(lean===-t){plan.size=0.5;plan.warn.push(`ข่าวเอียงสวนทางสัญญาณเล็กน้อย (${esc(N.why)}) จึงแนะนำแค่ครึ่งไม้`);}
-    else if(lean===t)plan.newsAgree=true;
-    if(plan.reversal&&lean!==t)plan.size=0.5;
-    return;}
-  // 2) เทคนิคยังไม่ชัด แต่ข่าวแรง + ตัวชี้วัดไปทางเดียวกัน + สถิติไม่สวน → ให้สัญญาณครึ่งไม้
-  if(tech==='WAIT'&&strong&&Math.sign(cur.score)===lean&&Math.abs(cur.score)>=3&&(lean>0?plan.pUp>=0.5:plan.pUp<=0.5)){
-    plan.side=lean>0?'LONG':'SHORT';plan.newsUpgrade=true;plan.conflict=false;plan.size=0.5;
-    plan.warn.push('สัญญาณนี้ได้มาเพราะข่าวช่วยยืนยัน ส่วนนี้ทดสอบย้อนหลังไม่ได้ (ไม่มีข่าวในอดีตให้ทดสอบ) จึงให้แค่ครึ่งไม้');}}
-function newsStripHtml(plan){if($('newsUse').value==='off')return 'ข่าว: ปิดอยู่ (ใช้เทคนิคล้วน)';
-  if(!S.feed)return 'ข่าว: ไม่ใช้ในโหมดวางข้อมูลย้อนหลัง';
-  const N=plan.news||newsSignal(),tgt=$('asset').value==='GOLD'?'ทอง':NAMES[$('asset').value];
-  const d=N.dir,lab=d>=2?`<b class="up">หนุนขึ้นชัด</b>`:d===1?`<span class="up">เอียงบวก</span>`:d<=-2?`<b class="down">กดดันลงชัด</b>`:d===-1?`<span class="down">เอียงลบ</span>`:'กลางๆ';
-  const nx=highUsdWindow().next;
-  return `ข่าวต่อ${tgt}: ${lab} (${sgn(d)})${N.why?' · '+esc(N.why):''}${N.block.length?' · <b class="down">อยู่ในช่วงงดเทรด</b>':nx?` · ข่าวแรงถัดไป ${countdown(nx.t)}`:''}${plan.newsAgree?' · <span class="up">ข่าวไปทางเดียวกับสัญญาณ ✓</span>':''}`;}
-
-// --- What the bot says about news ---
-function newsContext(){const items=[];let alert='';const {hot,next}=highUsdWindow();
-  if(hot.length){alert=`⚠ มีข่าวแรง USD (${hot.map(e=>esc(e.title)).join(', ')}) ภายใน 1 ชั่วโมง ตัวชี้วัดทางเทคนิคมักใช้ไม่ได้ช่วงข่าวออก ควรรอให้ข่าวออกและราคานิ่งก่อน 15–30 นาที หรือลดขนาดไม้`;
-    items.push(['w',`ข่าวผลกระทบสูง: ${hot.map(e=>`${esc(e.title)} ${thTime(e.t)} (${countdown(e.t)})`).join(', ')} ช่วงนี้ราคาอาจสวิงหลาย ATR ภายในไม่กี่นาที`]);}
-  else if(next&&next.t-Date.now()<24*3600000)items.push(['',`ข่าวแรง USD ตัวถัดไป: ${esc(next.title)}${evTh(next.title)?' ('+evTh(next.title)+')':''} ${thTime(next.t)} (${countdown(next.t)}) ถ้าถือออเดอร์ข้ามช่วงนั้นควรขยับ Stop Loss หรือปิดบางส่วนก่อน`]);
-  if(NEWS.heads.length&&NEWS.headAsset===$('asset').value){const h=NEWS.heads,up=h.filter(x=>x.tone>0).length,dn=h.filter(x=>x.tone<0).length;
-    const lean=up>=dn*1.5&&up-dn>=3?'p':dn>=up*1.5&&dn-up>=3?'n':'';
-    items.push([lean,`โทนหัวข่าวต่างประเทศ ${h.length} ชิ้นล่าสุด: บวก ${up} / ลบ ${dn}${lean==='p'?' ข่าวเอียงบวก':lean==='n'?' ข่าวเอียงลบ':' ไม่เอียงชัด'} ${$('newsUse').value==='on'?' บอทนำไปใช้กรองสัญญาณแล้ว (ไม่ได้บวกเข้าคะแนนเทคนิค)':''}`]);}
-  const sp=surprises();sp.forEach(x=>items.push([x.asset>0?'p':'n',`ผลข่าว ${esc(x.e.title)}: จริง ${esc(x.e.act)} เทียบคาด ${esc(x.e.fc||x.e.prev)} → ดอลลาร์${x.usd>0?'แข็ง':'อ่อน'} มักทำให้${$('asset').value==='GOLD'?'ทอง':NAMES[$('asset').value]}${x.asset>0?'ขึ้น':'ลง'} (มีผลประมาณ 4 ชม.หลังประกาศ)`]));
-  return {items,alert};}
-
-async function loadNews(){$('newsTime').textContent='กำลังโหลด...';
-  await Promise.allSettled([loadCalendar(),loadHeadlines()]);
-  $('newsTime').textContent='อัปเดต '+new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
-  if(S.bars.length>=70)S.dirty=true;}
-setInterval(()=>{if(NEWS.events.length)renderCalendar();if(S.bars.length>=70)S.dirty=true;},30000); // นับถอยหลัง + ให้บอทเช็กข่าวใหม่
-setInterval(loadHeadlines,5*60000);setInterval(loadCalendar,30*60000);
-const nc=$('ntCal'),nh=$('ntHead');
-nc.onclick=()=>{nc.classList.add('on');nh.classList.remove('on');$('calPane').classList.remove('hidden');$('headPane').classList.add('hidden');};
-nh.onclick=()=>{nh.classList.add('on');nc.classList.remove('on');$('headPane').classList.remove('hidden');$('calPane').classList.add('hidden');};
-['calUsdOnly','calHighOnly','calHidePast'].forEach(id=>$(id).onchange=renderCalendar);
-$('btnNews').onclick=loadNews;
-
-// =============== Push messages (Telegram / Discord) ===============
-let LAST=null;
-const MSG={sent:null,pend:null,pendT:0,pendBar:0,newsSent:new Set(),blockSent:null};
-const MSG_KEYS=['msgOn','msgCh','tgToken','tgChat','dcHook','mSig','mWait','mNews','mBlock','mHold'];
-function msgSave(){try{const o={};MSG_KEYS.forEach(k=>{const e=$(k);o[k]=e.type==='checkbox'?e.checked:e.value;});localStorage.setItem('ta_msg',JSON.stringify(o));}catch(e){}}
-function msgLoad(){try{const o=JSON.parse(localStorage.getItem('ta_msg')||'{}');MSG_KEYS.forEach(k=>{if(o[k]==null)return;const e=$(k);if(e.type==='checkbox')e.checked=o[k];else e.value=o[k];});}catch(e){}msgUI();}
-function msgUI(){const tg=$('msgCh').value==='tg';$('tgBox').classList.toggle('hidden',!tg);$('dcBox').classList.toggle('hidden',tg);
-  const on=$('msgOn').checked;$('msgBadge').innerHTML=on?`· <span class="ok">เปิดอยู่ (${tg?'Telegram':'Discord'})</span>`:'· ปิดอยู่';}
-function msgLog(t,ok=true){const lg=$('msgLog');lg.insertAdjacentHTML('afterbegin',`<div><span class="muted">${new Date().toLocaleTimeString('th-TH')}</span> ${ok?'✓':'<span class="down">✗</span>'} ${esc(t)}</div>`);while(lg.children.length>30)lg.lastChild.remove();}
-async function sendMsg(text){
-  if($('msgCh').value==='tg'){const tok=$('tgToken').value.trim(),chat=$('tgChat').value.trim();if(!tok||!chat)throw new Error('ยังไม่ได้ใส่ Token หรือ Chat ID');
-    // ส่งแบบ form (ไม่ต้องผ่าน CORS preflight)
-    const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{method:'POST',body:new URLSearchParams({chat_id:chat,text,disable_web_page_preview:'true'})});
-    const d=await r.json().catch(()=>({}));if(!d.ok)throw new Error(d.description||('HTTP '+r.status));}
-  else{const u=$('dcHook').value.trim();if(!/^https:\/\/(discord|discordapp)\.com\/api\/webhooks\//.test(u))throw new Error('Webhook URL ไม่ถูกต้อง');
-    const fd=new FormData();fd.append('content',text.slice(0,1990));const r=await fetch(u,{method:'POST',body:fd});if(!r.ok)throw new Error('HTTP '+r.status);}}
-async function trySend(text,label){try{await sendMsg(text);msgLog(label);toast('ส่งข้อความแล้ว',`${$('msgCh').value==='tg'?'Telegram':'Discord'}: ${esc(label)}`,'up',{key:'msg',ms:4000});$('msgStatus').innerHTML='<span class="ok">ส่งล่าสุด '+new Date().toLocaleTimeString('th-TH')+'</span>';return true;}
-  catch(e){msgLog(label+' ('+e.message+')',false);toast('ส่งข้อความไม่สำเร็จ',esc(e.message),'down',{key:'msg',imp:true});$('msgStatus').innerHTML='<span class="down">ส่งไม่สำเร็จ: '+esc(e.message)+'</span>';return false;}}
-function assetLabel(){const a=$('asset').value;return `${NAMES[a]}${a==='GOLD'?' (XAU/USD)':''} · TF ${S.tf}`;}
-function signalText(plan,res,price){const F=x=>fmt(x);const L=[];const h=S.horizon;
-  if(plan.side==='LONG'||plan.side==='SHORT'){const up=plan.side==='LONG';
-    L.push(`${up?'🟢 ซื้อ (LONG)':'🔴 ขาย (SHORT)'}${plan.reversal?' · จังหวะเด้งกลับ':''}${plan.newsUpgrade?' · ข่าวยืนยัน':''}`,assetLabel(),`ราคาตอนนี้ ${F(price)}`,'',
-      `โซนเข้า: ${F(plan.entryLow)} – ${F(plan.entryHigh)}`,`Stop Loss: ${F(plan.sl)}`,`TP1 (ปิดครึ่ง): ${F(plan.tp1)}`,`TP2: ${F(plan.tp2)}`,
-      `R:R ≈ 1 : ${plan.rr.toFixed(2)} · ${plan.size<1?'ครึ่งไม้':'เต็มไม้'}`,(()=>{const z=calcSize(plan);return z?`ขนาดไม้: ${z.txt} (เสี่ยง ${money(z.riskAcc,z.thb)})`:'';})(),'',
-      `โอกาส${up?'ขึ้น':'ลง'}ใน ${h} แท่ง ≈ ${((up?plan.pUp:1-plan.pUp)*100).toFixed(0)}% (คะแนน ${sgn(res.cur.score)})`);}
-  else{L.push('🟡 รอก่อน / ยกเลิกสัญญาณ',assetLabel(),`ราคาตอนนี้ ${F(price)}`,'');
-    if(plan.newsBlock)L.push('เหตุผล: ช่วงข่าวแรง '+plan.newsBlock.replace(/<[^>]+>/g,''));
-    else if(plan.newsVeto)L.push('เหตุผล: ข่าวสวนทางสัญญาณ ('+(plan.newsWhy||'')+')');
-    else if(plan.mktClosed)L.push('เหตุผล: ตลาดทองโลกปิด');
-    else if(plan.htfBlock)L.push('เหตุผล: สวนเทรนด์ TF ใหญ่');
-    L.push(`ซื้อถ้าปิดเหนือ ${F(plan.buyTrig)} · ขายถ้าปิดต่ำกว่า ${F(plan.sellTrig)}`);}
-  if(plan.news&&plan.news.dir)L.push(`ข่าว: ${plan.news.dir>0?'หนุนขึ้น':'กดดันลง'} (${sgn(plan.news.dir)})${plan.news.why?' · '+plan.news.why:''}`);
-  const nx=highUsdWindow().next;if(nx&&!plan.newsBlock&&nx.t-Date.now()<6*3600000)L.push(`ข่าวแรงถัดไป: ${nx.title} ${thTime(nx.t)} (${countdown(nx.t)})`);
-  L.push('','บอทกฎตายตัว ไม่ใช่คำแนะนำการลงทุน ตั้ง SL ทุกครั้ง');return L.join('\n');}
-function msgTick(){if(!$('msgOn').checked||!S.feed||!LAST)return;const {plan,res,price}=LAST,side=plan.side;
-  const hv=$('mHold').value,now=Date.now(),barT=S.bars.length?S.bars[S.bars.length-1].time:0;
-  if(side!==MSG.pend){MSG.pend=side;MSG.pendT=now;MSG.pendBar=barT;}
-  const held=hv==='close'?barT!==MSG.pendBar:now-MSG.pendT>=(+hv)*1000;
-  if(held&&side!==MSG.sent&&side!=='NONE'){
-    const isSig=side==='LONG'||side==='SHORT',isNewsWait=!isSig&&(plan.newsBlock||plan.newsVeto);
-    const want=isSig?$('mSig').checked:(MSG.sent==='LONG'||MSG.sent==='SHORT')&&($('mWait').checked||(isNewsWait&&$('mBlock').checked));
-    const first=MSG.sent===null;MSG.sent=side; // จำไว้แม้ไม่ส่ง กันส่งซ้ำ
-    if(want&&!(first&&!isSig))trySend(signalText(plan,res,price),`${side} ${fmt(price)}`);}
-  if($('mNews').checked)for(const e of NEWS.events){const dt=e.t-now,k=e.t+e.title;
-    if(e.cur==='USD'&&e.imp==='High'&&dt>0&&dt<=30*60000&&!MSG.newsSent.has(k)){MSG.newsSent.add(k);
-      trySend(`⚠ ข่าวแรง USD อีก ${Math.round(dt/60000)} นาที\n${e.title}${evTh(e.title)?' ('+evTh(e.title)+')':''}\nเวลา ${thTime(e.t)}${e.fc?'\nคาดการณ์ '+e.fc:''}${e.prev?' · ครั้งก่อน '+e.prev:''}\n\n${assetLabel()} ราคา ${fmt(price)}\nบอทจะงดให้สัญญาณช่วงข่าว ถ้ามีออเดอร์ค้างควรเลื่อน SL หรือปิดบางส่วน`,'เตือนข่าว '+e.title);}}}
-setInterval(msgTick,1000);
-MSG_KEYS.forEach(k=>$(k).addEventListener('change',()=>{msgSave();msgUI();if(k==='msgOn'&&$('msgOn').checked)MSG.sent=LAST?LAST.plan.side:null;}));
-$('tgFind').onclick=async()=>{const tok=$('tgToken').value.trim();if(!tok){$('msgStatus').textContent='ใส่ Bot Token ก่อน';return;}
-  $('msgStatus').textContent='กำลังค้นหา...';
-  try{const d=await getJSON(`https://api.telegram.org/bot${tok}/getUpdates`);if(!d.ok)throw new Error(d.description||'Token ไม่ถูกต้อง');
-    const m=[...(d.result||[])].reverse().map(u=>u.message||u.channel_post||u.my_chat_member).find(x=>x&&x.chat);
-    if(!m){$('msgStatus').textContent='ยังไม่เจอแชท ลองพิมพ์ข้อความหาบอทใน Telegram ก่อน แล้วกดใหม่';return;}
-    $('tgChat').value=m.chat.id;msgSave();$('msgStatus').innerHTML=`<span class="ok">เจอแล้ว: ${esc(m.chat.title||m.chat.first_name||'')} (${m.chat.id})</span>`;}
-  catch(e){$('msgStatus').innerHTML='<span class="down">'+esc(e.message)+'</span>';}};
-$('msgTest').onclick=()=>{const t=LAST?signalText(LAST.plan,LAST.res,LAST.price):'ทดสอบ';trySend('✅ ทดสอบการเชื่อมต่อ Trend Analyzer\nตัวอย่างข้อความจริง:\n\n'+t,'ข้อความทดสอบ');};
-msgLoad();
-
-// =============== Pro: strips, sizing, sim view, journal, settings ===============
-const TF_TH={'1m':'1 นาที','5m':'5 นาที','15m':'15 นาที','1h':'1 ชม.','4h':'4 ชม.','1d':'รายวัน'};
-function proStripHtml(plan,planL,conf){const parts=[];
-  if($('htfMode').value!=='off'&&S.htf){const d=plan.htfDir;parts.push(`เทรนด์ TF ใหญ่ (${TF_TH[S.htf.tf]}): ${d>0?'<span class="up">ขาขึ้น ▲</span>':d<0?'<span class="down">ขาลง ▼</span>':'ไซด์เวย์'}`);}
-  if(isGold()&&S.feed&&S.hasTime)parts.push(plan.mktOpen===false?'<b class="down">ตลาดทองโลกปิด</b>':'ตลาดทองเปิด');
-  if(S.offOn&&S.offset)parts.push(`ราคาปรับโบรกเกอร์ ${S.offset>0?'+':''}${S.offset}`);
-  if(conf){const f=planL.side;parts.push(`สัญญาณยืนยันเมื่อปิดแท่ง${f!==plan.side?` · แท่งปัจจุบันกำลังก่อตัวเป็น <b class="${SIDE_K[f]==='warn'?'neutral':SIDE_K[f]}">${SIDE_TH[f]}</b> (ยังไม่ยืนยัน)`:''}`);}
-  else if(S.feed)parts.push('<span class="neutral">สัญญาณทันที (อาจเปลี่ยนก่อนปิดแท่ง)</span>');
-  return parts.join(' · ');}
-// ---- position size ----
-const numIn=id=>{const v=parseFloat($(id).value);return isFinite(v)?v:0;};
-function calcSize(plan){if(!(plan.risk>0))return null;
-  const bal=numIn('accBal'),fx=numIn('fx')||1,pct=numIn('riskPct'),thb=$('accCur').value==='THB';
-  const riskAcc=bal*pct/100*(plan.size||1),riskUSD=thb?riskAcc/fx:riskAcc;if(!(riskUSD>0))return null;
-  if(isGold()){const oz=numIn('contract')||100,lots=riskUSD/(plan.risk*oz);return {txt:`${lots>=0.01?lots.toFixed(2):'<0.01'} lot`,lots,riskAcc,thb,units:lots*oz};}
-  const units=riskUSD/plan.risk,coin=$('asset').value.replace('USDT','');return {txt:`${units<1?units.toPrecision(3):units.toFixed(3)} ${coin}`,units,riskAcc,thb,notional:units*plan.P};}
-const money=(v,thb)=>(thb?'฿':'$')+Math.round(v).toLocaleString();
-function sizeText(plan){const z=calcSize(plan);if(!z)return plan.size<1?'ครึ่งไม้':'เต็มไม้';
-  return `${z.txt}<div class="muted" style="font-size:11px;font-weight:400">เสี่ยง ${money(z.riskAcc,z.thb)}${plan.size<1?' (ครึ่งไม้)':''}${z.notional?` · มูลค่า $${Math.round(z.notional).toLocaleString()}`:''}</div>`;}
-function riskBadge(){$('riskBadge').textContent=`· เสี่ยง ${numIn('riskPct')}% = ${money(numIn('accBal')*numIn('riskPct')/100,$('accCur').value==='THB')} ต่อไม้`;}
-// ---- simulation view ----
-let eqChart=null,eqSeries=null;
-function renderSim(sim){const A=sim.all,f=sim.first,l=sim.last,rp=numIn('riskPct');
-  const pf=x=>x===Infinity?'∞':x.toFixed(2),pc=x=>(x*100).toFixed(0)+'%',rr=x=>(x>=0?'+':'')+x.toFixed(2)+'R';
-  const row=(k,fn,good)=>`<tr><td>${k}</td>${[A,f,l].map(o=>{const v=fn(o);const g=good?good(o):null;return `<td class="${o.n?(g===true?'up':g===false?'down':''):''}">${o.n?v:'—'}</td>`;}).join('')}</tr>`;
-  $('simTable').innerHTML=`<tr><th>ตัวชี้วัด</th><th>ทั้งหมด</th><th>ช่วงแรก 60%</th><th>ช่วงหลัง 40%</th></tr>`+
-    row('จำนวนเทรด',o=>o.n)+row('ชนะ (%)',o=>pc(o.win))+
-    row('Profit Factor',o=>pf(o.pf),o=>o.pf>=1.3?true:o.pf<1?false:null)+
-    row('กำไรเฉลี่ย/ไม้',o=>rr(o.exp),o=>o.exp>0.1?true:o.exp<0?false:null)+
-    row('กำไรสุทธิ',o=>`${rr(o.net)} <span class="muted">(${(o.net*rp).toFixed(1)}%)</span>`,o=>o.net>0)+
-    row('Max Drawdown',o=>`${o.dd.toFixed(1)}R <span class="muted">(${(o.dd*rp).toFixed(1)}%)</span>`,o=>o.dd*rp>20?false:null)+
-    row('แพ้ติดกันสูงสุด',o=>o.mst+' ไม้')+row('ถือเฉลี่ย',o=>o.hold.toFixed(1)+' แท่ง');
-  let v,cls;
-  if(A.n<30){v=`ได้แค่ ${A.n} เทรดบนกราฟนี้ <b>น้อยเกินไปที่จะสรุป</b> ลองไทม์เฟรมเล็กลง หรือดูผลจากบันทึก Forward Test ประกอบ`;cls='neutral';}
-  else if(A.pf>=1.3&&A.exp>0.1&&l.n>=10&&l.exp>0&&f.exp>0){v=`<b class="up">มีความได้เปรียบบนข้อมูลนี้</b> PF ${pf(A.pf)} · เฉลี่ย ${rr(A.exp)}/ไม้ และได้กำไรทั้งช่วงแรกและช่วงหลัง (ผลไม่ได้มาจากช่วงเดียว) · ยังควรยืนยันด้วย Forward Test ก่อนใช้เงินจริง`;cls='up';}
-  else if(A.net>0){v=`<b class="neutral">กำไรเล็กน้อย ยังไม่น่าเชื่อถือพอ</b> PF ${pf(A.pf)}${(f.exp>0)!==(l.exp>0)?' และผลช่วงแรกกับช่วงหลังไม่ไปทางเดียวกัน (อาจเป็นแค่โชค)':''} · ยังไม่ควรใช้เงินจริงด้วยการตั้งค่านี้`;cls='neutral';}
-  else{v=`<b class="down">ขาดทุนตามแผนนี้</b> (${rr(A.net)} จาก ${A.n} เทรด) ทั้งที่อาจ "ทายทิศถูก" บ่อย เพราะกำไรต่อไม้ไม่พอชดเชยขาดทุนและต้นทุน · อย่าใช้เงินจริงด้วยการตั้งค่านี้`;cls='down';}
-  $('simVerdict').innerHTML=v+`<div class="muted" style="margin-top:4px">ต้นทุนต่อรอบ ${costPct()}% · เสี่ยง ${rp}% ต่อไม้ · ${MODE==='strict'?'เข้มงวด':'ตามสถิติ'} · ${$('htfMode').value==='off'?'ไม่กรอง TF ใหญ่':'กรอง TF ใหญ่'+(S.htf?'':' (ยังโหลดไม่เสร็จ)')}</div>`;
-  $('simTrades').innerHTML='<tr><th>เข้า</th><th>ฝั่ง</th><th>ราคา</th><th>ออก</th><th>ผล</th></tr>'+sim.trades.slice(-20).reverse().map(t=>
-    `<tr><td>${fmtT(t.t0)}</td><td class="${t.side==='LONG'?'up':'down'}">${t.side==='LONG'?'ซื้อ':'ขาย'}</td><td>${fmt(t.P)}</td><td>${t.why}</td><td class="${t.R>0?'up':'down'}">${rr(t.R)}</td></tr>`).join('');
-  // equity curve
-  const el=$('eqChart');
-  if(!eqChart){eqChart=LightweightCharts.createChart(el,{layout:{background:{color:'transparent'},textColor:'#9aa0aa'},grid:{vertLines:{visible:false},horzLines:{color:'#1d2129'}},
-      rightPriceScale:{borderColor:'#2a2f3a'},timeScale:{borderColor:'#2a2f3a',timeVisible:true},height:180,handleScroll:false,handleScale:false});
-    eqSeries=eqChart.addBaselineSeries({baseValue:{type:'price',price:0},topLineColor:'#26a69a',bottomLineColor:'#ef5350',topFillColor1:'rgba(38,166,154,.25)',topFillColor2:'rgba(38,166,154,0)',bottomFillColor1:'rgba(239,83,80,0)',bottomFillColor2:'rgba(239,83,80,.25)',priceFormat:{type:'custom',formatter:x=>x.toFixed(1)+'R'}});
-    new ResizeObserver(()=>eqChart.applyOptions({width:el.clientWidth})).observe(el);}
-  eqSeries.applyOptions({autoscaleInfoProvider:()=>{let mn=0,mx=0,e=0;for(const t of sim.trades){e+=t.R;mn=Math.min(mn,e);mx=Math.max(mx,e);}return {priceRange:{minValue:mn-1,maxValue:mx+1}};}});
-  let eq=0;const pts=sim.trades.map(t=>({time:t.t1,value:(eq+=t.R)}));
-  eqSeries.setData(pts);if(sim.splitTime&&pts.length)eqSeries.setMarkers(pts.some(p=>p.time>=sim.splitTime)?[{time:pts.find(p=>p.time>=sim.splitTime).time,position:'aboveBar',color:'#9aa0aa',shape:'arrowDown',text:'ช่วงหลัง 40%'}]:[]);
-  eqChart.timeScale().fitContent();}
-const fmtT=t=>new Date((t-(S.hasTime?TZ:0))*1000).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'});
-// ---- forward-test journal ----
-let JR=[];try{JR=JSON.parse(localStorage.getItem('ta_journal')||'[]');}catch(e){JR=[];}
-const jrSave=()=>{try{localStorage.setItem('ta_journal',JSON.stringify(JR.slice(-500)));}catch(e){}};
-function jrAdd(plan,res){const bt=res.bars[res.n-1].time,asset=$('asset').value,id=`${asset}|${S.tf}|${bt}|${plan.side}`;
-  if(JR.some(j=>j.id===id))return;const z=calcSize(plan);
-  JR.push({id,asset,tf:S.tf,bt,ts:Date.now(),side:plan.side,P:plan.P,sl:plan.sl,tp1:plan.tp1,tp2:plan.tp2,risk:plan.risk,size:plan.size,lots:z?z.txt:'',cost:plan.P*costPct()/100/plan.risk,
-    why:[plan.reversal?'เด้งกลับ':'',plan.newsUpgrade?'ข่าวยืนยัน':'',plan.newsAgree?'ข่าวหนุน':''].filter(Boolean).join(','),status:'open',R:null,exit:null});
-  jrSave();jrRender();toast('บันทึกสัญญาณลง Forward Test',`${plan.side==='LONG'?'ซื้อ':'ขาย'} ${fmt(plan.P)} · SL ${fmt(plan.sl)} · TP1 ${fmt(plan.tp1)}`,'info',{key:'jr'});}
-function jrUpdate(){const asset=$('asset').value,B=S.feed?S.bars.slice(0,-1):[];if(!B.length)return;let ch=false;
-  for(const j of JR){if(j.status!=='open'||j.asset!==asset||j.tf!==S.tf)continue;
-    let k=B.findIndex(b=>b.time>j.bt);if(k<0)continue;const pos={side:j.side,i0:0,P:j.P,sl:j.sl,tp1:j.tp1,tp2:j.tp2,risk:j.risk,half:false};
-    for(let i=k,cnt=1;i<B.length;i++,cnt++){const r=manageTrade(pos,B[i].high,B[i].low,B[i].close,cnt);
-      if(r){j.status='closed';j.R=r.R-(j.cost||0);j.exit=r.why;j.et=B[i].time;ch=true;break;}}
-    if(j.status==='open'&&pos.half&&!j.half){j.half=true;j.r1=pos.r1;ch=true;}
-    if(j.status==='open'&&B[0].time>j.bt+60*(TF_SEC[j.tf]||3600)){j.status='closed';j.R=null;j.exit='ข้อมูลไม่พอ';ch=true;}}
-  if(ch){jrSave();const last=JR.filter(j=>j.status==='closed'&&j.R!=null).slice(-1)[0];if(last&&last.et&&!last.tn){last.tn=1;jrSave();toast(`ผลสัญญาณ: ${last.exit}`,`${last.side==='LONG'?'ซื้อ':'ขาย'} ${fmt(last.P)} → ${last.R>=0?'+':''}${last.R.toFixed(2)}R`,last.R>0?'up':'down',{key:'jrres',imp:true});}}
-  jrRender();}
-let jrSig='';
-function jrRender(){const sig=JR.length+'|'+JR.filter(j=>j.status==='open').length+'|'+JR.map(j=>j.R).join(',');if(sig===jrSig)return;jrSig=sig;
-  const done=JR.filter(j=>j.status==='closed'&&j.R!=null),st=tStats(done.map(j=>({R:j.R,i0:0}))),open=JR.filter(j=>j.status==='open').length,rp=numIn('riskPct');
-  const tile=(k,v,c='')=>`<div class="stat"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`;
-  $('jrStats').innerHTML=tile('ปิดแล้ว / ยังเปิด',`${done.length} / ${open}`)+tile('ชนะ',done.length?(st.win*100).toFixed(0)+'%':'—')+
-    tile('Profit Factor',done.length?(st.pf===Infinity?'∞':st.pf.toFixed(2)):'—',st.pf>=1.3?'up':st.pf<1&&done.length?'down':'')+
-    tile('กำไรสุทธิ',done.length?`${st.net>=0?'+':''}${st.net.toFixed(1)}R`:'—',st.net>0?'up':st.net<0?'down':'')+
-    tile('เทียบเป็น % พอร์ต',done.length?`${(st.net*rp).toFixed(1)}%`:'—',st.net>0?'up':st.net<0?'down':'')+tile('Max DD',done.length?st.dd.toFixed(1)+'R':'—');
-  $('jrNote').innerHTML=done.length<50?`ยังมีผลแค่ ${done.length} สัญญาณ ต้องสะสมให้ได้ 50–100 สัญญาณก่อนสรุปว่าระบบใช้ได้จริง (เปิดหน้านี้ค้างไว้ หรือใช้บอทเซิร์ฟเวอร์)`:(st.pf>=1.3&&st.exp>0.1?'<b class="up">ผลจริงไปข้างหน้าเป็นบวก</b> เริ่มทดลองด้วยเงินน้อยๆ ได้':'<b class="down">ผลจริงยังไม่ดีพอ</b> อย่าเพิ่มเงิน');
-  $('jrTable').innerHTML='<tr><th>เวลา</th><th>สินทรัพย์</th><th>ฝั่ง</th><th>เข้า</th><th>SL / TP1</th><th>ไม้</th><th>ผล</th></tr>'+JR.slice().reverse().slice(0,100).map(j=>
-    `<tr><td>${new Date(j.ts).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td>${NAMES[j.asset]||j.asset} ${j.tf}</td><td class="${j.side==='LONG'?'up':'down'}">${j.side==='LONG'?'ซื้อ':'ขาย'}${j.why?` <span class="muted">(${j.why})</span>`:''}</td><td>${fmt(j.P)}</td><td>${fmt(j.sl)} / ${fmt(j.tp1)}</td><td>${esc(j.lots||'')}</td><td class="${j.R>0?'up':j.R<0?'down':'neutral'}">${j.status==='open'?(j.half?'เปิด (ได้ TP1 แล้ว)':'เปิดอยู่'):j.R==null?j.exit:`${j.exit} ${j.R>=0?'+':''}${j.R.toFixed(2)}R`}</td></tr>`).join('');}
-$('jrCsv').onclick=()=>{const head=['time','asset','tf','side','entry','sl','tp1','tp2','lots','status','exit','R'];
-  const rows=JR.map(j=>[new Date(j.ts).toISOString(),j.asset,j.tf,j.side,j.P,j.sl,j.tp1,j.tp2,j.lots,j.status,j.exit||'',j.R==null?'':j.R.toFixed(3)]);
-  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='forward-test.csv';a.click();toast('ดาวน์โหลด CSV แล้ว',`${JR.length} รายการ`,'up',{key:'csv'});};
-$('jrClear').onclick=()=>{if(!confirm('ล้างบันทึก Forward Test ทั้งหมด?'))return;JR=[];jrSave();jrSig='';jrRender();toast('ล้างบันทึกแล้ว','','info',{key:'jr'});};
-// ---- settings: save, lock, preset, overfit guard ----
-const STRAT=['tf','horizon','speed','mode','confirm','htfMode','newsUse','cost'];
-const PERSIST=[...STRAT,'asset','src','offset','accBal','accCur','fx','riskPct','contract','toastLv','toastPos','lockCfg'];
-function cfgSave(){try{const o={};PERSIST.forEach(k=>{const e=$(k);o[k]=e.type==='checkbox'?e.checked:e.value;});localStorage.setItem('ta_cfg',JSON.stringify(o));}catch(e){}}
-function cfgLoad(){try{const o=JSON.parse(localStorage.getItem('ta_cfg')||'{}');PERSIST.forEach(k=>{if(o[k]==null)return;const e=$(k);if(e.type==='checkbox')e.checked=o[k];else e.value=o[k];});}catch(e){}
-  S.offset=parseFloat($('offset').value)||0;applyLock();$('toasts').classList.toggle('center',$('toastPos').value==='center');}
-function applyLock(){const on=$('lockCfg').checked;STRAT.forEach(k=>$(k).disabled=on);$('btnPreset').disabled=on;}
-let stratChanges=0;
-document.addEventListener('change',e=>{const id=e.target.id;if(PERSIST.includes(id))cfgSave();
-  if(['accBal','accCur','fx','riskPct','contract'].includes(id)){posSig='';posRender();riskBadge();jrSig='';refresh(false);if(CACHE.sim)renderSim(CACHE.sim);}
-  if(STRAT.includes(id)){stratChanges++;if(stratChanges===6||stratChanges%10===0)toast('⚠ ระวังการปรับค่าจนเข้ากับอดีต',`คุณเปลี่ยนค่ากลยุทธ์ไปแล้ว ${stratChanges} ครั้ง การเลือกค่าที่ผลทดสอบสวยที่สุดมักใช้กับอนาคตไม่ได้ (overfitting) แนะนำให้เลือกชุดเดียว แล้ว "ล็อกการตั้งค่า" และดูผล Forward Test เป็นหลัก`,'warn',{key:'overfit',imp:true,ms:20000});}});
-$('lockCfg').addEventListener('change',applyLock);
-$('htfMode').addEventListener('change',()=>{loadHTF().then(()=>refresh(false));});
-$('confirm').addEventListener('change',()=>{PREV=null;lastSide=null;refresh(false);});
-$('cost').addEventListener('change',()=>refresh(false));
-$('btnPreset').onclick=()=>{const P={tf:'15m',horizon:'3',speed:'normal',mode:'strict',confirm:'close',htfMode:'block',newsUse:'on',cost:''};
-  const tfCh=$('tf').value!==P.tf;Object.entries(P).forEach(([k,v])=>$(k).value=v);setSpeed();MODE='strict';S.horizon=3;cfgSave();
-  toast('ใช้ค่ามาตรฐานแล้ว','TF 15 นาที · ทาย 3 แท่ง · ความไวปกติ · เข้มงวด · ยืนยันเมื่อปิดแท่ง · ห้ามสวนเทรนด์ TF ใหญ่ · ใช้ข่าว<br><span class="muted">ค่าชุดนี้เน้นสัญญาณน้อยแต่ชัด แนะนำให้ล็อกไว้แล้วเก็บผล Forward Test</span>','info',{key:'set',imp:true});
-  if(tfCh)loadAll();else{loadHTF();refresh(false);}};
-function setOffset(v){v=Math.round(v*100)/100;const d=v-S.offset;$('offset').value=v;S.offset=v;cfgSave();
-  if(S.offOn&&d){S.bars=S.bars.map(b=>shiftBar(b,d));drawnLen=0;refresh(true);}}
-$('offset').addEventListener('change',()=>setOffset(parseFloat($('offset').value)||0));
-$('btnAutoOff').onclick=async()=>{if(!S.offOn){toast('ใช้ได้เฉพาะทองจาก Binance PAXG','','warn',{key:'off'});return;}
-  try{const d=await getJSON('https://xaus.com/api/v1/spot?compact=1&fresh='+Date.now());const spot=+(d.spot_usd_oz??(d.xau&&d.xau.price));if(!(spot>0))throw new Error('ไม่มีราคา');
-    const raw=S.bars[S.bars.length-1].close-S.offset;setOffset(spot-raw);
-    toast('ปรับราคาให้ตรง XAU/USD แล้ว',`XAU/USD ${fmt(spot)} · PAXG ${fmt(raw)} → ปรับ ${S.offset>0?'+':''}${S.offset}<br><span class="muted">ถ้าโบรกเกอร์ของคุณต่างจากนี้ แก้ตัวเลขเองได้</span>`,'info',{key:'off',imp:true});}
-  catch(e){toast('ดึงราคา XAU/USD ไม่ได้',esc(e.message)+' · ใส่ส่วนต่างเองได้ (ราคาโบรกเกอร์ − ราคาบนกราฟ)','down',{key:'off',imp:true});}};
-
-// =============== Trading: open orders & per-trade P&L ===============
-let POS=[],HIST=[],TNO=0;
-try{POS=JSON.parse(localStorage.getItem('ta_pos')||'[]');HIST=JSON.parse(localStorage.getItem('ta_hist')||'[]');TNO=+(localStorage.getItem('ta_tno')||0);}catch(e){}
-const trSave=()=>{try{localStorage.setItem('ta_pos',JSON.stringify(POS));localStorage.setItem('ta_hist',JSON.stringify(HIST.slice(-1000)));localStorage.setItem('ta_tno',TNO);}catch(e){}};
-const isGoldA=a=>a==='GOLD';
-const perUnit=p=>isGoldA(p.asset)?(p.oz||100):1;              // มูลค่า USD ต่อราคาขยับ 1 หน่วย ต่อ 1 lot/เหรียญ
-const accTHB=()=>$('accCur').value==='THB',FX=()=>numIn('fx')||1;
-const toAcc=usd=>accTHB()?usd*FX():usd;
-const m$=(usd,sign=true)=>{const v=toAcc(usd);return (sign&&v>0?'+':v<0?'−':'')+(accTHB()?'฿':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:accTHB()?0:2});};
-const qtyTxt=p=>isGoldA(p.asset)?`${(+p.qtyLeft).toFixed(2)} lot`:`${+(+p.qtyLeft).toPrecision(4)} ${p.asset.replace('USDT','')}`;
-const curPrice=()=>S.bars.length?S.bars[S.bars.length-1].close:null;
-function floatUSD(p,px){return (p.side==='LONG'?px-p.entry:p.entry-px)*p.qtyLeft*perUnit(p);}
-// ---- modal ----
-let TM={side:'LONG'};
-function openModal(side){if(!S.feed||!LAST){toast('ยังเปิดออเดอร์ไม่ได้','ต้องอยู่ในโหมดเรียลไทม์และโหลดราคาเสร็จก่อน','warn',{key:'tr'});return;}
-  TM={side};$('tradeModal').classList.add('on');$('tmAsset').textContent=`${NAMES[$('asset').value]} · TF ${S.tf}`;
-  $('tmQtyLab').textContent=isGold()?'จำนวน (lot)':`จำนวน (${$('asset').value.replace('USDT','')})`;$('tmQty').step=isGold()?'0.01':'any';
-  fillModal(true);}
-function fillModal(reset){const side=TM.side,L=side==='LONG';$('tmLong').classList.toggle('off',!L);$('tmShort').classList.toggle('off',L);
-  $('tmTitle').textContent=L?'เปิดออเดอร์ซื้อ':'เปิดออเดอร์ขาย';$('tmOk').className=L?'bBuy':'bSell';
-  if(reset){const P=curPrice(),plan=LAST.plan,A=plan.A||P*0.002;let lv;
-    if(plan.side===side&&plan.sl){lv={sl:plan.sl,tp1:plan.tp1,tp2:plan.tp2,risk:Math.abs(P-plan.sl),size:plan.size};TM.follow=true;}
-    else{const t=tradeLevels(side,P,A,plan.sup,plan.res);lv={sl:t.sl,tp1:t.tp1,tp2:t.tp2,risk:t.risk,size:1};TM.follow=false;}
-    const d=DEC;$('tmEntry').value=P.toFixed(d);$('tmSL').value=lv.sl.toFixed(d);$('tmTP1').value=lv.tp1.toFixed(d);$('tmTP2').value=lv.tp2.toFixed(d);
-    const z=calcSize({risk:lv.risk,size:lv.size,P});$('tmQty').value=z?(isGold()?Math.max(0.01,Math.floor(z.lots*100)/100).toFixed(2):+z.units.toPrecision(4)):(isGold()?'0.01':'0.001');}
-  calcModal();}
-function readModal(){const g=id=>parseFloat($(id).value);return {side:TM.side,entry:g('tmEntry'),qty:g('tmQty'),sl:g('tmSL'),tp1:g('tmTP1'),tp2:g('tmTP2'),mode:$('tmMode').value};}
-function calcModal(){const o=readModal(),L=o.side==='LONG',pu=isGold()?(numIn('contract')||100):1,plan=LAST.plan;const msgs=[];let ok=true;
-  if(!(o.qty>0)){msgs.push('<span class="down">ใส่จำนวนให้มากกว่า 0</span>');ok=false;}
-  if(!(L?o.sl<o.entry:o.sl>o.entry)){msgs.push(`<span class="down">Stop Loss ต้องอยู่${L?'ต่ำกว่า':'สูงกว่า'}ราคาเข้า</span>`);ok=false;}
-  if(o.tp1&&!(L?o.tp1>o.entry:o.tp1<o.entry)){msgs.push(`<span class="down">TP1 ต้องอยู่${L?'สูงกว่า':'ต่ำกว่า'}ราคาเข้า</span>`);ok=false;}
-  if(ok){const risk=Math.abs(o.entry-o.sl)*o.qty*pu,cost=o.entry*costPct()/100*o.qty*pu,r1=o.tp1?Math.abs(o.tp1-o.entry)*o.qty*pu:0,r2=o.tp2?Math.abs(o.tp2-o.entry)*o.qty*pu:0;
-    const bal=numIn('accBal'),pct=bal?toAcc(risk)/bal*100:0;
-    msgs.push(`ถ้าโดน SL: <b class="down">${m$(-risk-cost)}</b>${bal?` (${pct.toFixed(2)}% ของพอร์ต)`:''}`);
-    if(o.tp1)msgs.push(`ถ้าถึง TP1 ทั้งไม้: <b class="up">${m$(r1-cost)}</b> · R:R 1 : ${(r1/risk).toFixed(2)}`);
-    if(o.tp1&&o.tp2)msgs.push(`ตามแผน (ปิดครึ่ง TP1 + ครึ่ง TP2): <b class="up">${m$(r1/2+r2/2-cost)}</b>`);
-    msgs.push(`<span class="muted">ต้นทุน ${m$(-cost)} · มูลค่าสัญญา $${Math.round(o.entry*o.qty*pu).toLocaleString()}</span>`);
-    if(pct>2)msgs.push('<span class="neutral">⚠ เสี่ยงเกิน 2% ต่อไม้ มืออาชีพมักไม่เกิน 1%</span>');
-    if(plan.side!==o.side)msgs.push(`<span class="neutral">⚠ บอทตอนนี้${plan.side==='WAIT'?'ให้รอ':'ชี้'+(plan.side==='LONG'?'ซื้อ':'ขาย')} ออเดอร์นี้ไม่ได้ตามสัญญาณบอท</span>`);
-    else msgs.push('<span class="up">✓ ตรงกับสัญญาณบอท ใช้แผน SL/TP ของบอท</span>');}
-  $('tmCalc').innerHTML=msgs.join('<br>');$('tmOk').disabled=!ok;return ok;}
-['tmEntry','tmQty','tmSL','tmTP1','tmTP2','tmMode'].forEach(id=>$(id).addEventListener('input',calcModal));
-$('tmLong').onclick=()=>{TM.side='LONG';fillModal(true);};$('tmShort').onclick=()=>{TM.side='SHORT';fillModal(true);};
-$('tmCancel').onclick=()=>$('tradeModal').classList.remove('on');
-$('tradeModal').addEventListener('click',e=>{if(e.target.id==='tradeModal')$('tradeModal').classList.remove('on');});
-$('btnBuy').onclick=()=>openModal('LONG');$('btnSell').onclick=()=>openModal('SHORT');
-$('tmOk').onclick=()=>{if(!calcModal())return;const o=readModal(),asset=$('asset').value,oz=isGold()?(numIn('contract')||100):1;
-  const p={id:Date.now()+'',no:++TNO,asset,tf:S.tf,side:o.side,mode:o.mode,entry:o.entry,qty:o.qty,qtyLeft:o.qty,sl:o.sl,sl0:o.sl,tp1:o.tp1||null,tp2:o.tp2||null,
-    oz,risk:Math.abs(o.entry-o.sl),openTs:Date.now(),costUSD:o.entry*costPct()/100*o.qty*oz,realized:0,half:false,follow:!!TM.follow,last:o.entry,mfe:0,mae:0};
-  POS.push(p);trSave();$('tradeModal').classList.remove('on');posRender();S.dirty=true;
-  const t=`${o.side==='LONG'?'🟢 เปิดซื้อ':'🔴 เปิดขาย'} #${p.no} ${NAMES[asset]} ${qtyTxt(p)} ที่ ${fmt(o.entry)}`;
-  toast(t.replace(/^\S+ /,''),`SL ${fmt(p.sl)} · TP1 ${fmt(p.tp1)} · TP2 ${fmt(p.tp2)} · ${p.mode==='paper'?'จำลอง':'เงินจริง'}`,o.side==='LONG'?'up':'down',{key:'tr'+p.id,imp:true});
-  if($('msgOn').checked)trySend(`${t}\nSL ${fmt(p.sl)} · TP1 ${fmt(p.tp1)} · TP2 ${fmt(p.tp2)}\n(${p.mode==='paper'?'บัญชีจำลอง':'บัญชีจริง'})`,'เปิดออเดอร์ #'+p.no);};
-// ---- close / manage ----
-function closePart(p,px,frac,why){const q=frac>=1?p.qtyLeft:(isGoldA(p.asset)?Math.max(0.01,Math.round(p.qtyLeft*frac*100)/100):p.qtyLeft*frac);
-  const qq=Math.min(q,p.qtyLeft),pnl=(p.side==='LONG'?px-p.entry:p.entry-px)*qq*perUnit(p);p.realized+=pnl;p.qtyLeft=+(p.qtyLeft-qq).toFixed(8);
-  p.parts=p.parts||[];p.parts.push({px,qty:qq,pnl,why,ts:Date.now()});
-  if(p.qtyLeft<=1e-9){POS=POS.filter(x=>x!==p);const net=p.realized-p.costUSD,riskUSD=p.risk*p.qty*perUnit(p);
-    const h={...p,exit:px,closeTs:Date.now(),why,net,R:riskUSD?net/riskUSD:0};HIST.push(h);
-    toast(`ปิดออเดอร์ #${p.no}: ${why}`,`${p.side==='LONG'?'ซื้อ':'ขาย'} ${fmt(p.entry)} → ${fmt(px)} · <b class="${net>=0?'up':'down'}">${m$(net)}</b> (${h.R>=0?'+':''}${h.R.toFixed(2)}R)`,net>=0?'up':'down',{key:'tr'+p.id,imp:true});
-    if($('msgOn').checked)trySend(`${net>=0?'✅':'❌'} ปิดออเดอร์ #${p.no} ${NAMES[p.asset]} (${why})\n${p.side==='LONG'?'ซื้อ':'ขาย'} ${fmt(p.entry)} → ${fmt(px)}\nผล: ${m$(net)} (${h.R>=0?'+':''}${h.R.toFixed(2)}R)`,'ปิด #'+p.no);}
-  else toast(`ปิดบางส่วน #${p.no}: ${why}`,`${fmt(px)} · ${m$(pnl)} · เหลือ ${qtyTxt(p)}`,pnl>=0?'up':'down',{key:'tr'+p.id,imp:true});
-  trSave();posRender();S.dirty=true;}
-function posTick(){const px=curPrice(),asset=$('asset').value;if(px==null||!S.feed)return posRender();
-  for(const p of POS.slice()){if(p.asset!==asset)continue;p.last=px;const f=floatUSD(p,px);p.mfe=Math.max(p.mfe||0,f);p.mae=Math.min(p.mae||0,f);
-    if(!$('autoManage').checked)continue;const L=p.side==='LONG';
-    if(L?px<=p.sl:px>=p.sl){closePart(p,p.sl,1,p.half?'โดน SL ที่ทุน':'โดน Stop Loss');continue;}
-    if(!p.half&&p.tp1&&(L?px>=p.tp1:px<=p.tp1)){p.half=true;closePart(p,p.tp1,0.5,'ถึง TP1 ปิดครึ่ง');p.sl=p.entry;trSave();
-      if(!POS.includes(p))continue;}
-    if(p.tp2&&(L?px>=p.tp2:px<=p.tp2))closePart(p,p.tp2,1,'ถึง TP2');}
-  posRender();}
-function posAction(id,act){const p=POS.find(x=>x.id===id);if(!p)return;const px=p.asset===$('asset').value&&S.feed?curPrice():p.last;
-  if(act==='close'){if(confirm(`ปิดออเดอร์ #${p.no} ทั้งหมดที่ราคา ${fmt(px)}?`))closePart(p,px,1,'ปิดเอง');}
-  else if(act==='half')closePart(p,px,0.5,'ปิดครึ่งเอง');
-  else if(act==='be'){p.sl=p.entry;trSave();posRender();S.dirty=true;toast(`#${p.no} เลื่อน SL มาที่ทุนแล้ว`,`SL = ${fmt(p.entry)} ไม้นี้จะไม่ขาดทุนแล้ว (ยกเว้นต้นทุน)`,'info',{key:'tr'+p.id});}}
-let posSig='';
-function posRender(){const asset=$('asset').value;
-  const plan=LAST&&LAST.plan;$('btnBuy').disabled=$('btnSell').disabled=!S.feed;
-  $('tradeHint').innerHTML=!S.feed?'เปิดออเดอร์ได้เฉพาะโหมดเรียลไทม์':plan&&plan.side==='LONG'?'บอทแนะนำ <b class="up">ซื้อ</b> · กดปุ่มซื้อเพื่อใช้แผน SL/TP และขนาดไม้ของบอท':plan&&plan.side==='SHORT'?'บอทแนะนำ <b class="down">ขาย</b> · กดปุ่มขายเพื่อใช้แผน SL/TP และขนาดไม้ของบอท':'บอทให้รอ · ถ้าเปิดเองจะตั้ง SL/TP จาก ATR และแนวรับ/ต้านให้อัตโนมัติ';
-  const closed=HIST,net=closed.reduce((a,h)=>a+h.net,0),wins=closed.filter(h=>h.net>0),loss=closed.filter(h=>h.net<=0);
-  const gp=wins.reduce((a,h)=>a+h.net,0),gl=-loss.reduce((a,h)=>a+h.net,0),flt=POS.reduce((a,p)=>a+floatUSD(p,p.last??p.entry)+p.realized-p.costUSD,0);
-  const paperNet=closed.filter(h=>h.mode==='paper').reduce((a,h)=>a+h.net,0)+POS.filter(p=>p.mode==='paper').reduce((a,p)=>a+floatUSD(p,p.last??p.entry)+p.realized-p.costUSD,0);
-  const sig=JSON.stringify([POS.map(p=>[p.id,p.last,p.qtyLeft,p.sl]),closed.length,$('accCur').value,numIn('fx'),numIn('accBal'),DEC]);if(sig===posSig)return;posSig=sig;
-  const tile=(k,v,c='')=>`<div class="stat"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`,cl=x=>x>0?'up':x<0?'down':'';
-  const bal=numIn('accBal');
-  $('portStats').innerHTML=tile('ยอดพอร์ตจำลอง',(accTHB()?'฿':'$')+Math.round(bal+toAcc(paperNet)).toLocaleString(),cl(paperNet))+
-    tile('กำไร/ขาดทุนลอยตัว',POS.length?m$(flt):'—',cl(flt))+tile('กำไรสุทธิ (ปิดแล้ว)',closed.length?m$(net):'—',cl(net))+
-    tile('ชนะ',closed.length?`${(wins.length/closed.length*100).toFixed(0)}% <span class="muted" style="font-size:12px">(${wins.length}/${closed.length})</span>`:'—')+
-    tile('เฉลี่ยต่อไม้',closed.length?m$(net/closed.length):'—',cl(net))+tile('Profit Factor',closed.length?(gl?(gp/gl).toFixed(2):'∞'):'—',gl&&gp/gl>=1.3?'up':gl&&gp/gl<1?'down':'');
-  $('posCount').innerHTML=POS.length?`· ${POS.length} ออเดอร์ · ลอยตัว <span class="${flt>=0?'pnl-up':'pnl-dn'}">${m$(flt)}</span>`:'';
-  $('posTable').innerHTML=POS.length?'<tr><th>#</th><th>ฝั่ง</th><th>จำนวน</th><th>เข้า</th><th>ตอนนี้</th><th>SL / TP</th><th>กำไร/ขาดทุน</th><th></th></tr>'+POS.map(p=>{
-      const px=p.last??p.entry,f=floatUSD(p,px)+p.realized-p.costUSD,riskUSD=p.risk*p.qty*perUnit(p),R=riskUSD?f/riskUSD:0,other=p.asset!==asset;
-      return `<tr><td>${p.no}<div class="muted" style="font-size:11px">${p.mode==='paper'?'จำลอง':'จริง'}</div></td><td class="${p.side==='LONG'?'up':'down'}">${p.side==='LONG'?'ซื้อ':'ขาย'}<div class="muted" style="font-size:11px">${NAMES[p.asset]} ${p.tf}</div></td>
-        <td>${qtyTxt(p)}${p.half?'<div class="muted" style="font-size:11px">ได้ TP1 แล้ว</div>':''}</td><td>${fmt(p.entry)}</td><td>${fmt(px)}${other?'<div class="muted" style="font-size:11px">(ราคาล่าสุดที่เห็น)</div>':''}</td>
-        <td>${fmt(p.sl)}<div class="muted" style="font-size:11px">${p.half?'':fmt(p.tp1)+' / '}${fmt(p.tp2)}</div></td>
-        <td class="${f>=0?'pnl-up':'pnl-dn'}">${m$(f)}<div style="font-size:11px">${R>=0?'+':''}${R.toFixed(2)}R</div></td>
-        <td style="white-space:nowrap"><button class="pbtn bGhost" onclick="posAction('${p.id}','be')" title="เลื่อน SL มาที่ทุน">SL→ทุน</button><button class="pbtn bGhost" onclick="posAction('${p.id}','half')">ปิดครึ่ง</button><button class="pbtn ${p.side==='LONG'?'bSell':'bBuy'}" onclick="posAction('${p.id}','close')">ปิด</button></td></tr>`;}).join('')
-    :'<tr><td class="muted" style="text-align:left">ยังไม่มีออเดอร์ที่เปิดอยู่ · กดปุ่ม "เปิดออเดอร์ซื้อ/ขาย" ใต้สัญญาณบอท</td></tr>';
-  $('histTable').innerHTML=closed.length?'<tr><th>#</th><th>เปิด–ปิด</th><th>ฝั่ง</th><th>จำนวน</th><th>เข้า → ออก</th><th>เหตุผล</th><th>ผล</th></tr>'+closed.slice().reverse().map(h=>{
-      const tm=t=>new Date(t).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),dur=Math.round((h.closeTs-h.openTs)/60000);
-      return `<tr><td>${h.no}<div class="muted" style="font-size:11px">${h.mode==='paper'?'จำลอง':'จริง'}</div></td><td>${tm(h.openTs)}<div class="muted" style="font-size:11px">ถือ ${dur<60?dur+' นาที':(dur/60).toFixed(1)+' ชม.'}</div></td>
-        <td class="${h.side==='LONG'?'up':'down'}">${h.side==='LONG'?'ซื้อ':'ขาย'}<div class="muted" style="font-size:11px">${NAMES[h.asset]}</div></td><td>${isGoldA(h.asset)?(+h.qty).toFixed(2)+' lot':+(+h.qty).toPrecision(4)}</td>
-        <td>${fmt(h.entry)} → ${fmt(h.exit)}${(h.parts||[]).length>1?`<div class="muted" style="font-size:11px">${h.parts.map(x=>fmt(x.px)).join(', ')}</div>`:''}</td><td>${esc(h.why)}${h.follow?'<div class="muted" style="font-size:11px">ตามสัญญาณบอท</div>':''}</td>
-        <td class="${h.net>=0?'pnl-up':'pnl-dn'}">${m$(h.net)}<div style="font-size:11px">${h.R>=0?'+':''}${h.R.toFixed(2)}R</div></td></tr>`;}).join('')
-    :'<tr><td class="muted" style="text-align:left">ยังไม่มีออเดอร์ที่ปิดแล้ว</td></tr>';}
-$('histCsv').onclick=()=>{const head=['no','mode','asset','side','qty','entry','exit','open','close','reason','pnl_usd','R'];
-  const rows=HIST.map(h=>[h.no,h.mode,h.asset,h.side,h.qty,h.entry,h.exit,new Date(h.openTs).toISOString(),new Date(h.closeTs).toISOString(),h.why,h.net.toFixed(2),h.R.toFixed(3)]);
-  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='my-trades.csv';a.click();};
-$('histClear').onclick=()=>{if(!confirm('ล้างประวัติออเดอร์ที่ปิดแล้วทั้งหมด? (ออเดอร์ที่เปิดอยู่ไม่ถูกลบ)'))return;HIST=[];trSave();posSig='';posRender();};
-setInterval(()=>{if(POS.length)posTick();},1000);
 
 // =============== Paste mode ===============
 $('btnPaste').onclick=()=>{
@@ -1443,90 +538,22 @@ $('btnPaste').onclick=()=>{
   stopFeed();S.feed=null;S.horizon=+$('horizon').value;S.hasTime=false;lastSide=null;
   const base=Math.floor(Date.now()/1000)-vals.length*3600;
   S.bars=vals.map((v,i)=>{const p=i?vals[i-1]:v;return {time:base+i*3600,open:p,close:v,high:Math.max(p,v),low:Math.min(p,v)};});
-  S.htf=null;PREV=null;refresh(true);
+  renderAll(analyze(S.bars,S.horizon),true,false);
   $('status').textContent=`วิเคราะห์จากข้อมูลที่วาง ${vals.length} แถว (ไม่ใช่เรียลไทม์ ใช้ราคาปิดอย่างเดียว ATR จึงเป็นค่าประมาณ)`;};
 
 // =============== UI wiring ===============
 const NAMES={GOLD:'Gold',BTCUSDT:'Bitcoin',ETHUSDT:'Ethereum',SOLUSDT:'Solana',BNBUSDT:'BNB',XRPUSDT:'XRP',DOGEUSDT:'Dogecoin'};
 function syncAssetUI(){const a=$('asset').value,g=a==='GOLD';
-  $('srcWrap').style.display=g?'':'none';$('offWrap').style.display=g?'':'none';$('contract').closest('label').style.display=g?'':'none';$('srcNote').style.display=g?'':'none';$('thaiCard').style.display=g?'':'none';
+  $('srcWrap').style.display=g?'':'none';$('srcNote').style.display=g?'':'none';$('thaiCard').style.display=g?'':'none';
   $('h1').textContent=NAMES[a]+' Trend Analyzer';}
-// ป๊อปอัปเมื่อเปลี่ยนการตั้งค่าใดๆ: บอกค่าเดิม → ค่าใหม่, ตัวเลือกนี้ทำอะไร, และผลต่อสัญญาณ
-const OPT_HELP={
-  asset:{_:'เปลี่ยนสินทรัพย์ที่วิเคราะห์ โหลดกราฟและข่าวใหม่ทั้งหมด'},
-  src:{binance:'ใช้ Binance PAXG ราคาสดทุกวินาที',xaus:'ใช้ XAU/USD ตรง อัปเดตทุก 30 วินาที'},
-  tf:{_:'เปลี่ยนขนาดแท่งเทียน TF เล็ก = สัญญาณถี่แต่หลอกบ่อย, TF ใหญ่ = ช้าแต่แม่นกว่า'},
-  horizon:{_:'บอททายว่าราคาจะขึ้นหรือลงภายในกี่แท่งข้างหน้า สถิติทั้งหมดคำนวณใหม่'},
-  speed:{normal:'EMA 9/21/50 สัญญาณนิ่ง หลอกน้อย แต่ช้า',fast:'EMA 5/13/34 สมดุลระหว่างความเร็วกับความนิ่ง',turbo:'EMA 3/8/21 เร็วที่สุด แต่สะบัดบ่อย ควรใช้คู่กับ Stop Loss แคบ'},
-  mode:{strict:'ออกสัญญาณเฉพาะเมื่อตัวชี้วัดและสถิติชี้ทางเดียวกัน (สัญญาณน้อยแต่ชัด)',stat:'ตามสถิติด้วย รวมจังหวะเด้งกลับ (สัญญาณมากขึ้น)'},
-  newsUse:{on:'ข่าวกรองสัญญาณ: งดเทรดช่วงข่าวแรง, ยกเลิกเมื่อข่าวสวนทาง, ปรับขนาดไม้',off:'ใช้เทคนิคล้วน ไม่สนข่าว'},
-  toastPos:{center:'ป๊อปอัปเด้งกลางหน้าจอ เห็นชัด',corner:'ป๊อปอัปอยู่มุมขวาบน ไม่บังกราฟ'},
-  toastLv:{all:'แสดงป๊อปอัปทุกการเปลี่ยนแปลง',key:'แสดงเฉพาะเรื่องสำคัญ เช่น สัญญาณเปลี่ยน ข่าวแรง'},
-  notify:{on:'มีเสียง และเด้งแจ้งเตือนของ Windows เมื่ออยู่แท็บอื่น',off:'ปิดเสียงและแจ้งเตือนของระบบ'},
-  msgOn:{on:'ส่งข้อความไป Telegram/Discord เมื่อสัญญาณเปลี่ยน',off:'หยุดส่งข้อความ'},
-  msgCh:{tg:'ส่งผ่าน Telegram',dc:'ส่งผ่าน Discord'},
-  mHold:{_:'สัญญาณต้องคงอยู่นานเท่านี้ก่อนส่งข้อความ กันส่งรัวตอนสัญญาณสะบัด'},
-  col:{_:'คอลัมน์ราคาที่ใช้วิเคราะห์ในโหมดวางข้อมูล'},
-  confirm:{close:'ยืนยันสัญญาณเมื่อแท่งเทียนปิดเท่านั้น ไม่สะบัด ไม่หลอก (มาตรฐานมืออาชีพ)',live:'ให้สัญญาณทันทีจากแท่งที่ยังไม่ปิด ไวแต่สัญญาณอาจหายไปก่อนปิดแท่ง'},
-  htfMode:{block:'ไม่เทรดสวนเทรนด์ของไทม์เฟรมใหญ่ (เช่น 15 นาที ดูเทรนด์ 1 ชม.)',align:'เทรดเฉพาะเมื่อ TF ใหญ่ไปทางเดียวกันชัดเจน สัญญาณน้อยลงแต่คุณภาพสูงขึ้น',off:'ไม่ดูเทรนด์ TF ใหญ่'},
-  lockCfg:{on:'ล็อกค่ากลยุทธ์ไว้ กันเผลอปรับไปมาจนผลไม่น่าเชื่อถือ',off:'ปลดล็อก ปรับค่ากลยุทธ์ได้'}};
-const optVal=el=>el.type==='checkbox'?(el.checked?'เปิด':'ปิด'):el.options?el.options[el.selectedIndex]?.text:el.value;
-const optName=el=>{const lab=el.closest('label');return lab?[...lab.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent.trim()).join(' ').trim():el.id;};
-function snapOpts(){document.querySelectorAll('select,input[type=checkbox]').forEach(el=>el.dataset.prev=optVal(el));}
-document.addEventListener('change',e=>{const el=e.target;if(!el.matches||!el.matches('select,input[type=checkbox]'))return;
-  if(!el.closest('#panelLive,#msgCard,#calPane,#panelPaste'))return;
-  const old=el.dataset.prev,now=optVal(el);el.dataset.prev=now;
-  if(el.id==='toastLv'&&el.value==='off')return;
-  const h=OPT_HELP[el.id]||{},key=el.type==='checkbox'?(el.checked?'on':'off'):el.value,help=h[key]||h._||'';
-  const before=LAST?LAST.plan.side:null,beforeScore=LAST&&LAST.res.cur?LAST.res.cur.score:null;
-  const head=`${esc(optName(el))}: ${old&&old!==now?`${esc(old)} → `:''}<b>${esc(now)}</b>`;
-  toast('⚙ เปลี่ยนการตั้งค่า',head+(help?`<br><span class="muted">${esc(help)}</span>`:''),'info',{key:'set',imp:true,ms:9000});
-  // รอบอทวิเคราะห์ใหม่ แล้วบอกผลลัพธ์
-  if(!el.closest('#panelLive'))return;
-  const t0=Date.now(),chk=setInterval(()=>{const ready=LAST&&(!/^(asset|tf|src)$/.test(el.id)||PREV!==null);
-    if(!ready&&Date.now()-t0<8000)return;clearInterval(chk);if(!LAST)return;
-    const p=LAST.plan,r=LAST.res,sc=r.cur?r.cur.score:null;
-    const oz=o=>o&&o.n?(o.hit/o.n*100).toFixed(0)+'%':'—';
-    const res=before&&before!==p.side?`สัญญาณ ${SIDE_TH[before]} → <b>${SIDE_TH[p.side]}</b>`:`สัญญาณยังเป็น <b>${SIDE_TH[p.side]}</b>`;
-    toast('⚙ ผลหลังเปลี่ยนการตั้งค่า',`${head}${help?`<br><span class="muted">${esc(help)}</span>`:''}<br>${res}${sc!=null?` · คะแนน ${beforeScore!=null&&beforeScore!==sc?sgn(beforeScore)+' → ':''}${sgn(sc)}`:''}<br><span class="muted">ทดสอบไม่โกง: เข้มงวด ${oz(r.oos.strict)} · ตามสถิติ ${oz(r.oos.stat)}</span>`,SIDE_K[p.side],{key:'set',imp:true,ms:12000});},300);},true);
-// เฝ้าข่าว: ใกล้ประกาศ / ประกาศแล้ว / หัวข่าวใหม่
-const NW={seen:new Set(),heads:null};
-setInterval(()=>{const now=Date.now();
-  for(const e of NEWS.events){if(e.cur!=='USD'||e.imp!=='High')continue;const dt=e.t-now,k=e.t+e.title;
-    for(const [m,lab] of [[30,'อีก 30 นาที'],[5,'อีก 5 นาที']])if(dt>0&&dt<=m*60000&&dt>(m-5)*60000&&!NW.seen.has(k+m)){NW.seen.add(k+m);
-      toast(`ข่าวแรง USD ${lab}`,`${esc(e.title)}${evTh(e.title)?' · '+evTh(e.title):''}<br>${thTime(e.t)}${e.fc?' · คาด '+esc(e.fc):''}`,'warn',{key:'nw'+k,imp:true});}
-    if(dt<=0&&dt>-10*60000&&!NW.seen.has(k+'out')){NW.seen.add(k+'out');
-      toast('ข่าวแรงประกาศแล้ว',`${esc(e.title)}${e.act?` · จริง <b>${esc(e.act)}</b> คาด ${esc(e.fc||'-')}`:''}<br>ราคามักกระชากแรงช่วงนี้`,'warn',{key:'nw'+k,imp:true});}}
-  if(NEWS.heads.length){const top=NEWS.heads[0].title;
-    if(NW.heads===null)NW.heads=new Set(NEWS.heads.map(x=>x.title));
-    else{const fresh=NEWS.heads.filter(x=>!NW.heads.has(x.title));fresh.forEach(x=>NW.heads.add(x.title));
-      if(fresh.length){const f=fresh[0];toast(`หัวข่าวใหม่ ${fresh.length} ข่าว`,`${f.tone>0?'🟢':f.tone<0?'🔴':'⚪'} ${esc(f.title)}`,f.tone>0?'up':f.tone<0?'down':'info',{key:'heads'});}}}
-},5000);
-// ---- เต็มจอ ----
-function setFull(on){const c=$('chartCard');if(on===c.classList.contains('fs'))return;
-  c.classList.toggle('fs',on);document.body.classList.toggle('fsOn',on);$('cbarHint').style.display=on?'none':'';
-  $('btnFull').textContent=on?'✕ ออกจากเต็มจอ':'⛶ เต็มจอ';
-  try{if(on&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});
-      if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{});}catch(e){}
-  setTimeout(()=>{if(chart){const el=$('chart');chart.applyOptions({width:el.clientWidth,height:el.clientHeight||420});}},60);}
-$('btnFull').onclick=()=>setFull(!$('chartCard').classList.contains('fs'));
-document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)setFull(false);});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')setFull(false);if((e.key==='f'||e.key==='F')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))setFull(!$('chartCard').classList.contains('fs'));});
-$('btnFit').onclick=()=>{if(chart&&S.bars.length)chart.timeScale().setVisibleLogicalRange({from:Math.max(0,S.bars.length-150),to:S.bars.length+8});};
-$('toastPos').onchange=()=>$('toasts').classList.toggle('center',$('toastPos').value==='center');
-$('asset').onchange=()=>{NW.heads=null;syncAssetUI();loadAll();loadThai();loadHeadlines();};
+$('asset').onchange=()=>{syncAssetUI();loadAll();loadThai();};
 $('src').onchange=loadAll;$('tf').onchange=loadAll;$('btnLoad').onclick=loadAll;
-const reAnalyze=()=>refresh(false);
-$('speed').onchange=()=>{setSpeed();reAnalyze();};
-$('newsUse').onchange=()=>reAnalyze();
-$('mode').onchange=()=>{MODE=$('mode').value;reAnalyze();};
-$('notify').onchange=()=>{if($('notify').checked){beep(true);try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission();}catch(e){}}};
-$('horizon').onchange=()=>{S.horizon=+$('horizon').value;refresh(false);};
+$('horizon').onchange=()=>{S.horizon=+$('horizon').value;if(S.bars.length>=70)renderAll(analyze(S.bars,S.horizon),false,S.hasTime);};
 const tl=$('tabLive'),tp=$('tabPaste');
 tl.onclick=()=>{tl.classList.add('on');tp.classList.remove('on');$('panelLive').classList.remove('hidden');$('panelPaste').classList.add('hidden');loadAll();};
 tp.onclick=()=>{tp.classList.add('on');tl.classList.remove('on');$('panelPaste').classList.remove('hidden');$('panelLive').classList.add('hidden');};
 
-cfgLoad();MODE=$('mode').value;S.horizon=+$('horizon').value;setSpeed();snapOpts();riskBadge();jrRender();posRender();syncAssetUI();loadAll();loadThai();loadNews();
+syncAssetUI();loadAll();loadThai();
 </script>
 </body>
 </html>
